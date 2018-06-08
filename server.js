@@ -1,5 +1,8 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+require('dotenv').load({ path: '.env' });
+
+const { createGraphQLRouter } = require('./src/graphql');
 
 const app = express();
 
@@ -10,8 +13,15 @@ app.use(bodyParser.urlencoded({
     extended: true
 }));
 
-app.all('/', async (req, res) => {
+
+app.use(createGraphQLRouter());
+
+app.get('/test', async (req, res) => {
   res.status(200).json('OK');
+});
+
+app.all('/', async (req, res) => {
+  res.status(200).json('Error router');
 });
 
 app.listen(port, function (res) {
