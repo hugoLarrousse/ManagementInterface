@@ -64,6 +64,7 @@
     "lodash": "^4.17.10",
     "moment-timezone": "^0.5.17",
     "mongodb": "^2.2.1",
+    "sha1": "^1.1.1",
     "winston": "^2.4.2"
   },
   "devDependencies": {
