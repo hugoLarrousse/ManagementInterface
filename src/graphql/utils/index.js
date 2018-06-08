@@ -1,18 +1,12 @@
 const isNumber = require('lodash/isNumber');
 const moment = require('moment-timezone');
-const jwt = require('jsonwebtoken');
-const { ObjectID } = require('mongodb');
-const logger = require('../../utils');
-
-const mongo = require('../../db/mongo');
-
-const JWT_SECRET = process.env.jwtSecret;
-
 const {
   GraphQLFloat,
   GraphQLInterfaceType,
   GraphQLNonNull,
 } = require('graphql');
+
+const { pickTokenInHeaders, validateToken } = require('../authentification');
 
 const timestampsModelInterfaceType = new GraphQLInterfaceType({
   name: 'timestamps',
@@ -45,35 +39,6 @@ const createTimeModelType = () => ({
   },
 });
 
-const pickTokenInHeaders = headers => {
-  return headers.authorization || null;
-};
-
-const extractTokenData = token => new Promise((resolve, reject) => {
-  jwt.verify(token, JWT_SECRET, (err, data) => {
-    if (err) {
-      reject(err);
-    } else {
-      resolve(data);
-    }
-  });
-});
-
-const validateToken = async token => {
-  const userData = await extractTokenData(token);
-  if (!userData || !userData.id) {
-    const err = new Error('SECURITY BREACH : Bad (but jwt compliant) token provided');
-    logger.error(__filename, validateToken.name, err.message, err);
-    throw err;
-  }
-  const user = await mongo.findOne({ _id: ObjectID(userData.id) });
-  if (!user) {
-    const err = new Error('SECURITY BREACH : User do not exists based on token');
-    logger.error(__filename, validateToken.name, err.message, err);
-    throw err;
-  }
-  return user;
-};
 
 const createResolver = ({ isAuthRequired }, action) => async (parent, args, ctx, ast) => {
   const authContext = {

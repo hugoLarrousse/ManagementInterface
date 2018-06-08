@@ -31,9 +31,9 @@ const testType = new GraphQLObjectType({
     // phone: {
     //   type: new GraphQLNonNull(GraphQLString),
     // },
-    // token: {
-    //   type: GraphQLString,
-    // },
+    token: {
+      type: GraphQLString,
+    },
   },
 });
 

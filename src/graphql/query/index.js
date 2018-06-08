@@ -2,9 +2,10 @@ const {
   GraphQLObjectType,
   GraphQLID,
   GraphQLNonNull,
+  GraphQLString,
 } = require('graphql');
 const { testType } = require('../types');
-const { findOneUser } = require('../resolvers.js');
+const { findOneUser, jwtLogin } = require('../resolvers.js');
 const { createResolver } = require('../utils');
 
 const queryType = new GraphQLObjectType({
@@ -20,11 +21,28 @@ const queryType = new GraphQLObjectType({
         },
       },
       resolve: createResolver(
-        { isAuthRequired: false },
+        { isAuthRequired: true },
         (_, { _id }) => {
           return findOneUser(_id);
         }
       ),
+    },
+    jwtLogin: {
+      type: testType,
+      description: 'Log User with JWT',
+      args: {
+        email: {
+          type: new GraphQLNonNull(GraphQLString),
+          description: 'User to connect email',
+        },
+        password: {
+          type: new GraphQLNonNull(GraphQLString),
+          description: 'User to connect password',
+        },
+      },
+      resolve: createResolver({ isAuthRequired: false }, (_, args) => {
+        return jwtLogin(args);
+      }),
     },
     // myConversations: {
     //   type: new GraphQLList(conversationType),
