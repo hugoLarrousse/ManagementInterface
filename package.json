@@ -1,0 +1,73 @@
+{
+  "name": "managementinterface",
+  "version": "1.0.0",
+  "description": "backend maangement inerface H7",
+  "main": "server.js",
+  "scripts": {
+    "test": "better-npm-run test",
+    "start": "node server.js",
+    "dev": "better-npm-run dev",
+    "staging": "better-npm-run staging",
+    "production": "better-npm-run production"
+  },
+  "betterScripts": {
+    "dev": {
+      "command": "nodemon server.js",
+      "env": {
+        "NODE_ENV": "development"
+      }
+    },
+    "test": {
+      "command": "node test/jasmineRun.js",
+      "env": {
+        "NODE_ENV": "test",
+        "JASMINE_CONFIG_PATH": "jasmine.json"
+      }
+    },
+    "staging": {
+      "command": "pm2 delete core && pm2 start server.js --name core",
+      "env": {
+        "NODE_ENV": "staging"
+      }
+    },
+    "production": {
+      "command": "pm2 delete core && pm2 start server.js --name core",
+      "env": {
+        "NODE_ENV": "production"
+      }
+    }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hugoLarrousse/ManagementInterface.git"
+  },
+  "keywords": [
+    "nodejs",
+    "graphQL",
+    "mongoDB",
+    "heptaward"
+  ],
+  "author": "Hugo Larrousse",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/hugoLarrousse/ManagementInterface/issues"
+  },
+  "homepage": "https://github.com/hugoLarrousse/ManagementInterface#readme",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "express": "^4.16.3"
+  },
+  "devDependencies": {
+    "better-npm-run": "^0.1.0",
+    "eslint": "^4.19.1",
+    "eslint-config-airbnb": "^16.1.0",
+    "eslint-config-airbnb-base": "^12.1.0",
+    "eslint-plugin-import": "^2.12.0",
+    "eslint-plugin-jasmine": "^2.10.1",
+    "eslint-plugin-jsx-a11y": "^6.0.3",
+    "eslint-plugin-react": "^7.9.1",
+    "jasmine": "^3.1.0",
+    "jasmine-console-reporter": "^3.0.2",
+    "nodemon": "^1.17.5"
+  }
+}
