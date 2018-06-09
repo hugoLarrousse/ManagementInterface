@@ -17,13 +17,10 @@ exports.count = new GraphQLObjectType({
     teamCount: {
       type: new GraphQLNonNull(GraphQLFloat),
     },
-    licenceCount: {
+    activeTeamPercentage: {
       type: new GraphQLNonNull(GraphQLFloat),
     },
-    licencePayingCount: {
-      type: new GraphQLNonNull(GraphQLFloat),
-    },
-    paidAccountRate: {
+    liveUsersCount: {
       type: new GraphQLNonNull(GraphQLFloat),
     },
   },
