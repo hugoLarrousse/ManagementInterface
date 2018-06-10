@@ -1,4 +1,4 @@
-const { authenticateUser } = require('../authentification');
+const { authenticateUser } = require('../authentication');
 
 exports.jwtLogin = async ({ email, password }) => {
   try {

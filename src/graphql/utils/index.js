@@ -6,7 +6,7 @@ const {
   GraphQLNonNull,
 } = require('graphql');
 
-const { pickTokenInHeaders, validateToken } = require('../authentification');
+const { pickTokenInHeaders, validateToken } = require('../authentication');
 
 const timestampsModelInterfaceType = new GraphQLInterfaceType({
   name: 'timestamps',
