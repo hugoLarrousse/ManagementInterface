@@ -6,6 +6,8 @@ const authentication = require('./authentication');
 const user = require('./user');
 const subscription = require('./subscription');
 const payment = require('./payment');
+const integration = require('./integration');
+const funnel = require('./funnel');
 
 const queryType = new GraphQLObjectType({
   name: 'Query',
@@ -14,6 +16,8 @@ const queryType = new GraphQLObjectType({
     jwtLogin: authentication.jwtLoginQuery,
     subscriptionInfo: subscription.count,
     paymentInfo: payment.count,
+    integrationInfo: integration.count,
+    funnelInfo: funnel.count,
   },
 });
 
