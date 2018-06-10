@@ -56,6 +56,17 @@ const createResolver = ({ isAuthRequired }, action) => async (parent, args, ctx,
   return action.call(null, parent, args, authContext, ast);
 };
 
+const makePercentage = (first, second) => {
+  if (!first || first === 0) {
+    return 0;
+  }
+  if (!second || second === 0) {
+    return 0;
+  }
+  return (first / second) * 100;
+};
+
 exports.timestampsModelInterfaceType = timestampsModelInterfaceType;
 exports.createTimeModelType = createTimeModelType;
 exports.createResolver = createResolver;
+exports.makePercentage = makePercentage;

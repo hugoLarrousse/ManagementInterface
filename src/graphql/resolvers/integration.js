@@ -10,11 +10,11 @@ const userCollection = 'users';
 const users = mongo.find(databaseName, userCollection, { status: 'ACTIVE' });
 
 const reducer = (accumulator, currentValue) => {
-  for (const cv of currentValue) {
-    if (accumulator[cv.name]) {
-      Object.assign(accumulator, { [cv.name]: accumulator[cv.name] + 1 });
+  for (const crt of currentValue) {
+    if (accumulator[crt.name]) {
+      Object.assign(accumulator, { [crt.name]: accumulator[crt.name] + 1 });
     } else {
-      Object.assign(accumulator, { [cv.name]: 1 });
+      Object.assign(accumulator, { [crt.name]: 1 });
     }
   }
   return accumulator;
@@ -29,15 +29,10 @@ exports.count = async () => {
   const integrationTotal = sum(Object.values(integrationCount));
   return {
     pipedriveCount: integrationCount.Pipedrive || 0,
-    pipedrivePercentage: integrationCount.Pipedrive ?
-      makePercentage(integrationCount.Pipedrive, integrationTotal) : 0,
+    pipedrivePercentage: makePercentage(integrationCount.Pipedrive, integrationTotal),
     hubspotCount: integrationCount.Hubspot || 0,
-    hubspotPercentage: integrationCount.Hubspot
-      ? makePercentage(integrationCount.Hubspot, integrationTotal)
-      : 0,
+    hubspotPercentage: makePercentage(integrationCount.Hubspot, integrationTotal),
     spectatorCount: integrationCount.spectator || 0,
-    spectatorPercentage: integrationCount.spectator
-      ? makePercentage(integrationCount.spectator, integrationTotal)
-      : 0,
+    spectatorPercentage: makePercentage(integrationCount.spectator, integrationTotal),
   };
 };
