@@ -24,7 +24,6 @@ exports.count = async () => {
   const total = result[0]
     + confirmedCount
     + pairedUsers.length;
-  console.log('makePercentage(signedUpCount, total) :', makePercentage(result[0], total));
   return {
     signedUpCount: result[0],
     signedUpPercentage: makePercentage(result[0], total),
