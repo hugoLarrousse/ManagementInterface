@@ -4,6 +4,7 @@ const {
   GraphQLFloat,
   GraphQLString,
   GraphQLList,
+  GraphQLID,
 } = require('graphql');
 
 
@@ -31,6 +32,9 @@ const userInfoList = new GraphQLObjectType({
 exports.info = new GraphQLObjectType({
   name: 'infoList',
   fields: {
+    orgaId: {
+      type: new GraphQLNonNull(GraphQLID),
+    },
     subDate: {
       type: new GraphQLNonNull(GraphQLFloat),
     },

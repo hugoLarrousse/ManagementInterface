@@ -80,6 +80,7 @@ exports.info = async () => {
       user3.last_connected === Math.max(...result.users.map(user4 => user4.last_connected || 0)));
 
     all.push({
+      orgaId: orga._id,
       companyName: result.team.name,
       subDate: oldestUser.create_on,
       mail: oldestUser.email,
