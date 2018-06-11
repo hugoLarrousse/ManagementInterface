@@ -63,7 +63,7 @@ const makePercentage = (first, second) => {
   if (!second || second === 0) {
     return 0;
   }
-  return (first / second) * 100;
+  return ((first / second) * 100).toFixed(2);
 };
 
 exports.timestampsModelInterfaceType = timestampsModelInterfaceType;
