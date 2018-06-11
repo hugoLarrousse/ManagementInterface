@@ -45,8 +45,8 @@ const differentFunnelPosition = {
 const normalizeUsers = (users) => {
   return users.map(user => {
     return {
-      subDate: user.create_on,
-      mail: user.email,
+      subDate: user.create_on || 0,
+      mail: user.email || '',
       integration: findIntegration(user.integrations),
       lastSeen: user.last_connected || 0,
       funnnelPosition: user.integrations.length > 0 && user.status === 'ACTIVE' ? 'paired' : differentFunnelPosition[user.status],
@@ -64,7 +64,7 @@ exports.info = async () => {
     const result = await normalizePromise({ users, team, licence });
 
     if (result.users.length === 0) {
-      console.log(`orga: ${orga} --> no users found`);
+      console.log(`orga: ${orga._id} --> no users found`);
       continue; /* eslint no-continue: "off" */
     }
     let plan = {};
