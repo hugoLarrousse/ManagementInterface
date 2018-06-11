@@ -19,16 +19,16 @@ exports.count = new GraphQLObjectType({
     confirmedPercentage: {
       type: new GraphQLNonNull(GraphQLFloat),
     },
-    pairedCount: {
-      type: new GraphQLNonNull(GraphQLFloat),
-    },
-    pairedPercentage: {
-      type: new GraphQLNonNull(GraphQLFloat),
-    },
     activeCount: {
       type: new GraphQLNonNull(GraphQLFloat),
     },
     activePercentage: {
+      type: new GraphQLNonNull(GraphQLFloat),
+    },
+    pairedCount: {
+      type: new GraphQLNonNull(GraphQLFloat),
+    },
+    pairedPercentage: {
       type: new GraphQLNonNull(GraphQLFloat),
     },
     autoRegisterCount: {

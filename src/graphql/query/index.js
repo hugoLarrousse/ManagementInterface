@@ -8,6 +8,7 @@ const subscription = require('./subscription');
 const payment = require('./payment');
 const integration = require('./integration');
 const funnel = require('./funnel');
+const list = require('./list');
 
 const queryType = new GraphQLObjectType({
   name: 'Query',
@@ -18,6 +19,7 @@ const queryType = new GraphQLObjectType({
     paymentInfo: payment.count,
     integrationInfo: integration.count,
     funnelInfo: funnel.count,
+    listInfo: list.info,
   },
 });
 
