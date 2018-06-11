@@ -23,7 +23,7 @@ const userInfoList = new GraphQLObjectType({
     lastSeen: {
       type: new GraphQLNonNull(GraphQLFloat),
     },
-    funnnelPosition: {
+    funnelPosition: {
       type: new GraphQLNonNull(GraphQLString),
     },
   },
@@ -59,7 +59,7 @@ exports.info = new GraphQLObjectType({
     endDate: {
       type: new GraphQLNonNull(GraphQLFloat),
     },
-    funnnelPosition: {
+    funnelPosition: {
       type: new GraphQLNonNull(GraphQLString),
     },
     users: {

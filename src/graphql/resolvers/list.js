@@ -49,7 +49,7 @@ const normalizeUsers = (users) => {
       mail: user.email || '',
       integration: findIntegration(user.integrations),
       lastSeen: user.last_connected || 0,
-      funnnelPosition: user.integrations.length > 0 && user.status === 'ACTIVE' ? 'paired' : differentFunnelPosition[user.status],
+      funnelPosition: user.integrations.length > 0 && user.status === 'ACTIVE' ? 'paired' : differentFunnelPosition[user.status],
     };
   });
 };
@@ -89,7 +89,7 @@ exports.info = async () => {
       lastSeen: youngestUser.last_connected || 0,
       plan: plan.nickname || 'Trial',
       endDate: result.licence.expirationDate,
-      funnnelPosition: oldestUser.integrations.length > 0 && oldestUser.status === 'ACTIVE' ? 'paired' : differentFunnelPosition[oldestUser.status],
+      funnelPosition: oldestUser.integrations.length > 0 && oldestUser.status === 'ACTIVE' ? 'paired' : differentFunnelPosition[oldestUser.status],
       users: normalizeUsers(result.users),
     });
   }
