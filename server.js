@@ -10,7 +10,7 @@ const port = 8080;
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
-    extended: true
+  extended: true,
 }));
 
 
@@ -24,6 +24,6 @@ app.all('/', async (req, res) => {
   res.status(200).json('Error router');
 });
 
-app.listen(port, function (res) {
+app.listen(port, () => {
   console.log(`Server Management is running on port ${port}`);
 });
