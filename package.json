@@ -1,7 +1,7 @@
 {
   "name": "managementinterface",
   "version": "1.0.0",
-  "description": "backend maangement inerface H7",
+  "description": "backend management interface H7",
   "main": "server.js",
   "scripts": {
     "test": "better-npm-run test",
@@ -20,7 +20,7 @@
     "test": {
       "command": "node test/jasmineRun.js",
       "env": {
-        "NODE_ENV": "test",
+        "NODE_ENV": "test", 
         "JASMINE_CONFIG_PATH": "jasmine.json"
       }
     },
