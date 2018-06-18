@@ -31,6 +31,9 @@ const authenticateUser = async (email, password) => {
   if (!email || !password) {
     throw new Error('Email or password not provided');
   }
+  if (!email.includes('heptaward')) {
+    throw new Error('You don\'t have access, you need an admin account');
+  }
   const userFound = await mongo.findOne(databaseName, collection, { email });
   if (!userFound) {
     throw new Error('WRONG EMAIL');
