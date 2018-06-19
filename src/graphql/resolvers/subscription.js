@@ -22,7 +22,7 @@ exports.count = async () => {
     user.last_connected > Date.now() - SEVEN_DAYS_MILLISECONDS).map(user => String(user.team_id));
 
   const liveUsersCount = usersUnpromising.filter(user =>
-    user.last_connected > Date.now() - FIVE_MINUTES_MILLISECONDS).length;
+    user.last_connected >= Date.now() - FIVE_MINUTES_MILLISECONDS).length;
 
   const teamCount = new Set(usersUnpromising.map(user => String(user.team_id))).size;
   return {
