@@ -9,8 +9,8 @@ const logger = require('../utils');
 
 const {
   databaseH7,
-  databasePipedrive,
-  databaseHubspot,
+  // databasePipedrive,
+  // databaseHubspot,
   mongoOptions,
 } = process.env;
 
@@ -18,18 +18,10 @@ const mongodbHeptaward = MongoClient
   .connect(`${process.env.dbserver}/${databaseH7}${mongoOptions || ''}`, { poolSize: 20 })
   .catch(err => logger.errorDb(__filename, 'mongo', null, null, `MongoClient.connect() : ${err.message}`, null, err));
 
-const mongodbPipedrive = MongoClient
-  .connect(`${process.env.dbserver}/${databasePipedrive}${mongoOptions || ''}`, { poolSize: 20 })
-  .catch(err => logger.errorDb(__filename, 'mongo', null, null, `MongoClient.connect() : ${err.message}`, null, err));
-
-const mongodbHubspot = MongoClient
-  .connect(`${process.env.dbserver}/${databaseHubspot}${mongoOptions || ''}`, { poolSize: 20 })
-  .catch(err => logger.errorDb(__filename, 'mongo', null, null, `MongoClient.connect() : ${err.message}`, null, err));
-
 const mongodbName = {
   heptaward: mongodbHeptaward,
-  pipedrive: mongodbPipedrive,
-  hubspot: mongodbHubspot,
+  // pipedrive: mongodbPipedrive,
+  // hubspot: mongodbHubspot,
 };
 
 const insert = async (databaseName, collectionName, doc) => {
@@ -126,8 +118,10 @@ const deleteDoc = async (databaseName, collectionName, query) => {
 
 const findOne = async (databaseName, collectionName, query = {}) => {
   const db = await mongodbName[databaseName];
+
   const docFound = await db.collection(collectionName)
     .findOne({ ...query, ...softDeleteRetrieveCondition });
+
   return docFound;
 };
 
