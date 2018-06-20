@@ -32,7 +32,7 @@ const makeRequest = (requestString, variableValues = null) =>
 
 const createGraphQLRouter = () => {
   const router = express.Router();
-  router.use('/graph', cors(corsOptions), graphQLHTTP(req => {
+  router.use('/graph', graphQLHTTP(req => {
     return {
       schema,
       graphiql: false,
