@@ -9,6 +9,7 @@ const planCollection = 'plans';
 const userCollection = 'users';
 const teamCollection = 'teams';
 const licenceCollection = 'licences';
+const integrationCollection = 'integrations';
 
 const normalizePromise = async (method) => {
   const name = Object.keys(method);
@@ -47,7 +48,7 @@ const normalizeUsers = (users) => {
     return {
       subDate: user.create_on || 0,
       mail: user.email || '',
-      integration: findIntegration(user.integrations),
+      integration: findIntegration(user.integrations) || user.role === 'spectator' ? 'spectator' : '',
       lastSeen: user.last_connected || 0,
       funnelPosition: user.integrations.length > 0 && user.status === 'ACTIVE' ? 'paired' : differentFunnelPosition[user.status],
     };
@@ -66,6 +67,11 @@ exports.info = async () => {
     if (result.users.length === 0) {
       console.log(`orga: ${orga._id} --> no users found`);
       continue; /* eslint no-continue: "off" */
+    }
+    for (const user of users) {
+      user.integrations = await mongo.find(databaseName, integrationCollection, {
+        userId: ObjectID(user._id),
+      });
     }
     let plan = {};
     if (result.licence.planId) {
