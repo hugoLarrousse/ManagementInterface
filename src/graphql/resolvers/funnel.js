@@ -1,9 +1,11 @@
+const { ObjectID } = require('mongodb');
 const mongo = require('../../db/mongo');
 
 const { makePercentage } = require('../utils');
 
 const databaseName = process.env.databaseH7;
 const userCollection = 'users';
+const integrationCollection = 'integrations';
 
 const SEVEN_DAYS_MILLISECONDS = 604800000;
 
@@ -17,7 +19,15 @@ const invitedCount = mongo.count(databaseName, userCollection, { status: 'INVITE
 exports.count = async () => {
   const result = await Promise.all([signedUpCount, autoRegisterCount, usersFound]);
 
-  const pairedUsers = result[2].filter(user => user.integrations.length > 0);
+  for (const user of result[2]) {
+    user.integrations = await mongo.find(databaseName, integrationCollection, {
+      userId: ObjectID(user._id),
+      token: {
+        $ne: null,
+      },
+    });
+  }
+  const pairedUsers = result[2].filter(user => user.integrations.length > 0 || user.role === 'spectator');
   const recentUsers = pairedUsers.filter(user =>
     user.last_connected > Date.now() - SEVEN_DAYS_MILLISECONDS);
   const confirmedCount = result[2].length - pairedUsers.length;
