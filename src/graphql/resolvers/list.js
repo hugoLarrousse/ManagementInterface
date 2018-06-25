@@ -24,7 +24,7 @@ const normalizePromise = async (method) => {
   return toBeReturn;
 };
 
-const findIntegration = (integrations) => {
+const findIntegration = (integrations, role) => {
   if (integrations.length > 0) {
     return integrations.reduce((acc, currentValue, index) => {
       if (index === 0) {
@@ -32,6 +32,8 @@ const findIntegration = (integrations) => {
       }
       return `${acc} ${currentValue.name}`;
     }, '');
+  } else if (role === 'spectator') {
+    return 'spectator';
   }
   return '';
 };
@@ -41,18 +43,6 @@ const differentFunnelPosition = {
   ACTIVE: 'confirmed',
   NOT_CONFIRMED_YET: 'not_confirmed_yet',
   INVITED: 'invited',
-};
-
-const normalizeUsers = (users) => {
-  return users.map(user => {
-    return {
-      subDate: user.create_on || 0,
-      mail: user.email || '',
-      integration: findIntegration(user.integrations) || user.role === 'spectator' ? 'spectator' : '',
-      lastSeen: user.last_connected || 0,
-      funnelPosition: user.integrations.length > 0 && user.status === 'ACTIVE' ? 'paired' : differentFunnelPosition[user.status],
-    };
-  });
 };
 
 exports.info = async () => {
@@ -68,11 +58,7 @@ exports.info = async () => {
       console.log(`orga: ${orga._id} --> no users found`);
       continue; /* eslint no-continue: "off" */
     }
-    for (const user of users) {
-      user.integrations = await mongo.find(databaseName, integrationCollection, {
-        userId: ObjectID(user._id),
-      });
-    }
+
     let plan = {};
     if (result.licence.planId) {
       plan = await mongo
@@ -81,6 +67,9 @@ exports.info = async () => {
     const oldestUser = result.users.find(user =>
       user.create_on === Math.min(...result.users.map(user2 => user2.create_on || Infinity)));
 
+    oldestUser.integrations = await mongo.find(databaseName, integrationCollection, {
+      userId: ObjectID(oldestUser._id),
+    });
     const integration = oldestUser.integrations.length > 0 ? findIntegration(oldestUser.integrations) : '';
     const youngestUser = result.users.find(user3 =>
       user3.last_connected === Math.max(...result.users.map(user4 => user4.last_connected || 0)));
@@ -96,7 +85,6 @@ exports.info = async () => {
       plan: plan.nickname || 'Trial',
       endDate: result.licence.expirationDate,
       funnelPosition: oldestUser.integrations.length > 0 && oldestUser.status === 'ACTIVE' ? 'paired' : differentFunnelPosition[oldestUser.status],
-      users: normalizeUsers(result.users),
     });
   }
   return all;

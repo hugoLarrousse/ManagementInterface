@@ -6,7 +6,7 @@ const { createResolver } = require('../utils');
 
 exports.info = {
   type: new GraphQLList(type.list.info),
-  description: 'Analytics about users',
+  description: 'Analytics about all users',
   resolve: createResolver(
     { isAuthRequired: true },
     () => {
