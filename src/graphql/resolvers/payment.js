@@ -43,7 +43,7 @@ exports.count = async () => {
   }, 0);
   return {
     licencePayingCount,
-    licencePayingPercentage: (await licencePayingCount / await licenceCount) * 100,
+    licencePayingPercentage: ((await licencePayingCount / await licenceCount) * 100).toFixed(2),
     mrr,
   };
 };
