@@ -35,7 +35,7 @@ exports.info = new GraphQLObjectType({
       type: new GraphQLNonNull(GraphQLString),
     },
     endDate: {
-      type: new GraphQLNonNull(GraphQLFloat),
+      type: new GraphQLNonNull(GraphQLString),
     },
     funnelPosition: {
       type: new GraphQLNonNull(GraphQLString),

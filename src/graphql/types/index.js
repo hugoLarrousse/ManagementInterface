@@ -5,4 +5,5 @@ exports.integration = require('./integration');
 exports.funnel = require('./funnel');
 exports.list = require('./list');
 exports.userList = require('./userList');
+exports.licence = require('./licence');
 

@@ -12,11 +12,11 @@ const cors = require('cors');
 const env = process.env.NODE_ENV || 'development';
 
 const { queryType } = require('./query');
-// const mutationType = require('./mutation');
+const { mutationType } = require('./mutation');
 
 const schema = new GraphQLSchema({
   query: queryType,
-  // mutation: mutationType,
+  mutation: mutationType,
 });
 
 const rootValue = {};
