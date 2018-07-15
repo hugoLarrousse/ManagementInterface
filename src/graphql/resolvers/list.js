@@ -1,4 +1,5 @@
 const { ObjectID } = require('mongodb');
+const moment = require('moment');
 
 const mongo = require('../../db/mongo');
 
@@ -45,6 +46,8 @@ const differentFunnelPosition = {
   INVITED: 'invited',
 };
 
+const formatEndDate = (endDate) => `${moment(endDate).format('L')} ${moment(endDate).format('LT')}`;
+
 exports.info = async () => {
   const allOrga = await mongo.find(databaseName, orgaCollection);
   const all = [];
@@ -83,7 +86,7 @@ exports.info = async () => {
       teamSize: result.users.length,
       lastSeen: youngestUser.last_connected || 0,
       plan: plan.nickname || 'Trial',
-      endDate: result.licence.expirationDate,
+      endDate: formatEndDate(result.licence.expirationDate),
       funnelPosition: oldestUser.integrations.length > 0 && oldestUser.status === 'ACTIVE' ? 'paired' : differentFunnelPosition[oldestUser.status],
     });
   }
