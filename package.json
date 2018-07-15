@@ -25,13 +25,13 @@
       }
     },
     "staging": {
-      "command": "pm2 delete core && pm2 start server.js --name core",
+      "command": "pm2 delete managementInterface && pm2 start server.js --name managementInterface",
       "env": {
         "NODE_ENV": "staging"
       }
     },
     "production": {
-      "command": "pm2 delete core && pm2 start server.js --name core",
+      "command": "pm2 delete managementInterface && pm2 start server.js --name managementInterface",
       "env": {
         "NODE_ENV": "production"
       }
