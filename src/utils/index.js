@@ -21,7 +21,7 @@ const transports = [
   }),
 ];
 
-const customLogger = new (winston.Logger)({
+const customLogger = winston.createLogger({
   transports,
 });
 

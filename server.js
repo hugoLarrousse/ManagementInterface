@@ -1,6 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 require('dotenv').load({ path: '.env' });
+require('./src/dataTest/cron').cron();
 
 const { createGraphQLRouter } = require('./src/graphql');
 

@@ -65,8 +65,11 @@
     "moment": "^2.22.2",
     "moment-timezone": "^0.5.17",
     "mongodb": "^2.2.1",
+    "node-cron": "^1.2.1",
+    "requestretry": "^2.0.0",
     "sha1": "^1.1.1",
-    "winston": "^2.4.2"
+    "winston": "^3.0.0",
+    "winston-slack-hook": "^0.3.0"
   },
   "devDependencies": {
     "better-npm-run": "^0.1.0",

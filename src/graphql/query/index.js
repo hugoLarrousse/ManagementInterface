@@ -9,6 +9,7 @@ const integration = require('./integration');
 const funnel = require('./funnel');
 const list = require('./list');
 const userList = require('./userList');
+const dataTest = require('./dataTest');
 
 const queryType = new GraphQLObjectType({
   name: 'Query',
@@ -20,6 +21,7 @@ const queryType = new GraphQLObjectType({
     funnelInfo: funnel.count,
     listInfo: list.info,
     userListInfo: userList.info,
+    dataTestManual: dataTest.manual,
   },
 });
 

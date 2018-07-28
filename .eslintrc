@@ -26,6 +26,7 @@
     "jasmine/no-spec-dupes": "error",
     "no-await-in-loop": "off",
     "no-restricted-syntax":"off",
-    "linebreak-style":"off"
+    "linebreak-style":"off",
+    "max-len": [2, 150, 2]
   }
 }
