@@ -2,10 +2,6 @@ const requestretry = require('requestretry');
 
 const urlPipedrive = process.env.pipedriveUrl;
 
-// const apiToken = '8a248db22705fa85b9f25dbe82572d06c2b16aa6'; // Token prod pipedrive samy
-// const apiToken = '5e271bab709f9e74189421d4cc49a60110a312e1'; // Token prod pipedrive Baptiste
-// const apiToken = 'a86eb36af4331b509045bd3ffe209b2c699e439d'; // Token Test Pipedrive
-
 const get = async (path, apiToken) => {
   try {
     const urlApiToken = `&api_token=${apiToken}`;
