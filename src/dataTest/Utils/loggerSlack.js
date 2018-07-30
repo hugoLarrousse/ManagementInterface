@@ -7,13 +7,11 @@ const loggerEnabledStatus = process.env.LOGGER || 'all';
 
 const transports = [];
 
-if (env === 'development') {
-  transports.push(new (WinstonSlack)({
-    hookUrl: process.env.slackUrl,
-    username: 'Louis-Eric',
-    channel: '#test-automation',
-  }));
-}
+transports.push(new (WinstonSlack)({
+  hookUrl: process.env.slackUrl,
+  username: 'Louis-Eric',
+  channel: '#test-automation',
+}));
 
 const customLogger = winston.createLogger({
   transports,
