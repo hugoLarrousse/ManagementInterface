@@ -13,11 +13,9 @@ const loggerEnabledStatus = process.env.LOGGER || 'all';
 const transports = [
   // colorize the output to the console
   new (winston.transports.Console)({
-    timestamp: () => (new Date()).toLocaleTimeString('en-US', {
-      hour12: false,
-    }),
     colorize: true,
     level: 'info',
+    json: true,
   }),
 ];
 
