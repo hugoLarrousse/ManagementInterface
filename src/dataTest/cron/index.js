@@ -1,7 +1,7 @@
 const cron = require('node-cron');
 const testPipedriveCtrl = require('../controllers/testPipedrive');
 const testHubspotCtrl = require('../controllers/testHubspot');
-const logger = require('../Utils/logger');
+const logger = require('../Utils/loggerSlack');
 const moment = require('moment');
 
 const pipedriveEMails = ['axel.manoukian@moovone.fr', 'baptiste.dubuc@gmail.com'];
