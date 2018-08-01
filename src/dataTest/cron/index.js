@@ -4,8 +4,8 @@ const testHubspotCtrl = require('../controllers/testHubspot');
 const logger = require('../Utils/loggerSlack');
 const moment = require('moment');
 
-const pipedriveEMails = ['axel.manoukian@moovone.fr', 'baptiste.dubuc@gmail.com'];
-const hubspotEmails = ['thomas@paygreen.fr', 'tony@insurge.digital'];
+const pipedriveEMails = ['axel.manoukian@moovone.fr'];
+const hubspotEmails = ['thomas@paygreen.fr', 'tony@insurge.digital', 'hello@ecommerce-nation.fr'];
 
 
 const cronTask = async () => {

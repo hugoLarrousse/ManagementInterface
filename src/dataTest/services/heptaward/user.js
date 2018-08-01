@@ -115,7 +115,7 @@ const getIntegration = async (userId, name) => {
 
     const result = await mongo.findOne('heptaward', 'integrations', select);
 
-    if (result.tokenExpiresAt) {
+    if (result && result.tokenExpiresAt) {
       if (result.tokenExpiresAt < Date.now()) {
         token = await hubspot.refreshToken(result.refreshToken);
       } else {
