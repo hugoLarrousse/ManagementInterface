@@ -5,16 +5,22 @@ const WinstonSlack = require('winston-slack-hook');
 const env = process.env.NODE_ENV || 'development';
 const loggerEnabledStatus = process.env.LOGGER || 'all';
 
-const transports = [];
-
-transports.push(new (WinstonSlack)({
-  hookUrl: process.env.slackUrl,
-  username: 'Louis-Eric',
-  channel: '#test-automation',
-}));
-
 const customLogger = winston.createLogger({
-  transports,
+  transports: [
+    new WinstonSlack({
+      hookUrl: process.env.slackUrl,
+      username: 'Louis-Eric',
+      channel: '#test-automation',
+      prependLevel: false,
+      appendMeta: false,
+      colors: {
+        warn: 'warning',
+        error: 'danger',
+        info: 'good',
+        debug: '#bbddff',
+      },
+    }),
+  ],
 });
 
 if (env === 'test' || loggerEnabledStatus === 'none') {
@@ -23,10 +29,10 @@ if (env === 'test' || loggerEnabledStatus === 'none') {
 
 const createLabelError = (crm, type, email, period) => {
   return `
-      crm: ${crm}
-      type: ${type}
-      period: ${period}
-      email: ${email}
+      *email: ${email}*
+    crm: ${crm}
+    type: ${type}
+    period: ${period}
 `;
 };
 
@@ -34,8 +40,8 @@ const createLabelInfo = (message) => {
   return `*${message}*`;
 };
 
-const error = async (crm, type, email, period, differences) => {
-  customLogger.error(createLabelError(crm, type, email, period), differences);
+const error = async (crm, type, email, period) => {
+  customLogger.error(createLabelError(crm, type, email, period));
 };
 
 const info = async (message) => {
