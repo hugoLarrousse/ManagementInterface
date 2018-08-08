@@ -2,7 +2,6 @@ const mongo = require('../../../db/mongo');
 const hubspot = require('../../Utils/hubspot');
 const { ObjectID } = require('mongodb');
 
-//
 const getUser = async (email) => {
   try {
     const select = {
@@ -61,7 +60,7 @@ const getHubspotToken = async (user) => {
 
 const getIntegrationToken = async (userId, name) => {
   try {
-    let token = null;
+    let tokenFound = null;
     const select = {
       userId: ObjectID(userId),
       name,
@@ -71,15 +70,15 @@ const getIntegrationToken = async (userId, name) => {
 
     if (result.tokenExpiresAt) {
       if (result.tokenExpiresAt < Date.now()) {
-        token = await hubspot.refreshToken(result.refreshToken);
+        tokenFound = await hubspot.refreshToken(result.refreshToken);
       } else {
-        token = result.token;
+        tokenFound = result.token;
       }
     } else {
-      token = result.token;
+      tokenFound = result.token;
     }
 
-    return token;
+    return tokenFound;
   } catch (e) {
     throw new Error(`${__filename}
       ${getIntegrationToken.name}
@@ -104,10 +103,9 @@ const getIntegrationTeam = async (userId, name) => {
   }
 };
 
-//
 const getIntegration = async (userId, name) => {
   try {
-    let token = null;
+    let tokenFound = null;
     const select = {
       userId: ObjectID(userId),
       name,
@@ -115,18 +113,18 @@ const getIntegration = async (userId, name) => {
 
     const result = await mongo.findOne('heptaward', 'integrations', select);
 
-    if (result && result.tokenExpiresAt) {
+    if (result.tokenExpiresAt) {
       if (result.tokenExpiresAt < Date.now()) {
-        token = await hubspot.refreshToken(result.refreshToken);
+        tokenFound = await hubspot.refreshToken(result.refreshToken);
       } else {
-        token = result.token;
+        tokenFound = result.token;
       }
     } else {
-      token = result.token;
+      tokenFound = result.token;
     }
 
     return {
-      token,
+      token: tokenFound,
       team: result.integrationTeam,
     };
   } catch (e) {

@@ -23,19 +23,14 @@ const compareDeals = async (email, period) => {
   const unregisteredDealsWon = await hubspotControls.dealsNotRegistered(hubspotDealsWon, heptawardWonDeals.deals);
   const unregisteredDealsOpened = await hubspotControls.dealsNotRegistered(hubspotDealsOpened, heptawardOpenedDeals.deals);
 
+  const differenceOpened = heptawardOpenedDeals.ndDeals - hubspotDealsOpened.length;
+  const differenceWon = heptawardWonDeals.ndDeals - hubspotDealsWon.length;
+
   return {
-    nbHubspotDealsOpened: hubspotDealsOpened.length,
-    nbH7DealsOpened: heptawardOpenedDeals.ndDeals,
-    nbH7DealsWon: heptawardWonDeals.ndDeals,
-    nbHubspotDealsWon: hubspotDealsWon.length,
-    nbDealsWonDoublons: dealsWonDoublons.length,
-    nbDealsOpenedDoublons: dealsOpenedDoublons.length,
-    nbUnregisteredDealsWon: unregisteredDealsWon.length,
-    nbUnregisteredDealsOpened: unregisteredDealsOpened.length,
-    heptawardOpenedDeals,
-    heptawardWonDeals,
-    hubspotDealsOpened,
-    hubspotDealsWon,
+    differenceOpened,
+    differenceWon,
+    doublons: (dealsOpenedDoublons.length + dealsWonDoublons.length),
+    unRegistered: (unregisteredDealsOpened.length + unregisteredDealsWon.length),
   };
 };
 
@@ -61,18 +56,12 @@ const compareActivities = async (email, period) => {
   const callsDoublons = h7Controls.doublonsOnEchoes(heptawardCalls.activities);
 
   return {
-    since: new Date(since),
-    nbSourceMeetings: hubspotengagements.nbMeetings,
-    nbH7Meetings: heptawardMeetings.ndActivities,
-    nbSourceCalls: hubspotengagements.nbCalls,
-    nbH7Calls: heptawardCalls.ndActivities,
-    hubspotengagements,
-    heptawardMeetings,
-    heptawardCalls,
-    unregisteredMeetingsEngagement,
-    unregisteredCallsEngagement,
-    meetingsDoublons,
-    callsDoublons,
+    meetings: (heptawardMeetings.ndActivities - hubspotengagements.nbMeetings),
+    meetingsDoublons: meetingsDoublons.length,
+    meetingsUnregistered: unregisteredMeetingsEngagement.length,
+    calls: (heptawardCalls.ndActivities - hubspotengagements.nbCalls),
+    callsDoublons: callsDoublons.length,
+    callsUnregistered: unregisteredCallsEngagement.length,
   };
 };
 

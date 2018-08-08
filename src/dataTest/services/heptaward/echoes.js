@@ -1,6 +1,5 @@
 const mongo = require('../../../db/mongo');
 const { ObjectID } = require('mongodb');
-const dates = require('../../Utils/dates');
 
 const getDealsInfos = async (type, teamId, since) => {
   try {
@@ -13,7 +12,7 @@ const getDealsInfos = async (type, teamId, since) => {
     const select = {
       team_h7_id: ObjectID(teamId),
       date_add_timestamp: {
-        $gte: Number(dates.setStartMonthTimestamp(since)),
+        $gte: Number(since),
       },
       type,
     };

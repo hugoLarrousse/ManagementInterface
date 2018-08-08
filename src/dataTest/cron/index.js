@@ -13,18 +13,16 @@ const cronTask = async () => {
     logger.info(`START TEST AUTOMATION : ${moment().format('LLL')}`);
     setTimeout(async () => {
       for (const email of pipedriveEMails) {
-        const resultActivities = await testPipedriveCtrl.compareMonthActivities(email);
-        const resultDeals = await testPipedriveCtrl.compareMonthDeals(email);
-        if (resultActivities && resultActivities.differences) {
-          const { differences } = resultActivities;
-          if (differences.meetingsDoublons || differences.meetingsUnregistered || differences.callsDoublons || differences.callsUnregistered) {
-            logger.error('pipedrive', 'activities', email, 'month', differences);
+        const resultActivities = await testPipedriveCtrl.compareActivities(email);
+        const resultDeals = await testPipedriveCtrl.compareDeals(email);
+        if (resultActivities) {
+          if (Object.values(resultActivities).filter(Number).length > 0) {
+            logger.error('pipedrive', 'activities', email, 'month');
           }
         }
-        if (resultDeals && resultDeals.differences) {
-          const { differences } = resultDeals;
-          if (differences.opened || differences.won || differences.doublons || differences.unRegistered) {
-            logger.error('pipedrive', 'deals', email, 'month', differences);
+        if (resultDeals) {
+          if (Object.values(resultActivities).filter(Number).length > 0) {
+            logger.error('pipedrive', 'deals', email, 'month');
           }
         }
       }
@@ -32,33 +30,13 @@ const cronTask = async () => {
         const resultActivities = await testHubspotCtrl.compareActivities(email, 'month');
         const resultDeals = await testHubspotCtrl.compareDeals(email, 'month');
         if (resultActivities) {
-          const {
-            unregisteredMeetingsEngagement,
-            unregisteredCallsEngagement,
-            meetingsDoublons,
-            callsDoublons,
-            ...rest
-          } = resultActivities;
-          if (unregisteredMeetingsEngagement.length > 0
-            || unregisteredCallsEngagement.length > 0
-            || meetingsDoublons.length > 0
-            || callsDoublons.length > 0) {
-            logger.error('hubspot', 'activities', email, 'month', rest);
+          if (Object.values(resultActivities).filter(Number).length > 0) {
+            logger.error('hubspot', 'activities', email, 'month');
           }
         }
         if (resultDeals) {
-          const {
-            nbDealsWonDoublons,
-            nbDealsOpenedDoublons,
-            nbUnregisteredDealsWon,
-            nbUnregisteredDealsOpened,
-          } = resultDeals;
-          if (nbDealsWonDoublons
-            || nbDealsOpenedDoublons
-            || nbUnregisteredDealsWon
-            || nbUnregisteredDealsOpened) {
-            const { hubspotDealsOpened, hubspotDealsWon, ...rest } = resultDeals;
-            logger.error('hubspot', 'deals', email, 'month', rest);
+          if (Object.values(resultDeals).filter(Number).length > 0) {
+            logger.error('hubspot', 'deals', email, 'month');
           }
         }
       }

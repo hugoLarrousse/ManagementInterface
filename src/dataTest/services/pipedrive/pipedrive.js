@@ -1,15 +1,17 @@
-const { get } = require('../../Utils/pipedrive');
+const _ = require('lodash');
+
+const {
+  get
+} = require('../../Utils/pipedrive');
 const dates = require('../../Utils/dates');
 
-//
-const getDealsOpenedTimeline = async (apiToken, since, interval) => {
+const getDealsOpenedTimeline = async (apiToken, since, interval = 'month') => {
   try {
     const date = dates.formatDateStartMonth(since);
 
     const path = `/v1/deals/timeline?start_date=${date}&limit=500&interval=${interval}&amount=1&field_key=add_time`;
 
     const result = await get(path, apiToken);
-
     return result.data;
   } catch (e) {
     throw new Error(`${__filename}
@@ -18,8 +20,7 @@ const getDealsOpenedTimeline = async (apiToken, since, interval) => {
   }
 };
 
-//
-const getDealsWonTimeline = async (apiToken, since, interval) => {
+const getDealsWonTimeline = async (apiToken, since, interval = 'month') => {
   try {
     const date = dates.formatDateStartMonth(since);
     const path = `/v1/deals/timeline?start_date=${date}&limit=500&interval=${interval}&amount=1&field_key=won_time`;
