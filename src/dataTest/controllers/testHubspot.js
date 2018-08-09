@@ -4,15 +4,24 @@ const h7Users = require('../services/heptaward/user');
 const h7Controls = require('../services/controls/heptaward/echoes');
 const hubspotControls = require('../services/controls/hubspot');
 const srvDate = require('../Utils/dates');
+const hubspotUtils = require('../Utils/hubspot');
+
+const isTokenValid = (expirationDate) => Date.now() - 300000 < Number(expirationDate);
 
 const compareDeals = async (email, period) => {
   const user = await h7Users.getUser(email);
   const integration = await h7Users.getIntegration(user._id, 'Hubspot');
 
+  let integrationChecked = integration;
+  if (integration.refreshToken && !isTokenValid(integration.tokenExpiresAt)) {
+    integrationChecked = await hubspotUtils.refreshToken(integration);
+  }
+  console.log('integrationChecked :', integrationChecked);
+
   const since = srvDate.timestampStartPeriode(period);
 
-  const hubspotDealsOpened = await hubspot.getDealsOpened(integration.token, since);
-  const hubspotDealsWon = await hubspot.getDealsWon(integration.token, since);
+  const hubspotDealsOpened = await hubspot.getDealsOpened(integrationChecked.token, since);
+  const hubspotDealsWon = await hubspot.getDealsWon(integrationChecked.token, since);
 
   const heptawardWonDeals = await h7Echoes.getDealsInfos('deal-won', user.team_id, since);
   const heptawardOpenedDeals = await h7Echoes.getDealsInfos('deal-opened', user.team_id, since);
@@ -27,21 +36,41 @@ const compareDeals = async (email, period) => {
   const differenceWon = heptawardWonDeals.ndDeals - hubspotDealsWon.length;
 
   return {
-    differenceOpened,
-    differenceWon,
-    doublons: (dealsOpenedDoublons.length + dealsWonDoublons.length),
-    unRegistered: (unregisteredDealsOpened.length + unregisteredDealsWon.length),
+    differences: {
+      differenceOpened,
+      differenceWon,
+      doublons: (dealsOpenedDoublons.length + dealsWonDoublons.length),
+      unRegistered: (unregisteredDealsOpened.length + unregisteredDealsWon.length),
+    },
+    hubspotOpened: {
+      count: hubspotDealsOpened.length,
+      datas: hubspotDealsOpened,
+    },
+    hubspotWon: {
+      count: hubspotDealsWon.length,
+      datas: hubspotDealsWon,
+    },
+    heptawardOpenedDeals,
+    heptawardWonDeals,
+    unregisteredDealsWon,
+    unregisteredDealsOpened,
+    dealsOpenedDoublons,
+    dealsWonDoublons,
   };
 };
 
 const compareActivities = async (email, period) => {
   const user = await h7Users.getUser(email);
-  const hubspotToken = await h7Users.getIntegrationToken(user._id, 'Hubspot');
-  if (!hubspotToken) {
-    throw new Error('No hubspot token');
+  const integration = await h7Users.getIntegration(user._id, 'Hubspot');
+
+  let integrationChecked = integration;
+  if (integration.refreshToken && !isTokenValid(integration.tokenExpiresAt)) {
+    integrationChecked = await hubspotUtils.refreshToken(integration);
   }
+  console.log('integrationChecked :', integrationChecked);
+
   const since = srvDate.timestampStartPeriode(period);
-  const hubspotengagements = await hubspot.getEngagements(hubspotToken, since);
+  const hubspotengagements = await hubspot.getEngagements(integrationChecked.token, since);
   const hubspotMeetings = hubspotengagements.documents.filter(meeting => meeting.engagement.type === 'MEETING');
   const hubspotCalls = hubspotengagements.documents.filter(meeting => meeting.engagement.type === 'CALL');
 
@@ -56,12 +85,26 @@ const compareActivities = async (email, period) => {
   const callsDoublons = h7Controls.doublonsOnEchoes(heptawardCalls.activities);
 
   return {
-    meetings: (heptawardMeetings.ndActivities - hubspotengagements.nbMeetings),
-    meetingsDoublons: meetingsDoublons.length,
-    meetingsUnregistered: unregisteredMeetingsEngagement.length,
-    calls: (heptawardCalls.ndActivities - hubspotengagements.nbCalls),
-    callsDoublons: callsDoublons.length,
-    callsUnregistered: unregisteredCallsEngagement.length,
+    since: new Date(since),
+    differences: {
+      meetings: (heptawardMeetings.ndActivities - hubspotengagements.nbMeetings),
+      meetingsDoublons: meetingsDoublons.length,
+      meetingsUnregistered: unregisteredMeetingsEngagement.length,
+      calls: (heptawardCalls.ndActivities - hubspotengagements.nbCalls),
+      callsDoublons: callsDoublons.length,
+      callsUnregistered: unregisteredCallsEngagement.length,
+    },
+    nbSourceMeetings: hubspotengagements.nbMeetings,
+    nbH7Meetings: heptawardMeetings.ndActivities,
+    nbSourceCalls: hubspotengagements.nbCalls,
+    nbH7Calls: heptawardCalls.ndActivities,
+    hubspotengagements,
+    heptawardMeetings,
+    heptawardCalls,
+    unregisteredMeetingsEngagement,
+    unregisteredCallsEngagement,
+    meetingsDoublons,
+    callsDoublons,
   };
 };
 
