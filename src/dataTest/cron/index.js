@@ -15,17 +15,17 @@ const cronTask = async () => {
     logger.info(`START TEST AUTOMATION : ${moment().format('LLL')}`);
     setTimeout(async () => {
       for (const email of pipedriveEmails) {
-        console.log('email :', email);
-        const resultActivities = await testPipedriveCtrl.compareActivities(email);
-        const resultDeals = await testPipedriveCtrl.compareDeals(email);
+        const resultActivities = await testPipedriveCtrl.compareActivities(email, 'month');
+
+        const resultDeals = await testPipedriveCtrl.compareDeals(email, 'month');
         if (resultActivities) {
-          if (Object.values(resultActivities).filter(Number).length > 0) {
-            logger.error('pipedrive', 'activities', email, 'month');
+          if (Object.values(resultActivities.differences).filter(Number).length > 0) {
+            logger.error('pipedrive', 'activities', email, 'month', resultActivities.differences);
           }
         }
         if (resultDeals) {
-          if (Object.values(resultActivities).filter(Number).length > 0) {
-            logger.error('pipedrive', 'deals', email, 'month');
+          if (Object.values(resultDeals.differences).filter(Number).length > 0) {
+            logger.error('pipedrive', 'deals', email, 'month', resultDeals.differences);
           }
         }
       }
@@ -33,13 +33,13 @@ const cronTask = async () => {
         const resultActivities = await testHubspotCtrl.compareActivities(email, 'month');
         const resultDeals = await testHubspotCtrl.compareDeals(email, 'month');
         if (resultActivities) {
-          if (Object.values(resultActivities).filter(Number).length > 0) {
-            logger.error('hubspot', 'activities', email, 'month');
+          if (Object.values(resultActivities.differences).filter(Number).length > 0) {
+            logger.error('hubspot', 'activities', email, 'month', resultActivities.differences);
           }
         }
         if (resultDeals) {
-          if (Object.values(resultDeals).filter(Number).length > 0) {
-            logger.error('hubspot', 'deals', email, 'month');
+          if (Object.values(resultDeals.differences).filter(Number).length > 0) {
+            logger.error('hubspot', 'deals', email, 'month', resultDeals.differences);
           }
         }
       }
@@ -47,13 +47,13 @@ const cronTask = async () => {
         const resultActivities = await testSalesforceCtrl.compareActivities(email, 'month');
         const resultDeals = await testSalesforceCtrl.compareDeals(email, 'month');
         if (resultActivities) {
-          if (Object.values(resultActivities).filter(Number).length > 0) {
-            logger.error('salesforce', 'activities', email, 'month');
+          if (Object.values(resultActivities.differences).filter(Number).length > 0) {
+            logger.error('salesforce', 'activities', email, 'month', resultActivities.differences);
           }
         }
         if (resultDeals) {
-          if (Object.values(resultDeals).filter(Number).length > 0) {
-            logger.error('salesforce', 'deals', email, 'month');
+          if (Object.values(resultDeals.differences).filter(Number).length > 0) {
+            logger.error('salesforce', 'deals', email, 'month', resultDeals.differences);
           }
         }
       }
