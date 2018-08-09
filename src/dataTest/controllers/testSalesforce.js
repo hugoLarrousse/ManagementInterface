@@ -20,7 +20,7 @@ const {
 const isTokenValid = (expirationDate) => Date.now() - 300000 < Number(expirationDate);
 
 const refreshToken = (token) => {
-  const queryRefreshToken = `grant_type=${grantType.refreshToken}&refresh_token=${token}&client_secret=${salesforceClientSecret}&client_id=${salesforceClientId}`; // eslint-disable-line
+  const queryRefreshToken = `grant_type=refresh_token&refresh_token=${token}&client_secret=${salesforceClientSecret}&client_id=${salesforceClientId}`; // eslint-disable-line
   return request(salesforceUrlLogin, null, queryRefreshToken, 'POST', null, null, true);
 };
 
