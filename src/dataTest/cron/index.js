@@ -13,6 +13,7 @@ const cronTask = async () => {
     logger.info(`START TEST AUTOMATION : ${moment().format('LLL')}`);
     setTimeout(async () => {
       for (const email of pipedriveEmails) {
+        console.log('email :', email);
         const resultActivities = await testPipedriveCtrl.compareActivities(email);
         const resultDeals = await testPipedriveCtrl.compareDeals(email);
         if (resultActivities) {
@@ -51,7 +52,8 @@ const cronTask = async () => {
 };
 
 exports.cron = () => {
-  cron.schedule('0 3 * * *', async () => {
+  cron.schedule('*/3 * * * *', async () => {
+  // cron.schedule('0 3 * * *', async () => {
     await cronTask();
   });
 };
