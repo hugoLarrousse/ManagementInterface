@@ -1,11 +1,13 @@
 const cron = require('node-cron');
 const testPipedriveCtrl = require('../controllers/testPipedrive');
 const testHubspotCtrl = require('../controllers/testHubspot');
+const testSalesforceCtrl = require('../controllers/testSalesforce');
 const logger = require('../Utils/loggerSlack');
 const moment = require('moment');
 
 const pipedriveEmails = ['axel.manoukian@moovone.fr'];
 const hubspotEmails = ['thomas@paygreen.fr', 'tony@insurge.digital', 'hello@ecommerce-nation.fr'];
+const salesforceEmails = ['samy@heptaward.com'];
 
 
 const cronTask = async () => {
@@ -38,6 +40,20 @@ const cronTask = async () => {
         if (resultDeals) {
           if (Object.values(resultDeals).filter(Number).length > 0) {
             logger.error('hubspot', 'deals', email, 'month');
+          }
+        }
+      }
+      for (const email of salesforceEmails) {
+        const resultActivities = await testSalesforceCtrl.compareActivities(email, 'month');
+        const resultDeals = await testSalesforceCtrl.compareDeals(email, 'month');
+        if (resultActivities) {
+          if (Object.values(resultActivities).filter(Number).length > 0) {
+            logger.error('salesforce', 'activities', email, 'month');
+          }
+        }
+        if (resultDeals) {
+          if (Object.values(resultDeals).filter(Number).length > 0) {
+            logger.error('salesforce', 'deals', email, 'month');
           }
         }
       }
