@@ -52,7 +52,6 @@ const request = async (info, authRequest = false) => {
 
   // Fonction de rafraichissement du token du User
 const refreshToken = async (integration) => {
-  console.log('integrations :', integration);
   const infos = {
     path: '/oauth/v1/token',
     method: 'POST',

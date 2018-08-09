@@ -19,8 +19,6 @@ const get = async (path, apiToken, oAuth) => {
       json: true,
     };
 
-    console.log('options :', options);
-
     if (oAuth) {
       Object.assign(options, {
         headers: {

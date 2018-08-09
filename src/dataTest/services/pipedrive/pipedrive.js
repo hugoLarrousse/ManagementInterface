@@ -2,14 +2,12 @@ const { get } = require('../../Utils/pipedrive');
 const dates = require('../../Utils/dates');
 
 const getDealsOpenedTimeline = async (apiToken, since, interval = 'month', isOauth) => {
-  console.log('apiToken :', apiToken);
   try {
     const date = dates.formatDateStartMonth(since);
 
     const path = `${isOauth ? '' : '/v1'}/deals/timeline?start_date=${date}&limit=500&interval=${interval}&amount=1&field_key=add_time`;
 
     const result = await get(path, apiToken, isOauth);
-    console.log('result :', result);
     return result.data;
   } catch (e) {
     throw new Error(`${__filename}

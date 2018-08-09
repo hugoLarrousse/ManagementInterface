@@ -47,6 +47,7 @@ const getAddActivitiesInfos = async (type, teamId, since) => {
       },
       type,
     };
+
     const result = await mongo.find('heptaward', 'echoes', select);
 
     stats.ndActivities = result.length;

@@ -16,7 +16,6 @@ const compareDeals = async (email, period) => {
   if (integration.refreshToken && !isTokenValid(integration.tokenExpiresAt)) {
     integrationChecked = await hubspotUtils.refreshToken(integration);
   }
-  console.log('integrationChecked :', integrationChecked);
 
   const since = srvDate.timestampStartPeriode(period);
 
@@ -67,7 +66,6 @@ const compareActivities = async (email, period) => {
   if (integration.refreshToken && !isTokenValid(integration.tokenExpiresAt)) {
     integrationChecked = await hubspotUtils.refreshToken(integration);
   }
-  console.log('integrationChecked :', integrationChecked);
 
   const since = srvDate.timestampStartPeriode(period);
   const hubspotengagements = await hubspot.getEngagements(integrationChecked.token, since);

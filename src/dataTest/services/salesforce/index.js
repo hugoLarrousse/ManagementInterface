@@ -32,7 +32,6 @@ const getDealsOpened = async (token, baseUrl, period) => {
         results = await getMoreData(baseUrl, token, urlPath);
       }
       if (results && results.records && results.records.length > 0) {
-        console.log('data is here :', results.records.length);
         urlPath = results.nextRecordsUrl;
         arrayData.push(...results.records);
       }
