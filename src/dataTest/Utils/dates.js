@@ -1,4 +1,3 @@
-//
 const formatDateStartMonth = (timestamp = Date.now()) => {
   const date = new Date(timestamp);
   let month = date.getMonth() + 1;
@@ -39,7 +38,7 @@ const timestampStartPeriode = (period = 'day', date = new Date()) => {
     case 'day':
       return date.setHours(0, 0, 0, 0);
     case 'week':
-      return new Date(date.setUTCDate((date.getUTCDate() - date.getUTCDay()) + 1)).setHours(0, 0, 0, 0);
+      return new Date(date.setUTCDate(date.getUTCDate() - (date.getUTCDay() + 1))).setHours(0, 0, 0, 0);
     case 'month':
       return new Date(date.getFullYear(), date.getMonth(), 1).setHours(0, 0, 0, 0);
     case 'quarter':
@@ -63,12 +62,14 @@ const timestampStartPeriode = (period = 'day', date = new Date()) => {
   }
 };
 
-const timestampEndPeriode = (period, date = new Date()) => {
-  switch (period) {
+const timestampEndPeriode = (periode, date = new Date()) => {
+  let diffDay;
+  switch (periode) {
     case 'day':
       return date.setHours(23, 59, 59, 999);
     case 'week':
-      return new Date(date.setDate(date.getUTCDate() + (7 - date.getDay()))).setHours(23, 59, 59, 999);
+      diffDay = 7 - date.getDay();
+      return new Date(date.setDate(date.getUTCDate() + diffDay)).setHours(23, 59, 59, 999);
     case 'month':
       return new Date(date.getFullYear(), date.getMonth() + 1, 0).setHours(23, 59, 59, 999);
     case 'quarter':
@@ -80,16 +81,13 @@ const timestampEndPeriode = (period, date = new Date()) => {
         return new Date(date.getFullYear(), 9, 0).setHours(23, 59, 59, 999);
       }
       return new Date(date.getFullYear(), 12, 0).setHours(23, 59, 59, 999);
-
     case 'semester':
       if (date.getMonth() < 6) {
         return new Date(date.getFullYear(), 6, 0).setHours(23, 59, 59, 999);
       }
       return new Date(date.getFullYear(), 12, 0).setHours(23, 59, 59, 999);
-
     case 'year':
       return new Date(date.getFullYear(), 12, 0).setHours(23, 59, 59, 999);
-
     default:
       return date.setHours(23, 59, 59, 999);
   }

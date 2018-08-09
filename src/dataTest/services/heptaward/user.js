@@ -1,5 +1,4 @@
 const mongo = require('../../../db/mongo');
-const hubspot = require('../../Utils/hubspot');
 const { ObjectID } = require('mongodb');
 
 const getUser = async (email) => {
@@ -9,79 +8,14 @@ const getUser = async (email) => {
     };
 
     const result = await mongo.findOne('heptaward', 'users', select);
+    if (!result) {
+      throw new Error('no user found');
+    }
 
     return result;
   } catch (e) {
     throw new Error(`${__filename}
       ${getUser.name}
-      ${e.message}`);
-  }
-};
-
-const getPipedriveToken = async (user) => {
-  try {
-    let token = null;
-
-    user.integrations.forEach((integration) => {
-      if (integration.name === 'Pipedrive') {
-        token = integration.informations.pipedrive_token;
-      }
-    });
-
-    return token;
-  } catch (e) {
-    throw new Error(`${__filename}
-      ${getPipedriveToken.name}
-      ${e.message}`);
-  }
-};
-
-const getHubspotToken = async (user) => {
-  try {
-    let token = null;
-
-    user.integrations.forEach(async (integration) => {
-      if (integration.name === 'Hubspot') {
-        if (integration.informations.hubspot_token_expires_at < Date.now()) {
-          token = await hubspot.refreshToken(integration.informations.hubspot_refresh_token);
-        } else {
-          token = integration.informations.hubspot_access_token;
-        }
-      }
-    });
-
-    return token;
-  } catch (e) {
-    throw new Error(`${__filename}
-      ${getHubspotToken.name}
-      ${e.message}`);
-  }
-};
-
-const getIntegrationToken = async (userId, name) => {
-  try {
-    let tokenFound = null;
-    const select = {
-      userId: ObjectID(userId),
-      name,
-    };
-
-    const result = await mongo.findOne('heptaward', 'integrations', select);
-
-    if (result.tokenExpiresAt) {
-      if (result.tokenExpiresAt < Date.now()) {
-        tokenFound = await hubspot.refreshToken(result.refreshToken);
-      } else {
-        tokenFound = result.token;
-      }
-    } else {
-      tokenFound = result.token;
-    }
-
-    return tokenFound;
-  } catch (e) {
-    throw new Error(`${__filename}
-      ${getIntegrationToken.name}
       ${e.message}`);
   }
 };
@@ -105,7 +39,6 @@ const getIntegrationTeam = async (userId, name) => {
 
 const getIntegration = async (userId, name) => {
   try {
-    let tokenFound = null;
     const select = {
       userId: ObjectID(userId),
       name,
@@ -113,18 +46,12 @@ const getIntegration = async (userId, name) => {
 
     const result = await mongo.findOne('heptaward', 'integrations', select);
 
-    if (result.tokenExpiresAt) {
-      if (result.tokenExpiresAt < Date.now()) {
-        tokenFound = await hubspot.refreshToken(result.refreshToken);
-      } else {
-        tokenFound = result.token;
-      }
-    } else {
-      tokenFound = result.token;
+    if (!result) {
+      throw new Error('No integration found');
     }
 
     return {
-      token: tokenFound,
+      ...result,
       team: result.integrationTeam,
     };
   } catch (e) {
@@ -135,8 +62,5 @@ const getIntegration = async (userId, name) => {
 };
 
 exports.getUser = getUser;
-exports.getPipedriveToken = getPipedriveToken;
-exports.getHubspotToken = getHubspotToken;
-exports.getIntegrationToken = getIntegrationToken;
 exports.getIntegrationTeam = getIntegrationTeam;
 exports.getIntegration = getIntegration;
