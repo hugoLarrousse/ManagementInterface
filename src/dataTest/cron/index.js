@@ -4,7 +4,7 @@ const testHubspotCtrl = require('../controllers/testHubspot');
 const logger = require('../Utils/loggerSlack');
 const moment = require('moment');
 
-const pipedriveEMails = ['axel.manoukian@moovone.fr'];
+const pipedriveEmails = ['axel.manoukian@moovone.fr'];
 const hubspotEmails = ['thomas@paygreen.fr', 'tony@insurge.digital', 'hello@ecommerce-nation.fr'];
 
 
@@ -12,7 +12,7 @@ const cronTask = async () => {
   try {
     logger.info(`START TEST AUTOMATION : ${moment().format('LLL')}`);
     setTimeout(async () => {
-      for (const email of pipedriveEMails) {
+      for (const email of pipedriveEmails) {
         const resultActivities = await testPipedriveCtrl.compareActivities(email);
         const resultDeals = await testPipedriveCtrl.compareDeals(email);
         if (resultActivities) {
