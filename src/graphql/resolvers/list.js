@@ -51,6 +51,7 @@ const formatEndDate = (endDate) => `${moment(endDate).format('L')} ${moment(endD
 exports.info = async () => {
   const allOrga = await mongo.find(databaseName, orgaCollection);
   const all = [];
+
   for (const orga of allOrga) {
     const users = mongo.find(databaseName, userCollection, { orga_id: ObjectID(orga._id) });
     const team = mongo.findOne(databaseName, teamCollection, { _id: ObjectID(orga.team_h7_id[0]) });
@@ -75,8 +76,7 @@ exports.info = async () => {
     });
     const integration = oldestUser.integrations.length > 0 ? findIntegration(oldestUser.integrations) : '';
     const youngestUser = result.users.find(user3 =>
-      user3.last_connected === Math.max(...result.users.map(user4 => user4.last_connected || 0)));
-
+      user3.last_connected === Math.max(...result.users.map(user4 => user4.last_connected || 0))) || 0;
     all.push({
       orgaId: orga._id,
       companyName: result.team.name,

@@ -21,7 +21,8 @@ const queryType = new GraphQLObjectType({
     funnelInfo: funnel.count,
     listInfo: list.info,
     userListInfo: userList.info,
-    dataTestManual: dataTest.manual,
+    checkAllData: dataTest.allData,
+    checkData: dataTest.data,
   },
 });
 
