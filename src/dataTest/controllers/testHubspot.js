@@ -92,10 +92,12 @@ const compareActivities = async (email, period) => {
       callsDoublons: callsDoublons.length,
       callsUnregistered: unregisteredCallsEngagement.length,
     },
-    nbSourceMeetings: hubspotengagements.nbMeetings,
-    nbH7Meetings: heptawardMeetings.ndActivities,
-    nbSourceCalls: hubspotengagements.nbCalls,
-    nbH7Calls: heptawardCalls.ndActivities,
+    hubspotMeetings: {
+      ndActivities: hubspotengagements.nbMeetings,
+    },
+    hubspotCalls: {
+      ndActivities: hubspotengagements.nbCalls,
+    },
     hubspotengagements,
     heptawardMeetings,
     heptawardCalls,
