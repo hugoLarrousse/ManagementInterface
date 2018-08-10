@@ -44,6 +44,7 @@ const getIntegration = async (userId, name) => {
       name,
     };
 
+
     const result = await mongo.findOne('heptaward', 'integrations', select);
 
     if (!result) {
