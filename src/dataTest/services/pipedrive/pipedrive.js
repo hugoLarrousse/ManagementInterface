@@ -37,9 +37,9 @@ const getAddActivities = async (type, apiToken, since, isOauth) => {
     const activities = [];
 
     let path = `${isOauth ? '' : '/v1'}/activities?user_id=0&limit=500&type=${type}&start=0&sort=add_time%20DESC`;
-
     do {
       const result = await get(path, apiToken, isOauth);
+
       hasMore = result.additional_data.pagination.more_items_in_collection;
       result.data.forEach(activity => { //eslint-disable-line
         const activityAddTime = new Date(activity.add_time);

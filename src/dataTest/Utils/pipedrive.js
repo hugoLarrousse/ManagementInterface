@@ -1,17 +1,13 @@
 const requestretry = require('requestretry');
+const config = require('config');
 
-const urlPipedrive = process.env.pipedriveUrl;
-const urlPipedriveOauth = process.env.pipedriveUrlOauth;
-
-// const apiToken = '8a248db22705fa85b9f25dbe82572d06c2b16aa6'; // Token prod pipedrive samy
-// const apiToken = '5e271bab709f9e74189421d4cc49a60110a312e1'; // Token prod pipedrive Baptiste
-// const apiToken = 'a86eb36af4331b509045bd3ffe209b2c699e439d'; // Token Test Pipedrive
+const pipedrive = config.get('pipedrive');
 
 const get = async (path, apiToken, oAuth) => {
   try {
     const urlApiToken = oAuth ? '' : `&api_token=${apiToken}`;
     const options = {
-      uri: `${oAuth ? urlPipedriveOauth : urlPipedrive}${path}${urlApiToken}`,
+      uri: `${oAuth ? pipedrive.apiUrlProxy : pipedrive.apiUrl}${path}${urlApiToken}`,
       method: 'GET',
       headers: {
         'Content-Type': 'application/json;charset=utf-8',
@@ -27,6 +23,7 @@ const get = async (path, apiToken, oAuth) => {
         },
       });
     }
+
 
     const { error, body } = await requestretry(options);
 

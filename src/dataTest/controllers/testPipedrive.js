@@ -51,13 +51,13 @@ const compareDeals = async (email, period) => {
 
   let integrationChecked = integration;
   if (integration.refreshToken) {
-    integrationChecked = await refreshToken();
+    integrationChecked = await refreshToken(integration);
   }
 
   const since = srvDate.timestampStartPeriode(period);
 
-  const pipedriveOpenedDeals = await pipedrive.getDealsOpenedTimeline(integrationChecked.token, since, period);
-  const pipedriveWonDeals = await pipedrive.getDealsWonTimeline(integrationChecked.token, since, period);
+  const pipedriveOpenedDeals = await pipedrive.getDealsOpenedTimeline(integrationChecked.token, since, period, Boolean(integration.refreshToken));
+  const pipedriveWonDeals = await pipedrive.getDealsWonTimeline(integrationChecked.token, since, period, Boolean(integration.refreshToken));
   const heptawardOpenedDeals = await h7Echoes.getDealsInfos('deal-opened', user.team_id, since);
   const heptawardWonDeals = await h7Echoes.getDealsInfos('deal-won', user.team_id, since);
 
@@ -101,14 +101,13 @@ const compareActivities = async (email, period) => {
 
   let integrationChecked = integration;
   if (integration.refreshToken) {
-    integrationChecked = await refreshToken();
+    integrationChecked = await refreshToken(integration);
   }
 
   const since = srvDate.timestampStartPeriode(period);
 
   const pipedriveMeetings = await pipedrive.getAddActivities('meeting', integrationChecked.token, since, Boolean(integration.refreshToken));
   const pipedriveCalls = await pipedrive.getAddActivities('call', integrationChecked.token, since, Boolean(integration.refreshToken));
-
   const heptawardMeetings = await h7Echoes.getAddActivitiesInfos('meeting', user.team_id, since);
   const heptawardCalls = await h7Echoes.getAddActivitiesInfos('call', user.team_id, since);
 
