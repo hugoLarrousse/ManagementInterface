@@ -1,13 +1,12 @@
-const mongo = require('../../Utils/mongo');
+const mongo = require('../../../db/mongo');
 
-const getOpenedDeals = async (teamId, since, stages) => {
+const getOpenedDeals = async (teamId, since, /* stages */) => {
   try {
-
     const stats = {
       ndDeals: 0,
       totalValueDeals: 0,
       deals: [],
-    }
+    };
 
     const select = {
       portalId: teamId,
@@ -39,12 +38,11 @@ const getOpenedDeals = async (teamId, since, stages) => {
 
 const getWonDeals = async (teamId, since, stages) => {
   try {
-
     const stats = {
       ndDeals: 0,
       totalValueDeals: 0,
       deals: [],
-    }
+    };
 
     const select = {
       portalId: teamId,
@@ -54,8 +52,8 @@ const getWonDeals = async (teamId, since, stages) => {
       },
       'properties.dealstage.value': {
         $in: stages.won,
-      }
-    }
+      },
+    };
 
     const result = await mongo.find('hubspot', 'deals', select);
 
@@ -65,7 +63,7 @@ const getWonDeals = async (teamId, since, stages) => {
         if (deal.properties.amout) {
           stats.totalValueDeals += Number(deal.properties.amout.value);
         }
-      };
+      }
     });
 
     stats.ndDeals = stats.deals.length;
@@ -80,23 +78,23 @@ const getWonDeals = async (teamId, since, stages) => {
 
 const getEngagementsDone = async (teamId, since) => {
   try {
-    let documents = [];
+    const documents = [];
     let nbMeetings = 0;
     let nbCalls = 0;
 
-    let stats = {
-      ndDeals: 0,
-      totalValueDeals: 0,
-      deals: [],
-    }
+    // const stats = {
+    //   ndDeals: 0,
+    //   totalValueDeals: 0,
+    //   deals: [],
+    // };
 
     const select = {
-      "engagement.portalId": teamId,
-      "engagement.active": true,
-      "engagement.timestamp": {
-        $gte: since
+      'engagement.portalId': teamId,
+      'engagement.active': true,
+      'engagement.timestamp': {
+        $gte: since,
       },
-    }
+    };
 
     const result = await mongo.find('hubspot', 'engagements', select);
 
@@ -109,7 +107,7 @@ const getEngagementsDone = async (teamId, since) => {
           nbCalls += 1;
         }
         documents.push(element);
-      };
+      }
     });
 
     return {
@@ -126,17 +124,17 @@ const getEngagementsDone = async (teamId, since) => {
 
 const getEngagementsAdd = async (teamId, since) => {
   try {
-    let documents = [];
+    const documents = [];
     let nbMeetings = 0;
     let nbCalls = 0;
 
     const select = {
-      "engagement.portalId": teamId,
-      "engagement.active": true,
-      "engagement.createdAt": {
+      'engagement.portalId': teamId,
+      'engagement.active': true,
+      'engagement.createdAt': {
         $gte: since,
       },
-    }
+    };
 
     const result = await mongo.find('hubspot', 'engagements', select);
     result.forEach(element => {
@@ -148,7 +146,7 @@ const getEngagementsAdd = async (teamId, since) => {
           nbCalls += 1;
         }
         documents.push(element);
-      };
+      }
     });
 
     return {
