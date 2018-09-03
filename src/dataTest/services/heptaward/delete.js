@@ -1,4 +1,4 @@
-const mongo = require('../../Utils/mongo');
+const mongo = require('../../../db/mongo');
 const { ObjectID } = require('mongodb');
 
 const deleteMany = async (elements, database, collection) => {

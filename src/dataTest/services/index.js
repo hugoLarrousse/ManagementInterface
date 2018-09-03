@@ -6,7 +6,9 @@ const logger = require('../Utils/loggerSlack');
 exports.checkPipedriveByEmail = async (emails, forJames) => {
   if (forJames) {
     const resultActivities = await testPipedriveCtrl.compareActivities(emails[0], 'month');
+
     const resultDeals = await testPipedriveCtrl.compareDeals(emails[0], 'month');
+
     return { resultActivities, resultDeals };
   }
   for (const email of emails) {
