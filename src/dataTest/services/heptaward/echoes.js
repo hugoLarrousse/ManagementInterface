@@ -12,7 +12,7 @@ const getDealsInfos = async (type, teamId, since) => {
     const select = {
       team_h7_id: ObjectID(teamId),
       date_add_timestamp: {
-        $gte: Number(since),
+        $gte: Number(since) + 7200000,
       },
       type,
     };
@@ -43,7 +43,8 @@ const getAddActivitiesInfos = async (type, teamId, since) => {
     const select = {
       team_h7_id: ObjectID(teamId),
       date_add_timestamp: {
-        $gte: Number(since),
+        $gte: Number(since) + 7200000,
+        $lte: 1538431080000,
       },
       type,
     };
