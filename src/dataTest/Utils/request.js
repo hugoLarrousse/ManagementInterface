@@ -17,7 +17,7 @@ const checkBody = (body) => {
 const defaultRetryStrategy = (err, response) =>
   (response && response.body && (response.statusCode < 200 || response.statusCode > 299));
 
-module.exports = async (baseUrl, path, query, method, headers, data, retry) => {
+module.exports = async (baseUrl, path, query, method, headers, data, retry, refreshToken) => {
   const options = {
     method,
     url: `${baseUrl}${path ? `/${path}` : ''}${query ? `?${query}` : ''}`,
@@ -25,9 +25,11 @@ module.exports = async (baseUrl, path, query, method, headers, data, retry) => {
       'Content-Type': 'application/json',
       ...headers,
     },
-    body: data || {},
     json: true,
   };
+
+  Object.assign(options, refreshToken ? { form: data || {} } : { body: data || {} });
+
 
   if (retry) {
     Object.assign(options, { maxAttempts: MAX_ATTEMPTS, retryDelay: RETRY_DELAY, retryStrategy: defaultRetryStrategy });
