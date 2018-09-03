@@ -19,14 +19,19 @@ const refreshToken = async (integrationInfo) => {
   if (!integrationInfo.tokenExpiresAt) {
     throw new Error('no integrationInfo.tokenExpiresAt ');
   }
-  if (integrationInfo.tokenExpiresAt < Date.now() - 360000) {
+
+  if (integrationInfo.tokenExpiresAt < Date.now() + 360000) {
     const data = {
       grant_type: 'refresh_token',
       refresh_token: integrationInfo.refreshToken,
       client_id: process.env.pipedriveClientId,
       client_secret: process.env.pipedriveClientSecret,
     };
-    const refreshedTokenInfo = await request(pipedriveLoginUrl, 'oauth/token', null, 'POST', null, data);
+    const refreshedTokenInfo = await request(
+      pipedriveLoginUrl, 'oauth/token', null, 'POST',
+      { 'Content-Type': 'application/x-www-form-urlencoded' }, data, null, true
+    );
+
     if (refreshedTokenInfo && refreshedTokenInfo.access_token) {
       const toUpdate = {
         token: refreshedTokenInfo.access_token,
@@ -97,9 +102,10 @@ const compareDeals = async (email, period) => {
 
 const compareActivities = async (email, period) => {
   const user = await h7Users.getUser(email);
-  const integration = await h7Users.getIntegration(user._id, 'Pipedrive');
 
+  const integration = await h7Users.getIntegration(user._id, 'Pipedrive');
   let integrationChecked = integration;
+
   if (integration.refreshToken) {
     integrationChecked = await refreshToken(integration);
   }
@@ -107,6 +113,7 @@ const compareActivities = async (email, period) => {
   const since = srvDate.timestampStartPeriode(period);
 
   const pipedriveMeetings = await pipedrive.getAddActivities('meeting', integrationChecked.token, since, Boolean(integration.refreshToken));
+
   const pipedriveCalls = await pipedrive.getAddActivities('call', integrationChecked.token, since, Boolean(integration.refreshToken));
   const heptawardMeetings = await h7Echoes.getAddActivitiesInfos('meeting', user.team_id, since);
   const heptawardCalls = await h7Echoes.getAddActivitiesInfos('call', user.team_id, since);
