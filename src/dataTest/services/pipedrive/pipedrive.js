@@ -6,7 +6,6 @@ const getDealsOpenedTimeline = async (apiToken, since, interval = 'month', isOau
     const date = dates.formatDateStartMonth(since);
 
     const path = `${isOauth ? '' : '/v1'}/deals/timeline?start_date=${date}&limit=500&interval=${interval}&amount=1&field_key=add_time`;
-
     const result = await get(path, apiToken, isOauth);
     return result.data;
   } catch (e) {
@@ -32,18 +31,20 @@ const getDealsWonTimeline = async (apiToken, since, interval = 'month', isOauth)
 
 const getAddActivities = async (type, apiToken, since, isOauth) => {
   try {
-    const compareStartDate = new Date(since);
     let hasMore = false;
     const activities = [];
 
     let path = `${isOauth ? '' : '/v1'}/activities?user_id=0&limit=500&type=${type}&start=0&sort=add_time%20DESC`;
     do {
       const result = await get(path, apiToken, isOauth);
-
       hasMore = result.additional_data.pagination.more_items_in_collection;
+      if (!result.data) {
+        return [];
+      }
       result.data.forEach(activity => { //eslint-disable-line
-        const activityAddTime = new Date(activity.add_time);
-        if (activityAddTime > compareStartDate) {
+
+        const activityAddTime = new Date(activity.add_time).getTime();
+        if (activityAddTime > since) {
           activities.push(activity);
         } else {
           hasMore = false;
@@ -62,7 +63,6 @@ const getAddActivities = async (type, apiToken, since, isOauth) => {
 
 const getDoneActivities = async (type, apiToken, since, isOauth) => {
   try {
-    const compareStartDate = new Date(since);
     let hasMore = false;
     const activities = [];
 
@@ -72,8 +72,8 @@ const getDoneActivities = async (type, apiToken, since, isOauth) => {
       const result = await get(path, apiToken, isOauth);
       hasMore = result.additional_data.pagination.more_items_in_collection;
       result.data.forEach(activity => { //eslint-disable-line
-        const activityDueTime = new Date(activity.due_date);
-        if (activityDueTime > compareStartDate) {
+        const activityDueTime = new Date(activity.due_date).getTime();
+        if (activityDueTime > since) {
           activities.push(activity);
         } else {
           hasMore = false;

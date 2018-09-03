@@ -37,6 +37,7 @@ const crmFunction = {
 exports.data = async ({ email, crmName }) => {
   const crmNameLOwerCase = crmName.toLowerCase();
   const { resultActivities, resultDeals } = await crmFunction[crmNameLOwerCase]([email], true);
+
   return {
     meetings: {
       crm: resultActivities[`${crmNameLOwerCase}Meetings`].ndActivities,

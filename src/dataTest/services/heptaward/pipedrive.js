@@ -1,4 +1,4 @@
-const mongo = require('../../Utils/mongo');
+const mongo = require('../../../db/mongo');
 const date = require('../../Utils/dates');
 
 const getOpenedDeals = async (teamId, since) => {
@@ -9,7 +9,7 @@ const getOpenedDeals = async (teamId, since) => {
       ndDeals: 0,
       totalValueDeals: 0,
       deals: [],
-    }
+    };
 
     const select = {
       team: teamId,
