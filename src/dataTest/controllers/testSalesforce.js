@@ -55,8 +55,8 @@ const compareDeals = async (email, period) => {
 
   const salesforceWonDeals = await salesforce.getDealsWon(integrationChecked.token, integrationChecked.instanceUrl, period);
 
-  const heptawardOpenedDeals = await h7Echoes.getDealsInfos('deal-opened', user.team_id, since);
-  const heptawardWonDeals = await h7Echoes.getDealsInfos('deal-won', user.team_id, since);
+  const heptawardOpenedDeals = await h7Echoes.getDealsInfos('deal-opened', user.team_id, since, integrationChecked.integrationTeam);
+  const heptawardWonDeals = await h7Echoes.getDealsInfos('deal-won', user.team_id, since, integrationChecked.integrationTeam);
 
 
   const unRegisteredOpenedDeals = PidControls.notRegistered(salesforceOpenedDeals, heptawardOpenedDeals.deals);

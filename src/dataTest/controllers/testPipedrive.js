@@ -63,8 +63,8 @@ const compareDeals = async (email, period) => {
 
   const pipedriveOpenedDeals = await pipedrive.getDealsOpenedTimeline(integrationChecked.token, since, period, Boolean(integration.refreshToken));
   const pipedriveWonDeals = await pipedrive.getDealsWonTimeline(integrationChecked.token, since, period, Boolean(integration.refreshToken));
-  const heptawardOpenedDeals = await h7Echoes.getDealsInfos('deal-opened', user.team_id, since);
-  const heptawardWonDeals = await h7Echoes.getDealsInfos('deal-won', user.team_id, since);
+  const heptawardOpenedDeals = await h7Echoes.getDealsInfos('deal-opened', user.team_id, since, integrationChecked.integrationTeam);
+  const heptawardWonDeals = await h7Echoes.getDealsInfos('deal-won', user.team_id, since, integrationChecked.integrationTeam);
 
   const unRegisteredOpenedDeals = PidControls.notRegistered(pipedriveOpenedDeals[0].deals, heptawardOpenedDeals.deals);
   const unRegisteredWonDeals = PidControls.notRegistered(pipedriveWonDeals[0].deals, heptawardWonDeals.deals);

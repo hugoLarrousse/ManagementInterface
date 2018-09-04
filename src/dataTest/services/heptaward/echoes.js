@@ -1,7 +1,7 @@
 const mongo = require('../../../db/mongo');
 const { ObjectID } = require('mongodb');
 
-const getDealsInfos = async (type, teamId, since) => {
+const getDealsInfos = async (type, teamH7Id, since, integrationTeam) => {
   try {
     const stats = {
       ndDeals: 0,
@@ -10,7 +10,8 @@ const getDealsInfos = async (type, teamId, since) => {
     };
 
     const select = {
-      team_h7_id: ObjectID(teamId),
+      team_h7_id: ObjectID(teamH7Id),
+      'source.team_id': Number(integrationTeam),
       date_add_timestamp: {
         $gte: Number(since) + 7200000,
       },

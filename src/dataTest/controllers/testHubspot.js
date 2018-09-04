@@ -22,8 +22,8 @@ const compareDeals = async (email, period) => {
   const hubspotDealsOpened = await hubspot.getDealsOpened(integrationChecked.token, since);
   const hubspotDealsWon = await hubspot.getDealsWon(integrationChecked.token, since);
 
-  const heptawardWonDeals = await h7Echoes.getDealsInfos('deal-won', user.team_id, since);
-  const heptawardOpenedDeals = await h7Echoes.getDealsInfos('deal-opened', user.team_id, since);
+  const heptawardWonDeals = await h7Echoes.getDealsInfos('deal-won', user.team_id, since, integrationChecked.integrationTeam);
+  const heptawardOpenedDeals = await h7Echoes.getDealsInfos('deal-opened', user.team_id, since, integrationChecked.integrationTeam);
 
   const dealsWonDoublons = await h7Controls.doublonsOnEchoes(heptawardWonDeals.deals);
   const dealsOpenedDoublons = await h7Controls.doublonsOnEchoes(heptawardOpenedDeals.deals);
