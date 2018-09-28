@@ -1,8 +1,8 @@
 {
   "emails": {
     "pipedrive": ["axel.manoukian@moovone.fr"],
-    "salesforce": ["samy@heptaward.com"],
-    "hubspot":["thomas@paygreen.fr", "tony@insurge.digital", "hello@ecommerce-nation.fr"]
+    "salesforce": ["gguilbert@marche-prive.net"],
+    "hubspot":["thomas@paygreen.fr", "nicolas@ecommerce-nation.fr"]
   },
   "pipedrive": {
     "apiUrl": "https://api.pipedrive.com",
