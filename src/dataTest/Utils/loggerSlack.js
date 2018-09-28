@@ -27,12 +27,69 @@ if (env === 'test' || loggerEnabledStatus === 'none') {
   customLogger.remove(winston.transports.Console);
 }
 
-const createLabelError = (crm, type, email, period) => {
+const manageData = (data, crm, type) => {
+  if (crm === 'pipedrive') {
+    if (type === 'activities') {
+      return `{
+        meetings: ${data.meetings}
+        meetingsDoublons: ${data.meetingsDoublons}
+        meetingsUnregistered: ${data.meetingsUnregistered}
+        calls: ${data.calls}
+        callsDoublons: ${data.callsDoublons}
+        callsUnregistered: ${data.callsUnregistered}
+      }`;
+    }
+    return `{
+      differenceOpened: ${data.differenceOpened}
+      differenceWon: ${data.differenceWon}
+      doublons: ${data.doublons}
+      unRegistered:: ${data.unRegistered}
+    }`;
+  } else if (crm === 'hubspot') {
+    if (type === 'activities') {
+      return `{
+        meetings: ${data.meetings}
+        meetingsDoublons:: ${data.meetingsDoublons}
+        meetingsUnregistered: ${data.meetingsUnregistered}
+        calls: ${data.calls}
+        callsDoublons: ${data.callsDoublons}
+        callsUnregistered: ${data.callsUnregistered}
+      }`;
+    }
+    return `{
+      differenceOpened: ${data.differenceOpened}
+      differenceWon: ${data.differenceWon}
+      doublons: ${data.doublons}
+      unRegistered:: ${data.unRegistered}
+    }`;
+  } else if (crm === 'salesforce') {
+    if (type === 'activities') {
+      return `{
+        meetings: ${data.meetings}
+        meetingsDoublons:: ${data.meetingsDoublons}
+        meetingsUnregistered: ${data.meetingsUnregistered}
+        calls: ${data.calls}
+        callsDoublons: ${data.callsDoublons}
+        callsUnregistered: ${data.callsUnregistered}
+      }`;
+    }
+    return `{
+      differenceOpened: ${data.differenceOpened}
+      differenceWon: ${data.differenceWon}
+      doublons: ${data.doublons}
+      unRegistered:: ${data.unRegistered}
+    }`;
+  }
+  return null;
+};
+
+const createLabelError = (crm, type, email, period, data) => {
   return `
       *email: ${email}*
     crm: ${crm}
     type: ${type}
     period: ${period}
+    data: ${manageData(data, crm, type)}
 `;
 };
 
@@ -40,8 +97,8 @@ const createLabelInfo = (message) => {
   return `*${message}*`;
 };
 
-const error = async (crm, type, email, period) => {
-  customLogger.error(createLabelError(crm, type, email, period));
+const error = async (crm, type, email, period, data) => {
+  customLogger.error(createLabelError(crm, type, email, period, data));
 };
 
 const info = async (message) => {
