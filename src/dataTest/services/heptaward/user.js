@@ -1,5 +1,6 @@
 const mongo = require('../../../db/mongo');
 const { ObjectID } = require('mongodb');
+const join = require('lodash/join');
 
 const getUser = async (email) => {
   try {
@@ -54,6 +55,30 @@ const getIntegration = async (userId, name) => {
     return {
       ...result,
       team: result.integrationTeam,
+    };
+  } catch (e) {
+    throw new Error(`${__filename}
+      ${getIntegration.name}
+      ${e.message}`);
+  }
+};
+
+exports.getSettings = async (orgaId) => {
+  let meetingTypes = ['meeting', 'lunch'];
+  let callTypes = ['call'];
+  try {
+    const select = {
+      orgaId: ObjectID(orgaId),
+    };
+    const result = await mongo.findOne('heptaward', 'settings', select);
+
+    if (result && result.pipedriveMeetingTypes && result.pipedriveCallTypes) {
+      meetingTypes = result.pipedriveMeetingTypes;
+      callTypes = result.pipedriveCallTypes;
+    }
+    return {
+      meetingTypes: join(meetingTypes, ','),
+      callTypes: join(callTypes, ','),
     };
   } catch (e) {
     throw new Error(`${__filename}

@@ -110,11 +110,13 @@ const compareActivities = async (email, period) => {
     integrationChecked = await refreshToken(integration);
   }
 
+  const { meetingTypes, callTypes } = await h7Users.getSettings(user.orga_id);
+
   const since = srvDate.timestampStartPeriode(period);
 
-  const pipedriveMeetings = await pipedrive.getAddActivities('meeting', integrationChecked.token, since, Boolean(integration.refreshToken));
+  const pipedriveMeetings = await pipedrive.getAddActivities(meetingTypes, integrationChecked.token, since, Boolean(integration.refreshToken));
+  const pipedriveCalls = await pipedrive.getAddActivities(callTypes, integrationChecked.token, since, Boolean(integration.refreshToken));
 
-  const pipedriveCalls = await pipedrive.getAddActivities('call', integrationChecked.token, since, Boolean(integration.refreshToken));
   const heptawardMeetings = await h7Echoes.getAddActivitiesInfos('meeting', user.team_id, since);
   const heptawardCalls = await h7Echoes.getAddActivitiesInfos('call', user.team_id, since);
 
