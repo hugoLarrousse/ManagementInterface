@@ -18,7 +18,11 @@ exports.cron = () => {
         logger.info(`END TEST AUTOMATION : ${moment().format('LLL')}`);
       }, 3000);
     } catch (e) {
-      logger.info(`END TEST AUTOMATION WITH ERRORS: ${moment().format('LLL')}`);
+      setTimeout(() => {
+        logger.info(`END TEST AUTOMATION WITH ERRORS: 
+          ${e.message}
+        ${moment().format('LLL')}`);
+      }, 3000);
     }
   });
 };
