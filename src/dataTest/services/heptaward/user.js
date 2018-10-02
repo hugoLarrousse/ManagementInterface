@@ -21,19 +21,17 @@ const getUser = async (email) => {
   }
 };
 
-const getIntegrationTeam = async (userId, name) => {
+const getIntegrationOrga = async (orgaId, name) => {
   try {
     const select = {
-      userId: ObjectID(userId),
+      orgaId: ObjectID(orgaId),
       name,
     };
 
-    const result = await mongo.findOne('heptaward', 'integrations', select);
-
-    return result.integrationTeam;
+    return mongo.find('heptaward', 'integrations', select);
   } catch (e) {
     throw new Error(`${__filename}
-      ${getIntegrationTeam.name}
+      ${getIntegrationOrga.name}
       ${e.message}`);
   }
 };
@@ -88,5 +86,5 @@ exports.getSettings = async (orgaId) => {
 };
 
 exports.getUser = getUser;
-exports.getIntegrationTeam = getIntegrationTeam;
+exports.getIntegrationOrga = getIntegrationOrga;
 exports.getIntegration = getIntegration;

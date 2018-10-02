@@ -19,7 +19,7 @@ exports.cron = () => {
       }, 3000);
     } catch (e) {
       setTimeout(() => {
-        logger.info(`END TEST AUTOMATION WITH ERRORS: 
+        logger.info(`END TEST AUTOMATION WITH ERRORS:
           ${e.message}
         ${moment().format('LLL')}`);
       }, 3000);

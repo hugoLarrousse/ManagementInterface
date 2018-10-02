@@ -18,13 +18,13 @@ const Idtoid = (data) => {
   Object.assign(data, { id: data.Id });
 };
 
-const getDealsOpened = async (token, baseUrl, period) => {
+const getDealsOpened = async (token, baseUrl, period, allIntegrations) => {
   const startDateTZ = `${(new Date(dates.timestampStartPeriode(period))).toISOString().split('.')[0]}Z`;
   try {
     let hasMore = false;
     let urlPath = '';
     let results = null;
-    const arrayData = [];
+    let arrayData = [];
     do {
       if (!hasMore) {
         results = await getData(baseUrl, token, 'opportunityOpened', startDateTZ);
@@ -37,6 +37,8 @@ const getDealsOpened = async (token, baseUrl, period) => {
       }
       hasMore = (results && results.done === false) || false;
     } while (hasMore);
+    const integrationIds = allIntegrations.map(int => int.integrationId);
+    arrayData = arrayData.filter(d => integrationIds.includes(d.OwnerId));
     arrayData.forEach(Idtoid);
     return arrayData;
   } catch (e) {
@@ -47,7 +49,8 @@ const getDealsOpened = async (token, baseUrl, period) => {
 };
 
 const getDealsWon = async (token, baseUrl, period) => {
-  const startDateTZ = `${(new Date(dates.timestampStartPeriode(period))).toISOString().split('.')[0]}Z`;
+  const date = new Date(period);
+  const startDate = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate() < 10 ? `0${date.getDate()}` : date.getDate()}`;
   try {
     let hasMore = false;
     let urlPath = '';
@@ -55,7 +58,7 @@ const getDealsWon = async (token, baseUrl, period) => {
     const arrayData = [];
     do {
       if (!hasMore) {
-        results = await getData(baseUrl, token, 'opportunityWon', startDateTZ);
+        results = await getData(baseUrl, token, 'opportunityWon', startDate);
       } else {
         results = await getMoreData(baseUrl, token, urlPath);
       }
@@ -74,13 +77,13 @@ const getDealsWon = async (token, baseUrl, period) => {
   }
 };
 
-const getEvents = async (token, baseUrl, period) => {
+const getEvents = async (token, baseUrl, period, allIntegrations) => {
   const startDateTZ = `${(new Date(dates.timestampStartPeriode(period))).toISOString().split('.')[0]}Z`;
   try {
     let hasMore = false;
     let urlPath = '';
     let results = null;
-    const arrayData = [];
+    let arrayData = [];
     do {
       if (!hasMore) {
         results = await getData(baseUrl, token, 'event', startDateTZ);
@@ -93,7 +96,10 @@ const getEvents = async (token, baseUrl, period) => {
       }
       hasMore = (results && results.done === false) || false;
     } while (hasMore);
+    const integrationIds = allIntegrations.map(int => int.integrationId);
+    arrayData = arrayData.filter(d => integrationIds.includes(d.OwnerId));
     arrayData.forEach(Idtoid);
+
     return arrayData;
   } catch (e) {
     throw new Error(`${__filename}
@@ -102,13 +108,13 @@ const getEvents = async (token, baseUrl, period) => {
   }
 };
 
-const getTasks = async (token, baseUrl, period) => {
+const getTasks = async (token, baseUrl, period, allIntegrations) => {
   const startDateTZ = `${(new Date(dates.timestampStartPeriode(period))).toISOString().split('.')[0]}Z`;
   try {
     let hasMore = false;
     let urlPath = '';
     let results = null;
-    const arrayData = [];
+    let arrayData = [];
     do {
       if (!hasMore) {
         results = await getData(baseUrl, token, 'task', startDateTZ);
@@ -121,6 +127,8 @@ const getTasks = async (token, baseUrl, period) => {
       }
       hasMore = (results && results.done === false) || false;
     } while (hasMore);
+    const integrationIds = allIntegrations.map(int => int.integrationId);
+    arrayData = arrayData.filter(d => integrationIds.includes(d.OwnerId));
     arrayData.forEach(Idtoid);
     return arrayData;
   } catch (e) {

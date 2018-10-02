@@ -50,14 +50,15 @@ const compareDeals = async (email, period) => {
   }
   const integrationChecked = await checkIntegration(integration);
 
+  const allIntegrations = await h7Users.getIntegrationOrga(integrationChecked.orgaId, 'Salesforce');
   const since = srvDate.timestampStartPeriode(period);
-  const salesforceOpenedDeals = await salesforce.getDealsOpened(integrationChecked.token, integrationChecked.instanceUrl, period);
 
-  const salesforceWonDeals = await salesforce.getDealsWon(integrationChecked.token, integrationChecked.instanceUrl, period);
+  const salesforceOpenedDeals = await salesforce.getDealsOpened(integrationChecked.token, integrationChecked.instanceUrl, period, allIntegrations);
+
+  const salesforceWonDeals = await salesforce.getDealsWon(integrationChecked.token, integrationChecked.instanceUrl, since);
 
   const heptawardOpenedDeals = await h7Echoes.getDealsInfos('deal-opened', user.team_id, since, integrationChecked.integrationTeam);
   const heptawardWonDeals = await h7Echoes.getDealsInfos('deal-won', user.team_id, since, integrationChecked.integrationTeam);
-
 
   const unRegisteredOpenedDeals = PidControls.notRegistered(salesforceOpenedDeals, heptawardOpenedDeals.deals);
   const unRegisteredWonDeals = PidControls.notRegistered(salesforceWonDeals, heptawardWonDeals.deals);
@@ -99,10 +100,11 @@ const compareActivities = async (email, period) => {
   }
   const integrationChecked = await checkIntegration(integration);
 
+  const allIntegrations = await h7Users.getIntegrationOrga(integrationChecked.orgaId, 'Salesforce');
   const since = srvDate.timestampStartPeriode(period);
 
-  const salesforceMeetings = await salesforce.getEvents(integrationChecked.token, integrationChecked.instanceUrl, period);
-  const salesforceCalls = await salesforce.getTasks(integrationChecked.token, integrationChecked.instanceUrl, period);
+  const salesforceMeetings = await salesforce.getEvents(integrationChecked.token, integrationChecked.instanceUrl, period, allIntegrations);
+  const salesforceCalls = await salesforce.getTasks(integrationChecked.token, integrationChecked.instanceUrl, period, allIntegrations);
 
   const heptawardMeetings = await h7Echoes.getAddActivitiesInfos('meeting', user.team_id, since);
   const heptawardCalls = await h7Echoes.getAddActivitiesInfos('call', user.team_id, since);
