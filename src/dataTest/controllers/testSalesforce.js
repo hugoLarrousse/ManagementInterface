@@ -55,7 +55,7 @@ const compareDeals = async (email, period) => {
 
   const salesforceOpenedDeals = await salesforce.getDealsOpened(integrationChecked.token, integrationChecked.instanceUrl, period, allIntegrations);
 
-  const salesforceWonDeals = await salesforce.getDealsWon(integrationChecked.token, integrationChecked.instanceUrl, since);
+  const salesforceWonDeals = await salesforce.getDealsWon(integrationChecked.token, integrationChecked.instanceUrl, since, allIntegrations);
 
   const heptawardOpenedDeals = await h7Echoes.getDealsInfos('deal-opened', user.team_id, since, integrationChecked.integrationTeam);
   const heptawardWonDeals = await h7Echoes.getDealsInfos('deal-won', user.team_id, since, integrationChecked.integrationTeam);

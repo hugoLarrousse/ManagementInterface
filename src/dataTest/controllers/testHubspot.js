@@ -17,10 +17,11 @@ const compareDeals = async (email, period) => {
     integrationChecked = await hubspotUtils.refreshToken(integration);
   }
 
+  const allIntegrations = await h7Users.getIntegrationOrga(integrationChecked.orgaId, 'Hubspot');
   const since = srvDate.timestampStartPeriode(period);
 
-  const hubspotDealsOpened = await hubspot.getDealsOpened(integrationChecked.token, since);
-  const hubspotDealsWon = await hubspot.getDealsWon(integrationChecked.token, since);
+  const hubspotDealsOpened = await hubspot.getDealsOpened(integrationChecked.token, since, allIntegrations);
+  const hubspotDealsWon = await hubspot.getDealsWon(integrationChecked.token, since, allIntegrations);
 
   const heptawardWonDeals = await h7Echoes.getDealsInfos('deal-won', user.team_id, since, integrationChecked.integrationTeam);
   const heptawardOpenedDeals = await h7Echoes.getDealsInfos('deal-opened', user.team_id, since, integrationChecked.integrationTeam);
@@ -67,8 +68,10 @@ const compareActivities = async (email, period) => {
     integrationChecked = await hubspotUtils.refreshToken(integration);
   }
 
+  const allIntegrations = await h7Users.getIntegrationOrga(integrationChecked.orgaId, 'Hubspot');
   const since = srvDate.timestampStartPeriode(period);
-  const hubspotengagements = await hubspot.getEngagements(integrationChecked.token, since);
+
+  const hubspotengagements = await hubspot.getEngagements(integrationChecked.token, since, allIntegrations);
   const hubspotMeetings = hubspotengagements.documents.filter(meeting => meeting.engagement.type === 'MEETING');
   const hubspotCalls = hubspotengagements.documents.filter(meeting => meeting.engagement.type === 'CALL');
 

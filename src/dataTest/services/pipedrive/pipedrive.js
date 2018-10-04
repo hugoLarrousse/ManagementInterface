@@ -1,13 +1,15 @@
 const { get } = require('../../Utils/pipedrive');
 const dates = require('../../Utils/dates');
 
-const getDealsOpenedTimeline = async (apiToken, since, interval = 'month', isOauth) => {
+const getDealsOpenedTimeline = async (apiToken, since, interval = 'month', isOauth, allIntegrations) => {
   try {
+    const integrationIds = allIntegrations.map(int => int.integrationId);
     const date = dates.formatDateStartMonth(since);
 
     const path = `${isOauth ? '' : '/v1'}/deals/timeline?start_date=${date}&limit=500&interval=${interval}&amount=1&field_key=add_time`;
     const result = await get(path, apiToken, isOauth);
-    return result.data;
+    result.data[0].deals = result.data[0].deals.filter(d => integrationIds.includes(Number(d.user_id)));
+    return result.data[0];
   } catch (e) {
     throw new Error(`${__filename}
       ${getDealsOpenedTimeline.name}
@@ -15,13 +17,17 @@ const getDealsOpenedTimeline = async (apiToken, since, interval = 'month', isOau
   }
 };
 
-const getDealsWonTimeline = async (apiToken, since, interval = 'month', isOauth) => {
+const getDealsWonTimeline = async (apiToken, since, interval = 'month', isOauth, allIntegrations) => {
   try {
+    const integrationIds = allIntegrations.map(int => int.integrationId);
     const date = dates.formatDateStartMonth(since);
     const path = `${isOauth ? '' : '/v1'}/deals/timeline?start_date=${date}&limit=500&interval=${interval}&amount=1&field_key=won_time`;
 
     const result = await get(path, apiToken, isOauth);
-    return result.data;
+
+    result.data[0].deals = result.data[0].deals.filter(d => integrationIds.includes(Number(d.user_id)));
+
+    return result.data[0];
   } catch (e) {
     throw new Error(`${__filename}
       ${getDealsWonTimeline.name}
@@ -29,10 +35,11 @@ const getDealsWonTimeline = async (apiToken, since, interval = 'month', isOauth)
   }
 };
 
-const getAddActivities = async (type, apiToken, since, isOauth) => {
+const getAddActivities = async (type, apiToken, since, isOauth, allIntegrations) => {
   try {
+    const integrationIds = allIntegrations.map(int => int.integrationId);
     let hasMore = false;
-    const activities = [];
+    let activities = [];
 
     let path = `${isOauth ? '' : '/v1'}/activities?user_id=0&limit=500&type=${type}&start=0&sort=add_time%20DESC`;
     do {
@@ -53,6 +60,7 @@ const getAddActivities = async (type, apiToken, since, isOauth) => {
       path = `${isOauth ? '' : '/v1'}/activities?user_id=0&limit=500&type=${type}&start=${result.additional_data.pagination.next_start}&sort=add_time%20DESC`; //eslint-disable-line
     } while (hasMore);
 
+    activities = activities.filter(d => integrationIds.includes(Number(d.user_id)));
     return activities;
   } catch (e) {
     throw new Error(`${__filename}

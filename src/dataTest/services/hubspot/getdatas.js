@@ -50,8 +50,9 @@ const getPipelines = async (apiToken) => {
   return result;
 };
 
-const getDealsOpened = async (apiToken, since) => {
-  const documents = [];
+const getDealsOpened = async (apiToken, since, allIntegrations) => {
+  const integrationIds = allIntegrations.map(int => int.integrationId);
+  let documents = [];
   const path = '/deals/v1/deal/recent/modified';
 
   // const stages = await getStages(apiToken);
@@ -63,7 +64,7 @@ const getDealsOpened = async (apiToken, since) => {
       documents.push(element);
     }
   });
-
+  documents = documents.filter(d => integrationIds.includes(Number(d.properties.hubspot_owner_id.value)));
   return documents;
 };
 
@@ -91,8 +92,9 @@ const getStages = async (apiToken) => {
   };
 };
 
-const getDealsWon = async (apiToken, since) => {
-  const documents = [];
+const getDealsWon = async (apiToken, since, allIntegrations) => {
+  const integrationIds = allIntegrations.map(int => int.integrationId);
+  let documents = [];
   const path = '/deals/v1/deal/recent/modified';
 
   const stages = await getStages(apiToken);
@@ -106,12 +108,13 @@ const getDealsWon = async (apiToken, since) => {
       }
     }
   });
-
+  documents = documents.filter(d => integrationIds.includes(Number(d.properties.hubspot_owner_id.value)));
   return documents;
 };
 
-const getEngagements = async (apiToken, since) => {
-  const documents = [];
+const getEngagements = async (apiToken, since, allIntegrations) => {
+  const integrationIds = allIntegrations.map(int => int.integrationId);
+  let documents = [];
   let nbMeetings = 0;
   let nbCalls = 0;
 
@@ -126,6 +129,8 @@ const getEngagements = async (apiToken, since) => {
       documents.push(element);
     }
   });
+
+  documents = documents.filter(d => integrationIds.includes(Number(d.engagement.ownerId)));
 
   return {
     nbMeetings,

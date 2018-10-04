@@ -59,21 +59,28 @@ const compareDeals = async (email, period) => {
     integrationChecked = await refreshToken(integration);
   }
 
+  const allIntegrations = await h7Users.getIntegrationOrga(integrationChecked.orgaId, 'Pipedrive');
   const since = srvDate.timestampStartPeriode(period);
 
-  const pipedriveOpenedDeals = await pipedrive.getDealsOpenedTimeline(integrationChecked.token, since, period, Boolean(integration.refreshToken));
-  const pipedriveWonDeals = await pipedrive.getDealsWonTimeline(integrationChecked.token, since, period, Boolean(integration.refreshToken));
+  const pipedriveOpenedDeals = await pipedrive.getDealsOpenedTimeline(
+    integrationChecked.token,
+    since, period, Boolean(integration.refreshToken), allIntegrations
+  );
+  const pipedriveWonDeals = await pipedrive.getDealsWonTimeline(
+    integrationChecked.token, since,
+    period, Boolean(integration.refreshToken), allIntegrations
+  );
   const heptawardOpenedDeals = await h7Echoes.getDealsInfos('deal-opened', user.team_id, since, integrationChecked.integrationTeam);
   const heptawardWonDeals = await h7Echoes.getDealsInfos('deal-won', user.team_id, since, integrationChecked.integrationTeam);
 
-  const unRegisteredOpenedDeals = PidControls.notRegistered(pipedriveOpenedDeals[0].deals, heptawardOpenedDeals.deals);
-  const unRegisteredWonDeals = PidControls.notRegistered(pipedriveWonDeals[0].deals, heptawardWonDeals.deals);
+  const unRegisteredOpenedDeals = PidControls.notRegistered(pipedriveOpenedDeals.deals, heptawardOpenedDeals.deals);
+  const unRegisteredWonDeals = PidControls.notRegistered(pipedriveWonDeals.deals, heptawardWonDeals.deals);
 
   const openedDoublons = H7Controls.doublonsOnEchoes(heptawardOpenedDeals.deals);
   const wonDoublons = H7Controls.doublonsOnEchoes(heptawardWonDeals.deals);
 
-  const differenceOpened = genericControls.tabDealsCompare(heptawardOpenedDeals.deals, pipedriveOpenedDeals[0].deals);
-  const differenceWon = genericControls.tabDealsCompare(heptawardWonDeals.deals, pipedriveWonDeals[0].deals);
+  const differenceOpened = genericControls.tabDealsCompare(heptawardOpenedDeals.deals, pipedriveOpenedDeals.deals);
+  const differenceWon = genericControls.tabDealsCompare(heptawardWonDeals.deals, pipedriveWonDeals.deals);
 
   return {
     differences: {
@@ -83,12 +90,12 @@ const compareDeals = async (email, period) => {
       unRegistered: (unRegisteredOpenedDeals.length + unRegisteredWonDeals.length),
     },
     pipedriveOpened: {
-      count: pipedriveOpenedDeals[0].totals.count,
-      values: pipedriveOpenedDeals[0].totals.values,
+      count: pipedriveOpenedDeals.totals.count,
+      values: pipedriveOpenedDeals.totals.values,
     },
     pipedriveWon: {
-      count: pipedriveWonDeals[0].totals.count,
-      values: pipedriveWonDeals[0].totals.values,
+      count: pipedriveWonDeals.totals.count,
+      values: pipedriveWonDeals.totals.values,
     },
     heptawardOpenedDeals,
     heptawardWonDeals,
@@ -112,10 +119,17 @@ const compareActivities = async (email, period) => {
 
   const { meetingTypes, callTypes } = await h7Users.getSettings(user.orga_id);
 
+  const allIntegrations = await h7Users.getIntegrationOrga(integrationChecked.orgaId, 'Pipedrive');
   const since = srvDate.timestampStartPeriode(period);
 
-  const pipedriveMeetings = await pipedrive.getAddActivities(meetingTypes, integrationChecked.token, since, Boolean(integration.refreshToken));
-  const pipedriveCalls = await pipedrive.getAddActivities(callTypes, integrationChecked.token, since, Boolean(integration.refreshToken));
+  const pipedriveMeetings = await pipedrive.getAddActivities(
+    meetingTypes, integrationChecked.token,
+    since, Boolean(integration.refreshToken), allIntegrations
+  );
+  const pipedriveCalls = await pipedrive.getAddActivities(
+    callTypes, integrationChecked.token,
+    since, Boolean(integration.refreshToken), allIntegrations
+  );
 
   const heptawardMeetings = await h7Echoes.getAddActivitiesInfos('meeting', user.team_id, since);
   const heptawardCalls = await h7Echoes.getAddActivitiesInfos('call', user.team_id, since);

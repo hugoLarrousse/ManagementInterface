@@ -48,14 +48,14 @@ const getDealsOpened = async (token, baseUrl, period, allIntegrations) => {
   }
 };
 
-const getDealsWon = async (token, baseUrl, period) => {
+const getDealsWon = async (token, baseUrl, period, allIntegrations) => {
   const date = new Date(period);
   const startDate = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate() < 10 ? `0${date.getDate()}` : date.getDate()}`;
   try {
     let hasMore = false;
     let urlPath = '';
     let results = null;
-    const arrayData = [];
+    let arrayData = [];
     do {
       if (!hasMore) {
         results = await getData(baseUrl, token, 'opportunityWon', startDate);
@@ -68,6 +68,8 @@ const getDealsWon = async (token, baseUrl, period) => {
       }
       hasMore = (results && results.done === false) || false;
     } while (hasMore);
+    const integrationIds = allIntegrations.map(int => int.integrationId);
+    arrayData = arrayData.filter(d => integrationIds.includes(d.OwnerId));
     arrayData.forEach(Idtoid);
     return arrayData;
   } catch (e) {
