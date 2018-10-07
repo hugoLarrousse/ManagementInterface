@@ -29,7 +29,7 @@ const getActivities = async (apiToken, path, since) => {
 
     hasMoreData = result.hasMore;
     offsetDoc = result.offset;
-  } while (hasMoreData);
+  } while (hasMoreData && offsetDoc < 10000);
 
   return documents;
 };
@@ -53,7 +53,7 @@ const getPipelines = async (apiToken) => {
 const getDealsOpened = async (apiToken, since, allIntegrations) => {
   const integrationIds = allIntegrations.map(int => int.integrationId);
   let documents = [];
-  const path = '/deals/v1/deal/recent/modified';
+  const path = '/deals/v1/deal/recent/created';
 
   // const stages = await getStages(apiToken);
   const result = await getActivities(apiToken, path, since);
@@ -64,7 +64,7 @@ const getDealsOpened = async (apiToken, since, allIntegrations) => {
       documents.push(element);
     }
   });
-  documents = documents.filter(d => integrationIds.includes(Number(d.properties.hubspot_owner_id.value)));
+  documents = documents.filter(d => integrationIds.includes(Number(d.properties.hubspot_owner_id && d.properties.hubspot_owner_id.value)));
   return documents;
 };
 
@@ -108,7 +108,7 @@ const getDealsWon = async (apiToken, since, allIntegrations) => {
       }
     }
   });
-  documents = documents.filter(d => integrationIds.includes(Number(d.properties.hubspot_owner_id.value)));
+  documents = documents.filter(d => integrationIds.includes(Number(d.properties.hubspot_owner_id && d.properties.hubspot_owner_id.value)));
   return documents;
 };
 
