@@ -9,8 +9,9 @@ const CONVERSION_DOLLAR_EURO = 0.85;
 
 const licencePayingCount = () => mongo.count(databaseName, licenceCollection, {
   planId: { $ne: null },
+  isCancel: false,
 });
-const licenceCount = () => mongo.count(databaseName, licenceCollection, { isCancel: false });
+const licenceCount = () => mongo.count(databaseName, licenceCollection);
 const licencesPaid = () => mongo.find(databaseName, licenceCollection, {
   planId: { $ne: null },
   isCancel: false,
