@@ -6,7 +6,7 @@ const {
 } = require('graphql');
 
 exports.update = new GraphQLObjectType({
-  name: 'UserDelete',
+  name: 'UserUpdateLicence',
   fields: {
     success: {
       type: new GraphQLNonNull(GraphQLBoolean),

@@ -20,7 +20,7 @@ exports.updateExpirationDate = {
       description: 'timestamp expiration Date',
     },
   },
-  resolve: createResolver({ isAuthRequired: false }, (_, args) => {
+  resolve: createResolver({ isAuthRequired: true }, (_, args) => {
     return licence.updateExpirationDate(args);
   }),
 };

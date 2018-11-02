@@ -7,4 +7,5 @@ exports.list = require('./list');
 exports.userList = require('./userList');
 exports.licence = require('./licence');
 exports.dataTest = require('./dataTest');
+exports.user = require('./user');
 
