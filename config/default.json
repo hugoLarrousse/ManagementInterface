@@ -1,8 +1,8 @@
 {
   "emails": {
-    "pipedrive": ["axel.manoukian@moovone.fr", "folliot.julien@gmail.com", "atul@10times.com", "jeremy.lellouche@cardata.fr", "dona@ibgme.com"],
-    "salesforce": ["gguilbert@marche-prive.net", "romain@lunchr.co", "fwelch@slipstreamcreative.com"],
-    "hubspot":["nicolas@ecommerce-nation.fr", "david@carts.guru", "ilan.koskas@flexybeauty.com"]
+    "pipedrive": ["axel.manoukian@moovone.fr", "folliot.julien@gmail.com"],
+    "salesforce": ["gguilbert@marche-prive.net"],
+    "hubspot":["nicolas@ecommerce-nation.fr", "david@carts.guru"]
   },
   "pipedrive": {
     "apiUrl": "https://api.pipedrive.com",
