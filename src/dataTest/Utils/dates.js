@@ -40,7 +40,7 @@ const timestampStartPeriod = (period = 'day', date = new Date()) => {
     case 'week':
       return new Date(date.setUTCDate(date.getUTCDate() - (date.getUTCDay() + 1))).setUTCHours(0, 0, 0, 0);
     case 'month':
-      return new Date(date.getUTCFullYear(), date.getUTCMonth(), 1);
+      return new Date(date.getUTCFullYear(), date.getUTCMonth(), 1).getTime();
     case 'quarter':
       if (date.getMonth() < 3) {
         return new Date(date.getFullYear(), 0, 1).setUTCHours(0, 0, 0, 0);
