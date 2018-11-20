@@ -19,7 +19,7 @@ const Idtoid = (data) => {
 };
 
 const getDealsOpened = async (token, baseUrl, period, allIntegrations) => {
-  const startDateTZ = `${(new Date(dates.timestampStartPeriode(period))).toISOString().split('.')[0]}Z`;
+  const startDateTZ = `${(new Date(dates.timestampStartPeriod(period))).toISOString().split('.')[0]}Z`;
   try {
     let hasMore = false;
     let urlPath = '';
@@ -80,7 +80,7 @@ const getDealsWon = async (token, baseUrl, period, allIntegrations) => {
 };
 
 const getEvents = async (token, baseUrl, period, allIntegrations) => {
-  const startDateTZ = `${(new Date(dates.timestampStartPeriode(period))).toISOString().split('.')[0]}Z`;
+  const startDateTZ = `${(new Date(dates.timestampStartPeriod(period))).toISOString().split('.')[0]}Z`;
   try {
     let hasMore = false;
     let urlPath = '';
@@ -111,7 +111,7 @@ const getEvents = async (token, baseUrl, period, allIntegrations) => {
 };
 
 const getTasks = async (token, baseUrl, period, allIntegrations) => {
-  const startDateTZ = `${(new Date(dates.timestampStartPeriode(period))).toISOString().split('.')[0]}Z`;
+  const startDateTZ = `${(new Date(dates.timestampStartPeriod(period))).toISOString().split('.')[0]}Z`;
   try {
     let hasMore = false;
     let urlPath = '';

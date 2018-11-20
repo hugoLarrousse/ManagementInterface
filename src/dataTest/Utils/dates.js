@@ -33,45 +33,45 @@ const setEndMonthTimestamp = (timestamp = Date.now()) => {
   return lastDayMonth;
 };
 
-const timestampStartPeriode = (period = 'day', date = new Date()) => {
+const timestampStartPeriod = (period = 'day', date = new Date()) => {
   switch (period) {
     case 'day':
-      return date.setHours(0, 0, 0, 0);
+      return date.setUTCHours(0, 0, 0, 0);
     case 'week':
-      return new Date(date.setUTCDate(date.getUTCDate() - (date.getUTCDay() + 1))).setHours(0, 0, 0, 0);
+      return new Date(date.setUTCDate(date.getUTCDate() - (date.getUTCDay() + 1))).setUTCHours(0, 0, 0, 0);
     case 'month':
-      return new Date(date.getFullYear(), date.getMonth(), 1).setHours(0, 0, 0, 0);
+      return new Date(date.getUTCFullYear(), date.getUTCMonth(), 1);
     case 'quarter':
       if (date.getMonth() < 3) {
-        return new Date(date.getFullYear(), 0, 1).setHours(0, 0, 0, 0);
+        return new Date(date.getFullYear(), 0, 1).setUTCHours(0, 0, 0, 0);
       } else if (date.getMonth() < 6) {
-        return new Date(date.getFullYear(), 3, 1).setHours(0, 0, 0, 0);
+        return new Date(date.getFullYear(), 3, 1).setUTCHours(0, 0, 0, 0);
       } else if (date.getMonth() < 9) {
-        return new Date(date.getFullYear(), 6, 1).setHours(0, 0, 0, 0);
+        return new Date(date.getFullYear(), 6, 1).setUTCHours(0, 0, 0, 0);
       }
-      return new Date(date.getFullYear(), 9, 1).setHours(0, 0, 0, 0);
+      return new Date(date.getFullYear(), 9, 1).setUTCHours(0, 0, 0, 0);
     case 'semester':
       if (date.getMonth() < 6) {
-        return new Date(date.getFullYear(), 0, 1).setHours(0, 0, 0, 0);
+        return new Date(date.getFullYear(), 0, 1).setUTCHours(0, 0, 0, 0);
       }
-      return new Date(date.getFullYear(), 6, 1).setHours(0, 0, 0, 0);
+      return new Date(date.getFullYear(), 6, 1).setUTCHours(0, 0, 0, 0);
     case 'year':
-      return new Date(date.getFullYear(), 0, 1).setHours(0, 0, 0, 0);
+      return new Date(date.getFullYear(), 0, 1).setUTCHours(0, 0, 0, 0);
     default:
       return Date.now();
   }
 };
 
-const timestampEndPeriode = (periode, date = new Date()) => {
+const timestampEndPeriode = (period, date = new Date()) => {
   let diffDay;
-  switch (periode) {
+  switch (period) {
     case 'day':
       return date.setHours(23, 59, 59, 999);
     case 'week':
       diffDay = 7 - date.getDay();
       return new Date(date.setDate(date.getUTCDate() + diffDay)).setHours(23, 59, 59, 999);
     case 'month':
-      return new Date(date.getFullYear(), date.getMonth() + 1, 0).setHours(23, 59, 59, 999);
+      return new Date(date.getFullYear(), date.getUTCMonth() + 1, 0).setUTCHours(23, 59, 59, 999);
     case 'quarter':
       if (date.getMonth() < 3) {
         return new Date(date.getFullYear(), 3, 0).setHours(23, 59, 59, 999);
@@ -97,5 +97,5 @@ exports.formatDateStartMonth = formatDateStartMonth;
 exports.formatDateEndMonth = formatDateEndMonth;
 exports.setStartMonthTimestamp = setStartMonthTimestamp;
 exports.setEndMonthTimestamp = setEndMonthTimestamp;
-exports.timestampStartPeriode = timestampStartPeriode;
+exports.timestampStartPeriod = timestampStartPeriod;
 exports.timestampEndPeriode = timestampEndPeriode;

@@ -51,7 +51,7 @@ const compareDeals = async (email, period) => {
   const integrationChecked = await checkIntegration(integration);
 
   const allIntegrations = await h7Users.getIntegrationOrga(integrationChecked.orgaId, 'Salesforce');
-  const since = srvDate.timestampStartPeriode(period);
+  const since = srvDate.timestampStartPeriod(period);
 
   const salesforceOpenedDeals = await salesforce.getDealsOpened(integrationChecked.token, integrationChecked.instanceUrl, period, allIntegrations);
 
@@ -101,7 +101,7 @@ const compareActivities = async (email, period) => {
   const integrationChecked = await checkIntegration(integration);
 
   const allIntegrations = await h7Users.getIntegrationOrga(integrationChecked.orgaId, 'Salesforce');
-  const since = srvDate.timestampStartPeriode(period);
+  const since = srvDate.timestampStartPeriod(period);
 
   const salesforceMeetings = await salesforce.getEvents(integrationChecked.token, integrationChecked.instanceUrl, period, allIntegrations);
   const salesforceCalls = await salesforce.getTasks(integrationChecked.token, integrationChecked.instanceUrl, period, allIntegrations);
@@ -109,18 +109,18 @@ const compareActivities = async (email, period) => {
   const heptawardMeetings = await h7Echoes.getAddActivitiesInfos('meeting', user.team_id, since);
   const heptawardCalls = await h7Echoes.getAddActivitiesInfos('call', user.team_id, since);
 
-  const meetingsDoublons = await H7Controls.doublonsOnEchoes(heptawardMeetings.activities);
-  const callsDoublons = await H7Controls.doublonsOnEchoes(heptawardCalls.activities);
+  const meetingsDoublons = await H7Controls.doublonsOnEchoes(heptawardMeetings);
+  const callsDoublons = await H7Controls.doublonsOnEchoes(heptawardCalls);
 
-  const meetingsUnregistered = await PidControls.notRegistered(salesforceMeetings, heptawardMeetings.activities);
-  const callsUnregistered = await PidControls.notRegistered(salesforceCalls, heptawardCalls.activities);
+  const meetingsUnregistered = await PidControls.notRegistered(salesforceMeetings, heptawardMeetings);
+  const callsUnregistered = await PidControls.notRegistered(salesforceCalls, heptawardCalls);
 
   return {
     differences: {
-      meetings: (heptawardMeetings.ndActivities - salesforceMeetings.length),
+      meetings: (heptawardMeetings.length - salesforceMeetings.length),
       meetingsDoublons: meetingsDoublons.length,
       meetingsUnregistered: meetingsUnregistered.length,
-      calls: (heptawardCalls.ndActivities - salesforceCalls.length),
+      calls: (heptawardCalls.length - salesforceCalls.length),
       callsDoublons: callsDoublons.length,
       callsUnregistered: callsUnregistered.length,
     },

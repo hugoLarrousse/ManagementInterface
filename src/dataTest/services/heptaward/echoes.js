@@ -13,7 +13,7 @@ const getDealsInfos = async (type, teamH7Id, since, integrationTeam) => {
       team_h7_id: ObjectID(teamH7Id),
       'source.team_id': integrationTeam,
       date_add_timestamp: {
-        $gte: Number(since) + 7200000,
+        $gte: Number(since),
       },
       type,
     };
@@ -34,29 +34,19 @@ const getDealsInfos = async (type, teamH7Id, since, integrationTeam) => {
   }
 };
 
-const getAddActivitiesInfos = async (type, teamId, since) => {
+const getAddActivitiesInfos = (type, teamId, since) => {
   const date = new Date(since);
   try {
-    const stats = {
-      ndActivities: 0,
-      activities: [],
-    };
-
     const select = {
       team_h7_id: ObjectID(teamId),
       date_add_timestamp: {
-        $gte: Number(since) + 7200000,
+        $gte: Number(since),
         $lte: new Date(date.getFullYear(), date.getMonth() + 1, 0).getTime(),
       },
       type,
     };
 
-    const result = await mongo.find('heptaward', 'echoes', select);
-
-    stats.ndActivities = result.length;
-    stats.activities = result;
-
-    return stats;
+    return mongo.find('heptaward', 'echoes', select);
   } catch (e) {
     throw new Error(`${__filename}
       ${getAddActivitiesInfos.name}
