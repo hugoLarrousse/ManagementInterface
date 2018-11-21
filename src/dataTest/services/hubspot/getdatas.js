@@ -1,7 +1,7 @@
 const utilsHubspot = require('../../Utils/hubspot');
 
 // Fonction de récupération et enregistrement de toutes les données Hubspot
-const getActivities = async (apiToken, path, since) => {
+const getData = async (apiToken, path, since) => {
   let hasMoreData = false;
   let offsetDoc = 0;
   const count = 100;
@@ -20,7 +20,6 @@ const getActivities = async (apiToken, path, since) => {
     if (!result) {
       return null;
     }
-
     result.results.forEach(element => {
       if (!element.isDeleted) {
         documents.push(element);
@@ -30,8 +29,17 @@ const getActivities = async (apiToken, path, since) => {
     hasMoreData = result.hasMore;
     offsetDoc = result.offset;
   } while (hasMoreData && offsetDoc < 10000);
-
   return documents;
+};
+
+const getActivity = (apiToken, activityId) => {
+  const info = {
+    path: `/engagements/v1/engagements/${activityId}`,
+    method: 'GET',
+    data: null,
+    token: `Bearer ${apiToken}`,
+  };
+  return utilsHubspot.request(info);
 };
 
 const getPipelines = async (apiToken) => {
@@ -56,7 +64,7 @@ const getDealsOpened = async (apiToken, since, allIntegrations) => {
   const path = '/deals/v1/deal/recent/created';
 
   // const stages = await getStages(apiToken);
-  const result = await getActivities(apiToken, path, since);
+  const result = await getData(apiToken, path, since);
 
   result.forEach(element => {
     const compareDate = Number(element.properties.createdate.value);
@@ -98,12 +106,12 @@ const getDealsWon = async (apiToken, since, allIntegrations) => {
   const path = '/deals/v1/deal/recent/modified';
 
   const stages = await getStages(apiToken);
-  const result = await getActivities(apiToken, path, since);
+  const result = await getData(apiToken, path, since);
 
   result.forEach(element => {
     if (element.properties.closedate) {
       const compareDate = Number(element.properties.closedate.value);
-      if (stages.won.includes(element.properties.dealstage.value) && (compareDate > since)) {
+      if (stages.won.includes(element.properties.dealstage.value) && (compareDate > since) && compareDate < Date.now()) {
         documents.push(element);
       }
     }
@@ -120,7 +128,7 @@ const getEngagements = async (apiToken, since, allIntegrations) => {
 
   const path = '/engagements/v1/engagements/recent/modified';
 
-  const result = await getActivities(apiToken, path, since);
+  const result = await getData(apiToken, path, since);
 
   result.forEach(element => {
     if (element.engagement.createdAt > since && (element.engagement.type === 'MEETING' || element.engagement.type === 'CALL')) {
@@ -139,8 +147,24 @@ const getEngagements = async (apiToken, since, allIntegrations) => {
   };
 };
 
+const checkEngagements = async (apiToken, activityIds) => {
+  const toDelete = [];
+  if (activityIds && activityIds.length > 0) {
+    for (const activityId of activityIds) {
+      const result = await getActivity(apiToken, activityId);
+      if (!result) {
+        toDelete.push(activityId);
+      }
+    }
+    return toDelete;
+  }
+  console.log('wtf :');
+  return [];
+};
+
 exports.getDealsOpened = getDealsOpened;
 exports.getDealsWon = getDealsWon;
 exports.getEngagements = getEngagements;
 exports.getStages = getStages;
 exports.getPipelines = getPipelines;
+exports.checkEngagements = checkEngagements;

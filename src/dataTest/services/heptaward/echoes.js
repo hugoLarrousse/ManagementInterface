@@ -14,6 +14,7 @@ const getDealsInfos = async (type, teamH7Id, since, integrationTeam) => {
       'source.team_id': integrationTeam,
       date_add_timestamp: {
         $gte: Number(since),
+        $lte: Date.now(),
       },
       type,
     };

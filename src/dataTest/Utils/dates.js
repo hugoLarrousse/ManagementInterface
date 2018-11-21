@@ -36,9 +36,9 @@ const setEndMonthTimestamp = (timestamp = Date.now()) => {
 const timestampStartPeriod = (period = 'day', date = new Date()) => {
   switch (period) {
     case 'day':
-      return date.setUTCHours(0, 0, 0, 0);
+      return new Date(date.setDate(date.getDate() - 1)).setUTCHours(0, 0, 0, 0);
     case 'week':
-      return new Date(date.setUTCDate(date.getUTCDate() - (date.getUTCDay() + 1))).setUTCHours(0, 0, 0, 0);
+      return new Date(date.setUTCDate((date.getDate() - date.getDay()) + 1)).setUTCHours(0, 0, 0, 0);
     case 'month':
       return new Date(date.getUTCFullYear(), date.getUTCMonth(), 1).getTime();
     case 'quarter':

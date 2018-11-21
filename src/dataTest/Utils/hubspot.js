@@ -32,7 +32,6 @@ const request = async (info, authRequest = false) => {
 
   try {
     const { error, body } = await requestRetry(options);
-
     if (error) {
       console.log('error : ', error);
       return null;

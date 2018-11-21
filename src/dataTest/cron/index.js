@@ -11,9 +11,14 @@ exports.cron = () => {
   cron.schedule('0 3 * * *', async () => {
     try {
       logger.info(`START TEST AUTOMATION : ${moment().format('LLL')}`);
-      await checkData.checkPipedriveByEmail(emails.pipedrive);
-      await checkData.checkHubspotByEmail(emails.hubspot);
-      await checkData.checkSalesforceByEmail(emails.salesforce);
+      await checkData.checkPipedriveByEmail(emails.pipedrive, false, 'month');
+      logger.info('Pipedrive month done');
+      await checkData.checkHubspotByEmail(emails.hubspot, false, 'week');
+      logger.info('Hubspot week done');
+      await checkData.checkSalesforceByEmail(emails.salesforce, false, 'month');
+      logger.info('Salesforce month done');
+      await checkData.checkHubspotByEmail(emails.hubspot, false, 'day');
+      logger.info('Hubspot day done');
       setTimeout(() => {
         logger.info(`END TEST AUTOMATION : ${moment().format('LLL')}`);
       }, 3000);

@@ -37,6 +37,7 @@ const manageData = (data, crm, type) => {
         calls: ${data.calls}
         callsDoublons: ${data.callsDoublons}
         callsUnregistered: ${data.callsUnregistered}
+        doublons: ${data.doublons}
       }`;
     }
     return `{
@@ -49,11 +50,10 @@ const manageData = (data, crm, type) => {
     if (type === 'activities') {
       return `{
         meetings: ${data.meetings}
-        meetingsDoublons:: ${data.meetingsDoublons}
         meetingsUnregistered: ${data.meetingsUnregistered}
         calls: ${data.calls}
-        callsDoublons: ${data.callsDoublons}
         callsUnregistered: ${data.callsUnregistered}
+        doublons: ${data.doublons}
       }`;
     }
     return `{
@@ -88,7 +88,7 @@ const createLabelError = (crm, type, email, period, data) => {
       *email: ${email}*
     crm: ${crm}
     type: ${type}
-    period: ${period}
+    period: *${period}*
     data: ${manageData(data, crm, type)}
 `;
 };

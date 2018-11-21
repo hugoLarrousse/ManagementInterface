@@ -148,6 +148,7 @@ const compareActivities = async (email, period) => {
 
   const meetingsDoublons = await H7Controls.doublonsOnEchoes(heptawardMeetings);
   const callsDoublons = await H7Controls.doublonsOnEchoes(heptawardCalls);
+  const doublons = await H7Controls.doublonsOnEchoes([...heptawardCalls, ...heptawardMeetings]);
 
   const meetingsUnregistered = await PidControls.notRegistered(pipedriveMeetings, heptawardMeetings);
   const callsUnregistered = await PidControls.notRegistered(pipedriveCalls, heptawardCalls);
@@ -160,6 +161,7 @@ const compareActivities = async (email, period) => {
       calls: (heptawardCalls.length - pipedriveCalls.length),
       callsDoublons: callsDoublons.length,
       callsUnregistered: callsUnregistered.length,
+      doublons: doublons.length,
     },
     pipedriveMeetings: {
       ndActivities: pipedriveMeetings.length,

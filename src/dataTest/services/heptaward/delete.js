@@ -62,6 +62,14 @@ const deleteDataDoublonsPipedrive = async (elements, database, collection) => {
   return doublons;
 };
 
+const deleteActivitiesById = async (activityIds) => {
+  const filter = {
+    _id: { $in: activityIds },
+  };
+  await mongo.softDeleteMany('heptaward', 'echoes', filter);
+};
+
 exports.deleteDealsDoublonsEchoes = deleteDealsDoublonsEchoes;
 exports.deleteActivitiesDoublonsEchoes = deleteActivitiesDoublonsEchoes;
 exports.deleteDataDoublonsPipedrive = deleteDataDoublonsPipedrive;
+exports.deleteActivitiesById = deleteActivitiesById;
