@@ -142,16 +142,19 @@ const compareActivities = async (email, period) => {
   const heptawardCalls = await h7Echoes.getAddActivitiesInfos('call', user.team_id, since);
 
   /* test */
-  // const pipedriveM = pipedriveCalls.map(p => p.id);
-  // const h7M = heptawardCalls.map(p => p.source.id);
-  // console.log('difference :', difference(h7M, pipedriveM));
-
   const meetingsDoublons = await H7Controls.doublonsOnEchoes(heptawardMeetings);
   const callsDoublons = await H7Controls.doublonsOnEchoes(heptawardCalls);
   const doublons = await H7Controls.doublonsOnEchoes([...heptawardCalls, ...heptawardMeetings]);
 
   const meetingsUnregistered = await PidControls.notRegistered(pipedriveMeetings, heptawardMeetings);
   const callsUnregistered = await PidControls.notRegistered(pipedriveCalls, heptawardCalls);
+
+  // const diffCall = difference(heptawardCalls.map(p => p.source.id), pipedriveCalls.map(p => p.id));
+  // const diffMeeting = difference(heptawardMeetings.map(p => p.source.id), pipedriveMeetings.map(p => p.id));
+
+  // console.log('doublons :', doublons);
+  // console.log('diffCall :', diffCall);
+  // console.log('diffMeeting :', diffMeeting);
 
   return {
     differences: {

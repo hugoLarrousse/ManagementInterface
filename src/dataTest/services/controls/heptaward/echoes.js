@@ -11,7 +11,7 @@ const doublonsOnEchoes = (h7Elements) => {
     const doublons = duplicatesID(count(listID));
 
     h7Elements.forEach(a => {
-      if (doublons.includes(a.source.id.toString())) {
+      if (doublons.includes(a.source.id.toString()) && !duplicated.find(d => d.source.id)) {
         duplicated.push(a);
       }
     });
