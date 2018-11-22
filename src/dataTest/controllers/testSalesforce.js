@@ -9,6 +9,7 @@ const PidControls = require('../services/controls/pipedrive');
 const H7Controls = require('../services/controls/heptaward/echoes');
 const srvDate = require('../Utils/dates');
 const genericControls = require('../services/controls/heptaward/generic');
+// const difference = require('lodash/difference');
 
 const {
   salesforceUrlLogin,
@@ -68,6 +69,14 @@ const compareDeals = async (email, period) => {
 
   const differenceOpened = genericControls.tabDealsCompare(heptawardOpenedDeals.deals, salesforceOpenedDeals);
   const differenceWon = genericControls.tabDealsCompare(heptawardWonDeals.deals, salesforceWonDeals);
+
+  // const salesforceM = salesforceWonDeals.map(p => p.Id);
+  // console.log('salesforceWonDeals[0] :', salesforceWonDeals[0]);
+  // console.log('salesforceM :', salesforceM.length);
+  // const h7M = heptawardWonDeals.deals.map(p => p.source.id);
+  // console.log('h7M.length :', h7M.length);
+  // console.log('DIFFF :', difference(h7M, salesforceM));
+  // console.log('DIFFF2 :', difference(salesforceM, h7M));
 
   return {
     differences: {

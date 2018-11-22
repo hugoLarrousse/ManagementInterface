@@ -8,7 +8,7 @@ const config = require('config');
 const emails = config.get('emails');
 
 exports.cron = () => {
-  cron.schedule('0 */3 * * *', async () => {
+  cron.schedule('0 */5 * * *', async () => {
     try {
       logger.info(`START TEST AUTOMATION : ${moment().format('LLL')}`);
       await checkData.checkPipedriveByEmail(emails.pipedrive, false, 'month');
