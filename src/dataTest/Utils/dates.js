@@ -36,27 +36,20 @@ const setEndMonthTimestamp = (timestamp = Date.now()) => {
 const timestampStartPeriod = (period = 'day', date = new Date()) => {
   switch (period) {
     case 'day':
-      return new Date(date.setDate(date.getDate() - 1)).setUTCHours(0, 0, 0, 0);
+      return new Date(date.setDate(date.getDate() - 1)).setUTCHours(1, 0, 0, 0);
     case 'week':
-      return new Date(date.setUTCDate((date.getDate() - date.getDay()) + 1)).setUTCHours(0, 0, 0, 0);
+      return new Date(date.setUTCDate((date.getDate() - date.getDay()) + 1)).setUTCHours(1, 0, 0, 0);
     case 'month':
       return new Date(date.getUTCFullYear(), date.getUTCMonth(), 1).setHours(1, 0, 0, 0);
     case 'quarter':
-      if (date.getMonth() < 3) {
-        return new Date(date.getFullYear(), 0, 1).setUTCHours(0, 0, 0, 0);
-      } else if (date.getMonth() < 6) {
-        return new Date(date.getFullYear(), 3, 1).setUTCHours(0, 0, 0, 0);
-      } else if (date.getMonth() < 9) {
-        return new Date(date.getFullYear(), 6, 1).setUTCHours(0, 0, 0, 0);
-      }
-      return new Date(date.getFullYear(), 9, 1).setUTCHours(0, 0, 0, 0);
+      return new Date(date.getFullYear(), Math.floor((date.getMonth() / 3)) * 3, 1).setHours(1, 0, 0, 0);
     case 'semester':
       if (date.getMonth() < 6) {
-        return new Date(date.getFullYear(), 0, 1).setUTCHours(0, 0, 0, 0);
+        return new Date(date.getFullYear(), 0, 1).setUTCHours(1, 0, 0, 0);
       }
-      return new Date(date.getFullYear(), 6, 1).setUTCHours(0, 0, 0, 0);
+      return new Date(date.getFullYear(), 6, 1).setUTCHours(1, 0, 0, 0);
     case 'year':
-      return new Date(date.getFullYear(), 0, 1).setUTCHours(0, 0, 0, 0);
+      return new Date(date.getFullYear(), 0, 1).setUTCHours(1, 0, 0, 0);
     default:
       return Date.now();
   }

@@ -126,10 +126,10 @@ const compareActivities = async (email, period) => {
 
   return {
     differences: {
-      meetings: (heptawardMeetings.length - salesforceMeetings.length),
+      // meetings: (heptawardMeetings.length - salesforceMeetings.length),
       meetingsDoublons: meetingsDoublons.length,
       meetingsUnregistered: meetingsUnregistered.length,
-      calls: (heptawardCalls.length - salesforceCalls.length),
+      // calls: (heptawardCalls.length - salesforceCalls.length),
       callsDoublons: callsDoublons.length,
       callsUnregistered: callsUnregistered.length,
     },

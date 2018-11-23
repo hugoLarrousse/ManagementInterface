@@ -31,10 +31,8 @@ const manageData = (data, crm, type) => {
   if (crm === 'pipedrive') {
     if (type === 'activities') {
       return `{
-        meetings: ${data.meetings}
         meetingsDoublons: ${data.meetingsDoublons}
         meetingsUnregistered: ${data.meetingsUnregistered}
-        calls: ${data.calls}
         callsDoublons: ${data.callsDoublons}
         callsUnregistered: ${data.callsUnregistered}
         doublons: ${data.doublons}
@@ -49,9 +47,7 @@ const manageData = (data, crm, type) => {
   } else if (crm === 'hubspot') {
     if (type === 'activities') {
       return `{
-        meetings: ${data.meetings}
         meetingsUnregistered: ${data.meetingsUnregistered}
-        calls: ${data.calls}
         callsUnregistered: ${data.callsUnregistered}
         doublons: ${data.doublons}
       }`;
@@ -65,10 +61,8 @@ const manageData = (data, crm, type) => {
   } else if (crm === 'salesforce') {
     if (type === 'activities') {
       return `{
-        meetings: ${data.meetings}
         meetingsDoublons:: ${data.meetingsDoublons}
         meetingsUnregistered: ${data.meetingsUnregistered}
-        calls: ${data.calls}
         callsDoublons: ${data.callsDoublons}
         callsUnregistered: ${data.callsUnregistered}
       }`;

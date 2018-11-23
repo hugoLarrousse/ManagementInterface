@@ -152,16 +152,18 @@ const compareActivities = async (email, period) => {
   // const diffCall = difference(heptawardCalls.map(p => p.source.id), pipedriveCalls.map(p => p.id));
   // const diffMeeting = difference(heptawardMeetings.map(p => p.source.id), pipedriveMeetings.map(p => p.id));
 
+  await H7Controls.manageDoublons(meetingsDoublons, callsDoublons, doublons);
+
   // console.log('doublons :', doublons);
   // console.log('diffCall :', diffCall);
   // console.log('diffMeeting :', diffMeeting);
 
   return {
     differences: {
-      meetings: (heptawardMeetings.length - pipedriveMeetings.length),
+      // meetings: (heptawardMeetings.length - pipedriveMeetings.length),
       meetingsDoublons: meetingsDoublons.length,
       meetingsUnregistered: meetingsUnregistered.length,
-      calls: (heptawardCalls.length - pipedriveCalls.length),
+      // calls: (heptawardCalls.length - pipedriveCalls.length),
       callsDoublons: callsDoublons.length,
       callsUnregistered: callsUnregistered.length,
       doublons: doublons.length,

@@ -111,10 +111,10 @@ const compareActivities = async (email, period) => {
   return {
     since: new Date(since),
     differences: {
-      meetings: heptawardMeetings.length - hubspotengagements.nbMeetings,
+      // meetings: heptawardMeetings.length - hubspotengagements.nbMeetings,
       meetingsDoublons: meetingsDoublons.length,
       meetingsUnregistered: unregisteredMeetingsEngagement.length,
-      calls: heptawardCalls.length - hubspotengagements.nbCalls,
+      // calls: heptawardCalls.length - hubspotengagements.nbCalls,
       callsDoublons: callsDoublons.length,
       callsUnregistered: unregisteredCallsEngagement.length,
       doublons: doublons.length,
