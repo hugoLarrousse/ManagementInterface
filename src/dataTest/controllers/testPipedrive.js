@@ -73,9 +73,9 @@ const compareDeals = async (email, period) => {
   const heptawardWonDeals = await h7Echoes.getDealsInfos('deal-won', user.team_id, since, integrationChecked.integrationTeam);
 
   /* test */
-  // const pipedriveM = pipedriveWonDeals.map(p => p.id);
+  // const pipedriveM = pipedriveOpenedDeals.map(p => p.id);
   // console.log('pipedriveM :', pipedriveM.length);
-  // const h7M = heptawardWonDeals.deals.map(p => p.source.id);
+  // const h7M = heptawardOpenedDeals.deals.map(p => p.source.id);
   // console.log('h7M :', h7M.length);
   // console.log('difference :', difference(h7M, pipedriveM));
 

@@ -84,7 +84,7 @@ const getDoneActivitiesInfos = async (type, teamId, since) => {
 };
 
 const getActivitiesDoublons = (teamId, activityId, type) => {
-  return mongo.find('heptaward', 'echoes', { 'source.id': activityId, 'source.team_id': teamId, type });
+  return mongo.find('heptaward', 'echoes', { 'source.id': activityId, 'source.team_id': teamId, type: type || { $in: ['call', 'meeting'] } });
 };
 
 exports.getDealsInfos = getDealsInfos;
