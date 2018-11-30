@@ -36,13 +36,12 @@ const getDealsInfos = async (type, teamH7Id, since, integrationTeam) => {
 };
 
 const getAddActivitiesInfos = (type, teamId, since) => {
-  const date = new Date(since);
   try {
     const select = {
       team_h7_id: ObjectID(teamId),
       date_add_timestamp: {
         $gte: Number(since),
-        $lte: new Date(date.getFullYear(), date.getMonth() + 1, 0).getTime(),
+        $lte: Date.now(),
       },
       type,
     };

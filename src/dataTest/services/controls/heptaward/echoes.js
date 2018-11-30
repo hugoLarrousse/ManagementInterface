@@ -78,6 +78,7 @@ exports.manageDoublons = async (meetingsDoublons, callDoublons, doublons) => {
       } else if (meetings.length > 2) {
         console.log('Meeting Doublon more than 2...');
       } else {
+        console.log('meetings :', meetings);
         const idToDelete = compareDoublons(meetings[0], meetings[1]);
         if (idToDelete) {
           console.log('idToDelete :', idToDelete);

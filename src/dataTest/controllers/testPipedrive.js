@@ -83,8 +83,9 @@ const compareDeals = async (email, period) => {
   const unRegisteredWonDeals = PidControls.notRegistered(pipedriveWonDeals, heptawardWonDeals.deals);
 
   const openedDoublons = H7Controls.doublonsOnEchoes(heptawardOpenedDeals.deals);
+  console.log('openedDoublons :', openedDoublons);
   const wonDoublons = H7Controls.doublonsOnEchoes(heptawardWonDeals.deals);
-
+  console.log('wonDoublons :', wonDoublons);
   const differenceOpened = genericControls.tabDealsCompare(heptawardOpenedDeals.deals, pipedriveOpenedDeals);
   const differenceWon = genericControls.tabDealsCompare(heptawardWonDeals.deals, pipedriveWonDeals);
 
@@ -147,8 +148,9 @@ const compareActivities = async (email, period) => {
   const doublons = await H7Controls.doublonsOnEchoes([...heptawardCalls, ...heptawardMeetings]);
 
   const meetingsUnregistered = await PidControls.notRegistered(pipedriveMeetings, heptawardMeetings);
-  const callsUnregistered = await PidControls.notRegistered(pipedriveCalls, heptawardCalls);
 
+  const callsUnregistered = await PidControls.notRegistered(pipedriveCalls, heptawardCalls);
+  console.log('callsUnregistered :', callsUnregistered);
   // const diffCall = difference(heptawardCalls.map(p => p.source.id), pipedriveCalls.map(p => p.id));
   // const diffMeeting = difference(heptawardMeetings.map(p => p.source.id), pipedriveMeetings.map(p => p.id));
 
