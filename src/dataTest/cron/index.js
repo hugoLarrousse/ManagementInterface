@@ -17,8 +17,8 @@ exports.cron = async () => {
       logger.info('Hubspot week done');
       await checkData.checkSalesforceByEmail(emails.salesforce, false, 'month');
       logger.info('Salesforce month done');
-      await checkData.checkHubspotByEmail(emails.hubspot, false, 'day');
-      logger.info('Hubspot day done');
+      // await checkData.checkHubspotByEmail(emails.hubspot, false, 'day');
+      // logger.info('Hubspot day done');
       setTimeout(() => {
         logger.info(`END TEST AUTOMATION : ${moment().format('LLL')}`);
       }, 3000);
