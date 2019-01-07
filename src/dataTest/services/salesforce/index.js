@@ -50,7 +50,9 @@ const getDealsOpened = async (token, baseUrl, period, allIntegrations) => {
 
 const getDealsWon = async (token, baseUrl, period, allIntegrations) => {
   const date = new Date(period);
-  const startDate = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate() < 10 ? `0${date.getDate()}` : date.getDate()}`;
+  const startDate = `${date.getFullYear()}-
+  ${date.getMonth() + 1 < 10 ? `0${date.getMonth() + 1}` : date.getMonth() + 1}-
+  ${date.getDate() < 10 ? `0${date.getDate()}` : date.getDate()}`;
   try {
     let hasMore = false;
     let urlPath = '';
