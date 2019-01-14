@@ -30,7 +30,11 @@ const compareDoublons = (doc1, doc2, isDoublon) => {
   let points1 = 0;
   let points2 = 0;
   if (String(doc1.orga_h7_id) !== String(doc2.orga_h7_id) || String(doc1.user_h7_id) !== String(doc2.user_h7_id)) {
-    console.log('orga_h7_id or user_h7_id different :');
+    console.log('orga_h7_id or user_h7_id different :', doc1.user_h7_id, doc2.user_h7_id);
+    const timestampDiff = doc1.register_timestamp - doc2.register_timestamp;
+    if (points1 === points2 && (timestampDiff < 1000 && timestampDiff > -1000)) {
+      return doc1.register_timestamp - doc2.register_timestamp > 0 ? doc2._id : doc1._id;
+    }
     return null;
   }
   // check updatedAt
@@ -65,10 +69,53 @@ const compareDoublons = (doc1, doc2, isDoublon) => {
   if (isDoublon) {
     return (points1 > points2 && doc2._id) || (points2 > points1 && doc1._id) || null;
   }
+  const timestampDiff = doc1.register_timestamp - doc2.register_timestamp;
+  if (points1 === points2 && (timestampDiff < 1000 && timestampDiff > -1000)) {
+    return doc1.register_timestamp - doc2.register_timestamp > 0 ? doc2._id : doc1._id;
+  }
+
   return null;
 };
 
-exports.manageDoublons = async (meetingsDoublons, callDoublons, doublons) => {
+exports.manageDoublonsDeals = async (openedDoublons, wonDoublons) => {
+  if (openedDoublons && openedDoublons.length > 0) {
+    console.log('openedDoublons is real');
+    for (const openedDoublon of openedDoublons) {
+      const dealsOpened = await h7Echoes.getActivitiesDoublons(openedDoublon.source.team_id, openedDoublon.source.id, 'deal-opened');
+
+      if (dealsOpened.length < 2) {
+        console.log('Error no doublons meetings :');
+      } else if (dealsOpened.length > 2) {
+        console.log('Meeting Doublon more than 2...');
+      } else {
+        const idToDelete = compareDoublons(dealsOpened[0], dealsOpened[1]);
+        if (idToDelete) {
+          await h7Echoes.deleteDoublonById(idToDelete);
+          console.log('idDeleted :', idToDelete);
+        }
+      }
+    }
+  }
+  if (wonDoublons && wonDoublons.length > 0) {
+    console.log('wonDoublons doublons');
+    for (const wonDoublon of wonDoublons) {
+      const dealsWon = await h7Echoes.getActivitiesDoublons(wonDoublon.source.team_id, wonDoublon.source.id, 'meeting');
+      if (dealsWon.length < 2) {
+        console.log('Error no doublons calls :');
+      } else if (dealsWon.length > 2) {
+        console.log('Call Doublon more than 2...');
+      } else {
+        const idToDelete = compareDoublons(dealsWon[0], dealsWon[1]);
+        if (idToDelete) {
+          await h7Echoes.deleteDoublonById(idToDelete);
+          console.log('idDeleted :', idToDelete);
+        }
+      }
+    }
+  }
+};
+
+exports.manageDoublonsActivities = async (meetingsDoublons, callDoublons, doublons) => {
   if (meetingsDoublons && meetingsDoublons.length > 0) {
     console.log('meeting doublons');
     for (const meetingDoublon of meetingsDoublons) {
@@ -81,8 +128,8 @@ exports.manageDoublons = async (meetingsDoublons, callDoublons, doublons) => {
         console.log('meetings :', meetings);
         const idToDelete = compareDoublons(meetings[0], meetings[1]);
         if (idToDelete) {
-          console.log('idToDelete :', idToDelete);
-          // delete
+          await h7Echoes.deleteDoublonById(idToDelete);
+          console.log('idDeleted :', idToDelete);
         }
       }
     }
@@ -98,8 +145,8 @@ exports.manageDoublons = async (meetingsDoublons, callDoublons, doublons) => {
       } else {
         const idToDelete = compareDoublons(meetings[0], meetings[1]);
         if (idToDelete) {
-          console.log('idToDelete :', idToDelete);
-          // delete
+          await h7Echoes.deleteDoublonById(idToDelete);
+          console.log('idDeleted :', idToDelete);
         }
       }
     }
@@ -115,8 +162,8 @@ exports.manageDoublons = async (meetingsDoublons, callDoublons, doublons) => {
       } else {
         const idToDelete = compareDoublons(activities[0], activities[1], true);
         if (idToDelete) {
-          console.log('idToDelete :', idToDelete);
-          // delete
+          await h7Echoes.deleteDoublonById(idToDelete);
+          console.log('idDeleted :', idToDelete);
         }
       }
     }

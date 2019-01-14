@@ -77,17 +77,22 @@ const compareDeals = async (email, period) => {
   // console.log('pipedriveM :', pipedriveM.length);
   // const h7M = heptawardOpenedDeals.deals.map(p => p.source.id);
   // console.log('h7M :', h7M.length);
-  // console.log('difference :', difference(h7M, pipedriveM));
+  // console.log('difference1 :', difference(h7M, pipedriveM));
+  // console.log('difference2 :', difference(pipedriveM, h7M));
 
   const unRegisteredOpenedDeals = PidControls.notRegistered(pipedriveOpenedDeals, heptawardOpenedDeals.deals);
   const unRegisteredWonDeals = PidControls.notRegistered(pipedriveWonDeals, heptawardWonDeals.deals);
 
   const openedDoublons = H7Controls.doublonsOnEchoes(heptawardOpenedDeals.deals);
-  console.log('openedDoublons :', openedDoublons);
+  // console.log('openedDoublons :', openedDoublons);
   const wonDoublons = H7Controls.doublonsOnEchoes(heptawardWonDeals.deals);
-  console.log('wonDoublons :', wonDoublons);
+  // console.log('wonDoublons :', wonDoublons);
   const differenceOpened = genericControls.tabDealsCompare(heptawardOpenedDeals.deals, pipedriveOpenedDeals);
   const differenceWon = genericControls.tabDealsCompare(heptawardWonDeals.deals, pipedriveWonDeals);
+
+  if (openedDoublons.length > 0 || wonDoublons.length > 0) {
+    await H7Controls.manageDoublonsDeals(openedDoublons, wonDoublons);
+  }
 
   return {
     differences: {
@@ -150,11 +155,11 @@ const compareActivities = async (email, period) => {
   const meetingsUnregistered = await PidControls.notRegistered(pipedriveMeetings, heptawardMeetings);
 
   const callsUnregistered = await PidControls.notRegistered(pipedriveCalls, heptawardCalls);
-  console.log('callsUnregistered :', callsUnregistered);
+  // console.log('callsUnregistered :', callsUnregistered);
   // const diffCall = difference(heptawardCalls.map(p => p.source.id), pipedriveCalls.map(p => p.id));
   // const diffMeeting = difference(heptawardMeetings.map(p => p.source.id), pipedriveMeetings.map(p => p.id));
 
-  await H7Controls.manageDoublons(meetingsDoublons, callsDoublons, doublons);
+  await H7Controls.manageDoublonsActivities(meetingsDoublons, callsDoublons, doublons);
 
   // console.log('doublons :', doublons);
   // console.log('diffCall :', diffCall);

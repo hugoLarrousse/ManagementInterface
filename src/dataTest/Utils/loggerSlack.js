@@ -42,7 +42,7 @@ const manageData = (data, crm, type) => {
       differenceOpened: ${data.differenceOpened}
       differenceWon: ${data.differenceWon}
       doublons: ${data.doublons}
-      unRegistered:: ${data.unRegistered}
+      unRegistered: ${data.unRegistered}
     }`;
   } else if (crm === 'hubspot') {
     if (type === 'activities') {
@@ -56,7 +56,7 @@ const manageData = (data, crm, type) => {
       differenceOpened: ${data.differenceOpened}
       differenceWon: ${data.differenceWon}
       doublons: ${data.doublons}
-      unRegistered:: ${data.unRegistered}
+      unRegistered: ${data.unRegistered}
     }`;
   } else if (crm === 'salesforce') {
     if (type === 'activities') {
@@ -71,7 +71,7 @@ const manageData = (data, crm, type) => {
       differenceOpened: ${data.differenceOpened}
       differenceWon: ${data.differenceWon}
       doublons: ${data.doublons}
-      unRegistered:: ${data.unRegistered}
+      unRegistered: ${data.unRegistered}
     }`;
   }
   return null;

@@ -11,7 +11,7 @@ const getDealsInfos = async (type, teamH7Id, since, integrationTeam) => {
 
     const select = {
       team_h7_id: ObjectID(teamH7Id),
-      'source.team_id': integrationTeam,
+      'source.team_id': Number(integrationTeam),
       date_add_timestamp: {
         $gte: Number(since),
         $lte: Date.now(),
@@ -86,7 +86,14 @@ const getActivitiesDoublons = (teamId, activityId, type) => {
   return mongo.find('heptaward', 'echoes', { 'source.id': activityId, 'source.team_id': teamId, type: type || { $in: ['call', 'meeting'] } });
 };
 
+const getDealsDoublons = (teamId, activityId, type) => {
+  return mongo.find('heptaward', 'echoes', { 'source.id': activityId, 'source.team_id': teamId, type });
+};
+
+exports.deleteDoublonById = (id) => mongo.softDelete('heptaward', 'echoes', { _id: ObjectID(id) });
+
 exports.getDealsInfos = getDealsInfos;
 exports.getAddActivitiesInfos = getAddActivitiesInfos;
 exports.getDoneActivitiesInfos = getDoneActivitiesInfos;
 exports.getActivitiesDoublons = getActivitiesDoublons;
+exports.getDealsDoublons = getDealsDoublons;
