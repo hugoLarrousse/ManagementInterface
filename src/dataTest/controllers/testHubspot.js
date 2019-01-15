@@ -1,25 +1,12 @@
 const hubspot = require('../services/hubspot/getdatas');
 const h7Echoes = require('../services/heptaward/echoes');
-const h7Users = require('../services/heptaward/user');
 const h7Delete = require('../services/heptaward/delete');
 const h7Controls = require('../services/controls/heptaward/echoes');
 const hubspotControls = require('../services/controls/hubspot');
 const srvDate = require('../Utils/dates');
-const hubspotUtils = require('../Utils/hubspot');
 const difference = require('lodash/difference');
 
-const isTokenValid = (expirationDate) => Date.now() - 300000 < Number(expirationDate);
-
-const compareDeals = async (email, period) => {
-  const user = await h7Users.getUser(email);
-  const integration = await h7Users.getIntegration(user._id, 'Hubspot');
-
-  let integrationChecked = integration;
-  if (integration.refreshToken && !isTokenValid(integration.tokenExpiresAt)) {
-    integrationChecked = await hubspotUtils.refreshToken(integration);
-  }
-
-  const allIntegrations = await h7Users.getIntegrationOrga(integrationChecked.orgaId, 'Hubspot');
+const compareDeals = async (user, integrationChecked, allIntegrations, period) => {
   const since = srvDate.timestampStartPeriod(period);
 
   const hubspotDealsOpened = await hubspot.getDealsOpened(integrationChecked.token, since, allIntegrations);
@@ -69,16 +56,7 @@ const compareDeals = async (email, period) => {
   };
 };
 
-const compareActivities = async (email, period) => {
-  const user = await h7Users.getUser(email);
-  const integration = await h7Users.getIntegration(user._id, 'Hubspot');
-
-  let integrationChecked = integration;
-  if (integration.refreshToken && !isTokenValid(integration.tokenExpiresAt)) {
-    integrationChecked = await hubspotUtils.refreshToken(integration);
-  }
-
-  const allIntegrations = await h7Users.getIntegrationOrga(integrationChecked.orgaId, 'Hubspot');
+const compareActivities = async (user, integrationChecked, allIntegrations, period) => {
   const since = srvDate.timestampStartPeriod(period);
 
   const hubspotengagements = await hubspot.getEngagements(integrationChecked.token, since, allIntegrations);

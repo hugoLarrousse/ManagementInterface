@@ -43,19 +43,19 @@ exports.cron = async () => {
     try {
       logger.info(`START TEST AUTOMATION 22H: ${moment().format('LLL')}`);
       logger.info('--------------------');
-      await checkData.checkPipedriveByEmail(emails.pipedrive, false, 'month');
+      await checkData.checkPipedriveByEmail(emails.pipedrive, false, 'month', true);
       logger.info('Pipedrive month done');
       await timeoutPromise(300);
       logger.info('--------------------');
-      await checkData.checkHubspotByEmail(emails.hubspot, false, 'week');
+      await checkData.checkHubspotByEmail(emails.hubspot, false, 'week', true);
       logger.info('Hubspot week done');
       await timeoutPromise(300);
       logger.info('--------------------');
-      await checkData.checkSalesforceByEmail(emails.salesforce, false, 'month');
+      await checkData.checkSalesforceByEmail(emails.salesforce, false, 'month', true);
       logger.info('Salesforce month done');
       await timeoutPromise(300);
       logger.info('--------------------');
-      await checkData.checkHubspotByEmail(emails.hubspot, false, 'day');
+      await checkData.checkHubspotByEmail(emails.hubspot, false, 'day', true);
       logger.info('Hubspot day done');
       await timeoutPromise(1000);
       logger.info(`END TEST AUTOMATION : ${moment().format('LLL')}`);

@@ -1,12 +1,14 @@
 {
   "emails": {
-    "pipedrive": ["ubaid@brandimpact.ae", "alex@justflybusiness.co.uk", "alexandre@deepidoo.com", "quentin@qualifio.com", "ofir@easy.co.il", "schuett@masterplan.com", "Marshall@GoldinSolar.com", "simone@eurostep.it", "axel.manoukian@moovone.fr", "p.vasse@webetsolutions.com"],
+    "pipedrive": ["ubaid@brandimpact.ae", "alex@justflybusiness.co.uk", "alexandre@deepidoo.com", "quentin@qualifio.com", "ofir@easy.co.il", "schuett@masterplan.com", "Marshall@GoldinSolar.com", "simone@eurostep.it", "p.vasse@webetsolutions.com"],
     "salesforce": ["gguilbert@marche-prive.net"],
-    "hubspot":["nicolas@ecommerce-nation.fr", "david@carts.guru", "alexandre@greenkub.fr", "antoine@medgo.fr", "jean.baptiste@quasiaqui.fr"]
+    "hubspot":["alexandre@greenkub.fr"],
+    "hubspotA":["nicolas@ecommerce-nation.fr", "david@carts.guru", "alexandre@greenkub.fr", "antoine@medgo.fr", "jean.baptiste@quasiaqui.fr"]
   },
   "pipedrive": {
     "apiUrl": "https://api.pipedrive.com",
     "apiUrlProxy": "https://api-proxy.pipedrive.com",
     "loginUrl": "https://oauth.pipedrive.com"
-  }
+  },
+  "coreUrl": "http://localhost:3333"
 }
