@@ -49,7 +49,7 @@ exports.checkPipedriveByEmail = async (emails, forJames, period, toBeSync) => {
       if (toBeSync) {
         if ((resultDeals && resultDeals.differences.unRegistered > 0)
           || (resultActivities && (resultActivities.differences.meetingsUnregistered || resultActivities.differences.callsUnregistered))) {
-          syncDataAuto(user._id, 'pipedrive');
+          syncDataAuto(user._id, 'pipedrive', email);
         }
       }
     } catch (e) {
@@ -97,7 +97,7 @@ exports.checkHubspotByEmail = async (emails, forJames, period, toBeSync) => {
       if (toBeSync) {
         if ((resultDeals && resultDeals.differences.unRegistered > 0)
           || (resultActivities && (resultActivities.differences.meetingsUnregistered || resultActivities.differences.callsUnregistered))) {
-          syncDataAuto(user._id, 'hubspot');
+          syncDataAuto(user._id, 'hubspot', email);
         }
       }
     } catch (e) {
@@ -142,7 +142,7 @@ exports.checkSalesforceByEmail = async (emails, forJames, period, toBeSync) => {
     if (toBeSync) {
       // if ((resultDeals && resultDeals.differences.unRegistered > 0)
       //   || (resultActivities && (resultActivities.differences.meetingsUnregistered || resultActivities.differences.callsUnregistered))) {
-      //   syncDataAuto(user._id, 'hubspot');
+      //   syncDataAuto(user._id, 'hubspot', email);
       // }
     }
   }

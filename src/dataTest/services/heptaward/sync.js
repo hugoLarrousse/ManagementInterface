@@ -1,10 +1,12 @@
 const request = require('../../Utils/request');
-const config = require('config')
+const config = require('config');
 
 
 const { fixedToken } = process.env;
+console.log('fixedToken', fixedToken);
 
-module.exports = (id, crm) => {
+module.exports = (id, crm, email) => {
+  console.log('email SYNC', email);
   try {
     const data = {
       forSync: true,
