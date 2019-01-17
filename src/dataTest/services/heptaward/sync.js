@@ -4,6 +4,7 @@ const config = require('config');
 
 const { fixedToken } = process.env;
 console.log('fixedToken', fixedToken);
+console.log('coreUrl', config.get('coreUrl'));
 
 module.exports = (id, crm, email) => {
   console.log('email SYNC', email);
