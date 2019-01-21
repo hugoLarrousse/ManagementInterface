@@ -1,3 +1,5 @@
+const { ObjectID } = require('mongodb');
+
 const mongo = require('../../db/mongo');
 
 const databaseName = process.env.databaseH7;
@@ -53,4 +55,22 @@ exports.count = async () => {
     licencePayingPercentage: ((resultLicencePayingCount / resultLicenceCount) * 100).toFixed(2),
     mrr,
   };
+};
+
+exports.getCoupons = () => {
+  return mongo.find('heptaward', 'coupons');
+};
+
+exports.setCoupon = async ({ orgaId, couponId }) => {
+  try {
+    const licence = await mongo.findOne('heptaward', 'licences', { orgaId: ObjectID(orgaId) });
+    if (!licence) throw Error('no licence found');
+    if (licence.couponId) throw Error('already has a couponId');
+    const result = await mongo.updateOne('heptaward', 'licences', { _id: licence._id }, { couponId });
+    if (!result) throw Error('licence not updated');
+    return { success: true };
+  } catch (e) {
+    console.log('e.message :', e.message);
+    return { success: false };
+  }
 };
