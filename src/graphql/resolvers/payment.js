@@ -4,25 +4,25 @@ const databaseName = process.env.databaseH7;
 
 const licenceCollection = 'licences';
 const planCollection = 'plans';
+const couponCollection = 'coupons';
 
 const CONVERSION_DOLLAR_EURO = 0.85;
 
-const licencePayingCount = () => mongo.count(databaseName, licenceCollection, {
-  planId: { $ne: null },
-  isCancel: false,
-});
+let coupons = [];
+
 const licenceCount = () => mongo.count(databaseName, licenceCollection);
 const licencesPaid = () => mongo.find(databaseName, licenceCollection, {
   planId: { $ne: null },
   isCancel: false,
 });
-const plans = mongo.find(databaseName, planCollection);
 
-const reducer = (accumulator, licence) => {
+const couponPercentOff = (couponId) => 1 - (Number(coupons.find(coupon => String(coupon._id) === couponId).percent_off) / 100);
+
+const reducerPlan = (accumulator, licence) => {
   if (accumulator[licence.planId]) {
-    Object.assign(accumulator, { [licence.planId]: accumulator[licence.planId] + 1 });
+    Object.assign(accumulator, { [licence.planId]: accumulator[licence.planId] + (licence.couponId ? couponPercentOff(licence.couponId) : 1) });
   } else {
-    Object.assign(accumulator, { [licence.planId]: 1 });
+    Object.assign(accumulator, { [licence.planId]: (licence.couponId ? couponPercentOff(licence.couponId) : 1) });
   }
   return accumulator;
 };
@@ -35,13 +35,16 @@ const normalizeAmountPlan = ({ interval, currency, amount }) => {
 };
 
 exports.count = async () => {
-  const resultLicencePayingCount = await licencePayingCount();
   const resultLicenceCount = await licenceCount();
   const resultLicencesPaid = await licencesPaid();
-  const planIdCount = resultLicencesPaid.reduce(reducer, {});
-  const plansUnpromising = await plans;
+  coupons = await mongo.find(databaseName, couponCollection);
+
+  const resultLicencePayingCount = resultLicencesPaid.length;
+  const planIdCount = resultLicencesPaid.reduce(reducerPlan, {});
+  const plans = await mongo.find(databaseName, planCollection);
+
   const mrr = Object.entries(planIdCount).reduce((accumulator, currentValue) => {
-    const planFound = plansUnpromising.find(plan => currentValue[0] === plan._id);
+    const planFound = plans.find(plan => currentValue[0] === plan._id);
     const amount = normalizeAmountPlan(planFound);
     return accumulator += amount * currentValue[1]; // eslint-disable-line
   }, 0);
