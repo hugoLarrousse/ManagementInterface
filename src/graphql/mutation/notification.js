@@ -35,7 +35,7 @@ exports.postNotification = {
       description: 'user Ids',
     },
   },
-  resolve: createResolver({ isAuthRequired: false }, (_, args) => {
+  resolve: createResolver({ isAuthRequired: true }, (_, args) => {
     return notification.postNotification(args);
   }),
 };

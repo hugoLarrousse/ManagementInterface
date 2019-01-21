@@ -38,3 +38,21 @@ exports.getTeamsUsers = async () => {
   const result = await Promise.all([mongo.find('heptaward', 'teams'), mongo.find('heptaward', 'users', { team_id: { $ne: null } })]);
   return { teams: result[0], users: result[1] };
 };
+
+exports.getTeams = async () => {
+  const [licences, teams, organisations] = await Promise.all([
+    mongo.find('heptaward', 'licences'),
+    mongo.find('heptaward', 'teams'),
+    mongo.find('heptaward', 'organisations')]);
+  const teamToRemove = [];
+  for (const team of teams) {
+    const orga = organisations.find(o => String(o.team_h7_id[0]) === String(team._id));
+    if (!orga) {
+      teamToRemove.push(team._id);
+      continue; //eslint-disable-line
+    }
+    const licence = licences.find(l => String(l.orgaId) === String(orga._id));
+    Object.assign(team, { orgaId: orga._id, couponId: licence.couponId });
+  }
+  return teams.filter(team => !teamToRemove.includes(team._id));
+};

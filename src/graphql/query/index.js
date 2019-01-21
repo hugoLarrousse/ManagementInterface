@@ -25,6 +25,8 @@ const queryType = new GraphQLObjectType({
     checkAllData: dataTest.allData,
     checkData: dataTest.data,
     teamsUsers: user.teamsUsers,
+    teams: user.teams,
+    coupons: payment.getCoupons,
   },
 });
 
