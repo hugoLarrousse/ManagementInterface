@@ -66,7 +66,14 @@ const makePercentage = (first, second) => {
   return ((first / second) * 100).toFixed(2);
 };
 
+const makeEnumType = mapper => Object.values(mapper)
+  .reduce((acc, c) => ({
+    ...acc,
+    [c]: { value: c },
+  }), {});
+
 exports.timestampsModelInterfaceType = timestampsModelInterfaceType;
 exports.createTimeModelType = createTimeModelType;
 exports.createResolver = createResolver;
 exports.makePercentage = makePercentage;
+exports.makeEnumType = makeEnumType;

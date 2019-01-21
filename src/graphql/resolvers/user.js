@@ -33,3 +33,8 @@ exports.deleteUsers = async (email) => {
     return { success: false };
   }
 };
+
+exports.getTeamsUsers = async () => {
+  const result = await Promise.all([mongo.find('heptaward', 'teams'), mongo.find('heptaward', 'users', { team_id: { $ne: null } })]);
+  return { teams: result[0], users: result[1] };
+};
