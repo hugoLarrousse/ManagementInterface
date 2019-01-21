@@ -28,7 +28,7 @@ const compareDeals = async (user, integrationChecked, allIntegrations, period) =
   const hubspotM = hubspotDealsOpened.map(p => p.dealId);
   // console.log('hubspotM :', hubspotM);
   const h7M = heptawardOpenedDeals.deals.map(p => p.source.id);
-  console.log('DIFFF :', difference(h7M, hubspotM));
+  // console.log('DIFFF :', difference(h7M, hubspotM));
   // const hubspotC = hubspotCalls.map(p => p.engagement.id);
   // const h7C = heptawardCalls.map(p => p.source.id);
 
