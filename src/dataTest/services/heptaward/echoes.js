@@ -11,6 +11,7 @@ const getDealsInfos = async (type, teamH7Id, since, integrationTeam) => {
 
     const select = {
       team_h7_id: ObjectID(teamH7Id),
+      user_h7_id: { $ne: null },
       'source.team_id': Number(integrationTeam),
       date_add_timestamp: {
         $gte: Number(since),
@@ -39,6 +40,7 @@ const getAddActivitiesInfos = (type, teamId, since) => {
   try {
     const select = {
       team_h7_id: ObjectID(teamId),
+      user_h7_id: { $ne: null },
       date_add_timestamp: {
         $gte: Number(since),
         $lte: Date.now(),
@@ -63,6 +65,7 @@ const getDoneActivitiesInfos = async (type, teamId, since) => {
 
     const select = {
       team_h7_id: ObjectID(teamId),
+      user_h7_id: { $ne: null },
       date_done_timestamp: {
         $gte: Number(since),
       },

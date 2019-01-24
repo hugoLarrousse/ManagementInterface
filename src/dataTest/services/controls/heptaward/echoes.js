@@ -101,7 +101,7 @@ exports.manageDoublonsDeals = async (openedDoublons, wonDoublons) => {
     for (const wonDoublon of wonDoublons) {
       const dealsWon = await h7Echoes.getActivitiesDoublons(wonDoublon.source.team_id, wonDoublon.source.id, 'meeting');
       if (dealsWon.length < 2) {
-        console.log('Error no doublons calls :');
+        console.log('Error no wonDoublons :');
       } else if (dealsWon.length > 2) {
         console.log('Call Doublon more than 2...');
       } else {
@@ -137,7 +137,7 @@ exports.manageDoublonsActivities = async (meetingsDoublons, callDoublons, doublo
   if (callDoublons && callDoublons.length > 0) {
     console.log('call doublons');
     for (const callDoublon of callDoublons) {
-      const meetings = await h7Echoes.getActivitiesDoublons(callDoublon.source.team_id, callDoublon.source.id, 'meeting');
+      const meetings = await h7Echoes.getActivitiesDoublons(callDoublon.source.team_id, callDoublon.source.id, 'call');
       if (meetings.length < 2) {
         console.log('Error no doublons calls :');
       } else if (meetings.length > 2) {
@@ -156,7 +156,7 @@ exports.manageDoublonsActivities = async (meetingsDoublons, callDoublons, doublo
     for (const doublon of doublons) {
       const activities = await h7Echoes.getActivitiesDoublons(doublon.source.team_id, doublon.source.id);
       if (activities.length < 2) {
-        console.log('Error no doublons calls :');
+        console.log('Error no doublons :');
       } else if (activities.length > 2) {
         console.log('Call Doublon more than 2...');
       } else {
