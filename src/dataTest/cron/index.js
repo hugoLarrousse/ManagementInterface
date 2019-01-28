@@ -70,6 +70,7 @@ exports.cron = async () => {
   } else {
     try {
       logger.info('START TEST AUTOMATION MANUAL');
+      await timeoutPromise(300);
       logger.info('PIPEDRIVE MONTH');
       await checkData.checkPipedriveByEmail(emails.pipedrive, false, 'month');
       await timeoutPromise(300);

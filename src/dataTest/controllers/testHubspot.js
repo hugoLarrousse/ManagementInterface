@@ -11,7 +11,7 @@ const compareDeals = async (user, integrationChecked, allIntegrations, period) =
 
   const hubspotDealsOpened = await hubspot.getDealsOpened(integrationChecked.token, since, allIntegrations);
   const hubspotDealsWon = await hubspot.getDealsWon(integrationChecked.token, since, allIntegrations);
-  // console.log('hubspotDealsWon[0] :', hubspotDealsWon[0]);
+  // console.log('hubspotDealsWon :', hubspotDealsWon.length);
   const heptawardWonDeals = await h7Echoes.getDealsInfos('deal-won', user.team_id, since, integrationChecked.integrationTeam);
   // console.log('heptawardWonDeals :', heptawardWonDeals);
   const heptawardOpenedDeals = await h7Echoes.getDealsInfos('deal-opened', user.team_id, since, integrationChecked.integrationTeam);
@@ -25,9 +25,9 @@ const compareDeals = async (user, integrationChecked, allIntegrations, period) =
   const differenceOpened = heptawardOpenedDeals.ndDeals - hubspotDealsOpened.length;
   const differenceWon = heptawardWonDeals.ndDeals - hubspotDealsWon.length;
 
-  // const hubspotM = hubspotDealsOpened.map(p => p.dealId);
+  // const hubspotM = hubspotDealsWon.map(p => p.dealId);
   // console.log('hubspotM :', hubspotM.length);
-  // const h7M = heptawardOpenedDeals.deals.map(p => p.source.id);
+  // const h7M = heptawardWonDeals.deals.map(p => p.source.id);
   // console.log('DIFFF :', difference(h7M, hubspotM));
 
   return {
