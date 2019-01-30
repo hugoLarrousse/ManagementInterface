@@ -1,8 +1,12 @@
 {
   "emails": {
-    "pipedrive": ["ubaid@brandimpact.ae", "alex@justflybusiness.co.uk", "alexandre@deepidoo.com", "quentin@qualifio.com", "ofir@easy.co.il", "schuett@masterplan.com", "Marshall@GoldinSolar.com", "simone@eurostep.it", "p.vasse@webetsolutions.com", "dimitri@wedoogift.com"],
-    "salesforce": ["gguilbert@marche-prive.net"],
-    "hubspot":["nicolas@ecommerce-nation.fr", "david@carts.guru", "alexandre@greenkub.fr", "antoine@medgo.fr", "jean.baptiste@quasiaqui.fr", "aurelien@permettezmoideconstruire.fr"]
+    "pipedrive": ["ubaid@brandimpact.ae", "alex@justflybusiness.co.uk", "alexandre@deepidoo.com",
+      "quentin@qualifio.com", "ofir@easy.co.il", "schuett@masterplan.com", "Marshall@GoldinSolar.com",
+      "simone@eurostep.it", "p.vasse@webetsolutions.com", "dimitri@wedoogift.com", "marion.mccallum@itison.com"],
+    "salesforce": ["gguilbert@marche-prive.net", "romain.bulard-luc@dimelo.com"],
+    "hubspot":["nicolas@ecommerce-nation.fr", "david@carts.guru", "alexandre@greenkub.fr",
+      "antoine@medgo.fr", "jean.baptiste@quasiaqui.fr", "aurelien@permettezmoideconstruire.fr",
+      "romain.bulard-luc@dimelo.com", "nicolas.weissleib@paygreen.fr"]
   },
   "pipedrive": {
     "apiUrl": "https://api.pipedrive.com",
