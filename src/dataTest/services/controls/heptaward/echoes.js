@@ -32,7 +32,7 @@ const compareDoublons = (doc1, doc2, isDoublon) => {
   if (String(doc1.orga_h7_id) !== String(doc2.orga_h7_id) || String(doc1.user_h7_id) !== String(doc2.user_h7_id)) {
     console.log('orga_h7_id or user_h7_id different :', doc1.user_h7_id, doc2.user_h7_id);
     const timestampDiff = doc1.register_timestamp - doc2.register_timestamp;
-    if (points1 === points2 && (timestampDiff < 1000 && timestampDiff > -1000)) {
+    if (timestampDiff < 1000 && timestampDiff > -1000) {
       return doc1.register_timestamp - doc2.register_timestamp > 0 ? doc2._id : doc1._id;
     }
     return null;
@@ -55,7 +55,7 @@ const compareDoublons = (doc1, doc2, isDoublon) => {
   // check createdAt
   if (doc1.createdAt > doc2.createdAt) {
     points1 += 1;
-  } else {
+  } else if (doc1.createdAt < doc2.createdAt) {
     points2 += 1;
   }
 
@@ -70,7 +70,12 @@ const compareDoublons = (doc1, doc2, isDoublon) => {
     return (points1 > points2 && doc2._id) || (points2 > points1 && doc1._id) || null;
   }
   const timestampDiff = doc1.register_timestamp - doc2.register_timestamp;
-  if (points1 === points2 && (timestampDiff < 1000 && timestampDiff > -1000)) {
+
+  if (points1 === points2 && (timestampDiff < 20 && timestampDiff > -20)) {
+    return doc1.register_timestamp - doc2.register_timestamp > 0 ? doc2._id : doc1._id;
+  }
+
+  if ([0, 1].includes(points1) && [0, 1].includes(points2) && (timestampDiff < 10 && timestampDiff > -10)) {
     return doc1.register_timestamp - doc2.register_timestamp > 0 ? doc2._id : doc1._id;
   }
 
