@@ -129,6 +129,7 @@ exports.checkSalesforceByEmail = async (emails, forJames, period, toBeSync) => {
 
     const resultActivities = await testSalesforceCtrl.compareActivities(user, integrationChecked, allIntegrations, period || 'month');
     const resultDeals = await testSalesforceCtrl.compareDeals(user, integrationChecked, allIntegrations, period || 'month');
+
     if (resultActivities) {
       if (Object.values(resultActivities.differences).filter(Number).length > 0) {
         logger.error('salesforce', 'activities', email, period || 'month', resultActivities.differences);
@@ -142,7 +143,7 @@ exports.checkSalesforceByEmail = async (emails, forJames, period, toBeSync) => {
     if (toBeSync) {
       // if ((resultDeals && resultDeals.differences.unRegistered > 0)
       //   || (resultActivities && (resultActivities.differences.meetingsUnregistered || resultActivities.differences.callsUnregistered))) {
-      //   syncDataAuto(user._id, 'hubspot', email);
+      //   syncDataAuto(user._id, 'salesforce', email);
       // }
     }
   }

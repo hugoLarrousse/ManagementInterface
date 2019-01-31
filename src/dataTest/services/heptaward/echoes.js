@@ -12,7 +12,7 @@ const getDealsInfos = async (type, teamH7Id, since, integrationTeam) => {
     const select = {
       team_h7_id: ObjectID(teamH7Id),
       user_h7_id: { $ne: null },
-      'source.team_id': Number(integrationTeam),
+      'source.team_id': integrationTeam,
       date_add_timestamp: {
         $gte: Number(since),
         $lte: Date.now(),
