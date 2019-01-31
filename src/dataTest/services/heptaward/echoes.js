@@ -1,7 +1,7 @@
 const mongo = require('../../../db/mongo');
 const { ObjectID } = require('mongodb');
 
-const getDealsInfos = async (type, teamH7Id, since, integrationTeam) => {
+const getDealsInfos = async (type, teamH7Id, since, integrationTeam, crm) => {
   try {
     const stats = {
       ndDeals: 0,
@@ -12,7 +12,8 @@ const getDealsInfos = async (type, teamH7Id, since, integrationTeam) => {
     const select = {
       team_h7_id: ObjectID(teamH7Id),
       user_h7_id: { $ne: null },
-      'source.team_id': integrationTeam,
+      'source.team_id': crm === 'salesforce' ? integrationTeam : Number(integrationTeam),
+      'source.name': crm,
       date_add_timestamp: {
         $gte: Number(since),
         $lte: Date.now(),
@@ -36,11 +37,12 @@ const getDealsInfos = async (type, teamH7Id, since, integrationTeam) => {
   }
 };
 
-const getAddActivitiesInfos = (type, teamId, since) => {
+const getAddActivitiesInfos = (type, teamId, since, crm) => {
   try {
     const select = {
       team_h7_id: ObjectID(teamId),
       user_h7_id: { $ne: null },
+      'source.name': crm,
       date_add_timestamp: {
         $gte: Number(since),
         $lte: Date.now(),
@@ -56,7 +58,7 @@ const getAddActivitiesInfos = (type, teamId, since) => {
   }
 };
 
-const getDoneActivitiesInfos = async (type, teamId, since) => {
+const getDoneActivitiesInfos = async (type, teamId, since, crm) => {
   try {
     const stats = {
       ndActivities: 0,
@@ -66,6 +68,7 @@ const getDoneActivitiesInfos = async (type, teamId, since) => {
     const select = {
       team_h7_id: ObjectID(teamId),
       user_h7_id: { $ne: null },
+      'source.name': crm,
       date_done_timestamp: {
         $gte: Number(since),
       },

@@ -15,8 +15,8 @@ const compareDeals = async (user, integrationChecked, allIntegrations, period) =
 
   const salesforceWonDeals = await salesforce.getDealsWon(integrationChecked.token, integrationChecked.instanceUrl, since, allIntegrations);
 
-  const heptawardOpenedDeals = await h7Echoes.getDealsInfos('deal-opened', user.team_id, since, integrationChecked.integrationTeam);
-  const heptawardWonDeals = await h7Echoes.getDealsInfos('deal-won', user.team_id, since, integrationChecked.integrationTeam);
+  const heptawardOpenedDeals = await h7Echoes.getDealsInfos('deal-opened', user.team_id, since, integrationChecked.integrationTeam, 'salesforce');
+  const heptawardWonDeals = await h7Echoes.getDealsInfos('deal-won', user.team_id, since, integrationChecked.integrationTeam, 'salesforce');
 
   const unRegisteredOpenedDeals = PidControls.notRegistered(salesforceOpenedDeals, heptawardOpenedDeals.deals);
   const unRegisteredWonDeals = PidControls.notRegistered(salesforceWonDeals, heptawardWonDeals.deals);
@@ -64,8 +64,8 @@ const compareActivities = async (user, integrationChecked, allIntegrations, peri
   const salesforceMeetings = await salesforce.getEvents(integrationChecked.token, integrationChecked.instanceUrl, period, allIntegrations);
   const salesforceCalls = await salesforce.getTasks(integrationChecked.token, integrationChecked.instanceUrl, period, allIntegrations);
 
-  const heptawardMeetings = await h7Echoes.getAddActivitiesInfos('meeting', user.team_id, since);
-  const heptawardCalls = await h7Echoes.getAddActivitiesInfos('call', user.team_id, since);
+  const heptawardMeetings = await h7Echoes.getAddActivitiesInfos('meeting', user.team_id, since, 'salesforce');
+  const heptawardCalls = await h7Echoes.getAddActivitiesInfos('call', user.team_id, since, 'salesforce');
 
   const meetingsDoublons = await H7Controls.doublonsOnEchoes(heptawardMeetings);
   const callsDoublons = await H7Controls.doublonsOnEchoes(heptawardCalls);

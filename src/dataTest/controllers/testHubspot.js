@@ -12,9 +12,9 @@ const compareDeals = async (user, integrationChecked, allIntegrations, period) =
   const hubspotDealsOpened = await hubspot.getDealsOpened(integrationChecked.token, since, allIntegrations);
   const hubspotDealsWon = await hubspot.getDealsWon(integrationChecked.token, since, allIntegrations);
   // console.log('hubspotDealsWon :', hubspotDealsWon.length);
-  const heptawardWonDeals = await h7Echoes.getDealsInfos('deal-won', user.team_id, since, integrationChecked.integrationTeam);
+  const heptawardWonDeals = await h7Echoes.getDealsInfos('deal-won', user.team_id, since, integrationChecked.integrationTeam, 'hubspot');
   // console.log('heptawardWonDeals :', heptawardWonDeals);
-  const heptawardOpenedDeals = await h7Echoes.getDealsInfos('deal-opened', user.team_id, since, integrationChecked.integrationTeam);
+  const heptawardOpenedDeals = await h7Echoes.getDealsInfos('deal-opened', user.team_id, since, integrationChecked.integrationTeam, 'hubspot');
 
   const dealsWonDoublons = await h7Controls.doublonsOnEchoes(heptawardWonDeals.deals);
   const dealsOpenedDoublons = await h7Controls.doublonsOnEchoes(heptawardOpenedDeals.deals);
@@ -62,8 +62,8 @@ const compareActivities = async (user, integrationChecked, allIntegrations, peri
   const hubspotMeetings = hubspotengagements.documents.filter(meeting => meeting.engagement.type === 'MEETING');
   const hubspotCalls = hubspotengagements.documents.filter(meeting => meeting.engagement.type === 'CALL');
 
-  const heptawardMeetings = await h7Echoes.getAddActivitiesInfos('meeting', user.team_id, since);
-  const heptawardCalls = await h7Echoes.getAddActivitiesInfos('call', user.team_id, since);
+  const heptawardMeetings = await h7Echoes.getAddActivitiesInfos('meeting', user.team_id, since, 'hubspot');
+  const heptawardCalls = await h7Echoes.getAddActivitiesInfos('call', user.team_id, since, 'hubspot');
 
   const unregisteredMeetingsEngagement = hubspotControls.engagementsNotRegistered(hubspotMeetings, heptawardMeetings);
   const unregisteredCallsEngagement = hubspotControls.engagementsNotRegistered(hubspotCalls, heptawardCalls);

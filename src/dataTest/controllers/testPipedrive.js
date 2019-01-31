@@ -20,8 +20,8 @@ const compareDeals = async (user, integrationChecked, allIntegrations, period) =
     Boolean(integrationChecked.refreshToken), allIntegrations
   );
 
-  const heptawardOpenedDeals = await h7Echoes.getDealsInfos('deal-opened', user.team_id, since, integrationChecked.integrationTeam);
-  const heptawardWonDeals = await h7Echoes.getDealsInfos('deal-won', user.team_id, since, integrationChecked.integrationTeam);
+  const heptawardOpenedDeals = await h7Echoes.getDealsInfos('deal-opened', user.team_id, since, integrationChecked.integrationTeam, 'pipedrive');
+  const heptawardWonDeals = await h7Echoes.getDealsInfos('deal-won', user.team_id, since, integrationChecked.integrationTeam, 'pipedrive');
 
   /* test */
   // const pipedriveM = pipedriveOpenedDeals.map(p => p.id);
@@ -84,8 +84,8 @@ const compareActivities = async (user, integrationChecked, allIntegrations, peri
     since, Boolean(integrationChecked.refreshToken), allIntegrations
   );
 
-  const heptawardMeetings = await h7Echoes.getAddActivitiesInfos('meeting', user.team_id, since);
-  const heptawardCalls = await h7Echoes.getAddActivitiesInfos('call', user.team_id, since);
+  const heptawardMeetings = await h7Echoes.getAddActivitiesInfos('meeting', user.team_id, since, 'pipedrive');
+  const heptawardCalls = await h7Echoes.getAddActivitiesInfos('call', user.team_id, since, 'pipedrive');
 
   /* test */
   const meetingsDoublons = await H7Controls.doublonsOnEchoes(heptawardMeetings);
