@@ -73,7 +73,9 @@ const refreshToken = async (integration) => {
       tokenExpiresAt: Date.now() + (hubResult.expires_in * 1000),
     };
 
-    const integrationUpdated = await mongo.updateOne('heptaward', 'integrations', { userId: ObjectID(integration.userId) }, toUpdate);
+    const integrationUpdated = await mongo.updateOne('heptaward', 'integrations', {
+      userId: ObjectID(integration.userId), name: 'Hubspot',
+    }, toUpdate);
 
     if (integrationUpdated) {
       return {
