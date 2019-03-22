@@ -8,7 +8,7 @@
     "hubspot":["nicolas@ecommerce-nation.fr", "david@carts.guru", "alexandre@greenkub.fr",
       "antoine@medgo.fr", "jean.baptiste@quasiaqui.fr", "aurelien@permettezmoideconstruire.fr",
       "romain.bulard-luc@dimelo.com", "nicolas.weissleib@paygreen.fr", "frederic.hamain@siatech.fr",
-      "julien.l@captaincontrat.com"]
+      "julien.l@captaincontrat.com", "m.cost@cliqeo.com"]
   },
   "pipedrive": {
     "apiUrl": "https://api.pipedrive.com",
