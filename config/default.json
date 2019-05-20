@@ -1,14 +1,15 @@
 {
   "emails": {
-    "pipedrive": ["ubaid@brandimpact.ae", "alex@justflybusiness.co.uk", "alexandre@deepidoo.com",
-      "quentin@qualifio.com", "Marshall@GoldinSolar.com",
-      "simone@eurostep.it", "p.vasse@webetsolutions.com", "dimitri@wedoogift.com",
-      "axel.manoukian@moovone.fr"],
-    "salesforce": ["gguilbert@marche-prive.net", "romain.bulard-luc@dimelo.com", "baptiste@touch-sell.com"],
-    "hubspot":["nicolas@ecommerce-nation.fr", "david@carts.guru", "alexandre@greenkub.fr",
-      "antoine@medgo.fr", "jean.baptiste@quasiaqui.fr", "aurelien@permettezmoideconstruire.fr",
-      "romain.bulard-luc@dimelo.com", "nicolas.weissleib@paygreen.fr", "frederic.hamain@siatech.fr",
-      "julien.l@captaincontrat.com", "m.cost@cliqeo.com"]
+    "pipedriveOld": ["alexandre@deepidoo.com", "quentin@qualifio.com", "Marshall@GoldinSolar.com", "simone@eurostep.it", "p.vasse@webetsolutions.com"],
+    "pipedrive": ["alex@justflybusiness.co.uk", "dimitri@wedoogift.com", "axel.manoukian@moovone.fr",
+      "schfin@gmail.com", "sean.freedman@trinitylogistics.com"],
+    "salesforceOld": ["gguilbert@marche-prive.net", "baptiste@touch-sell.com"],
+    "salesforce": ["romain.bulard-luc@dimelo.com", "julien@demenagerfacile.com"],
+    "hubspotOld": ["nicolas@ecommerce-nation.fr", "antoine@medgo.fr", "nicolas.weissleib@paygreen.fr", "julien.l@captaincontrat.com"],
+    "hubspot":["david@carts.guru", "alexandre@greenkub.fr",
+      "service.client@quasiaqui.fr", "aurelien@permettezmoideconstruire.fr",
+      "romain.bulard-luc@dimelo.com", "frederic.hamain@siatech.fr",
+      "m.cost@cliqeo.com"]
   },
   "pipedrive": {
     "apiUrl": "https://api.pipedrive.com",
