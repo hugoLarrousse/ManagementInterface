@@ -1,8 +1,8 @@
 {
   "emails": {
-    "pipedriveOld": ["alexandre@deepidoo.com", "quentin@qualifio.com", "Marshall@GoldinSolar.com", "simone@eurostep.it", "p.vasse@webetsolutions.com"],
+    "pipedriveOld": ["alexandre@deepidoo.com", "quentin@qualifio.com", "Marshall@GoldinSolar.com", "simone@eurostep.it", "p.vasse@webetsolutions.com", "sean.freedman@trinitylogistics.com"],
     "pipedrive": ["alex@justflybusiness.co.uk", "dimitri@wedoogift.com", "axel.manoukian@moovone.fr",
-      "schfin@gmail.com", "sean.freedman@trinitylogistics.com"],
+      "schfin@gmail.com"],
     "salesforceOld": ["gguilbert@marche-prive.net", "baptiste@touch-sell.com"],
     "salesforce": ["romain.bulard-luc@dimelo.com", "julien@demenagerfacile.com"],
     "hubspotOld": ["nicolas@ecommerce-nation.fr", "antoine@medgo.fr", "nicolas.weissleib@paygreen.fr", "julien.l@captaincontrat.com"],
