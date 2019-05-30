@@ -7,9 +7,7 @@ const config = require('config');
 
 const emails = config.get('emails');
 
-const timeoutPromise = (ms) => {
-  return new Promise(resolve => setTimeout(resolve, ms));
-};
+const timeoutPromise = require('../Utils/timeout');
 
 exports.cron = async () => {
   if (process.env.NODE_ENV === 'production') {
@@ -56,7 +54,7 @@ exports.cron = async () => {
         await timeoutPromise(1000);
         logger.info('--------------------');
         logger.info('HUBSPOT DAY');
-        await checkData.checkHubspotByEmail(emails.hubspot, false, 'day', true);
+        await checkData.checkHubspotByEmail(emails.hubspot, false, 'day');
         await timeoutPromise(1000);
         logger.info(`END TEST AUTOMATION : ${moment().format('LLL')}`);
       } catch (e) {

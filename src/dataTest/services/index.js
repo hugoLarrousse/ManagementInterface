@@ -7,6 +7,7 @@ const hubspotUtils = require('../Utils/hubspot');
 const h7Users = require('../services/heptaward/user');
 const pipedriveRefreshToken = require('./pipedrive/refreshToken');
 const salesforceCheckToken = require('./salesforce/checkIntegration');
+const timeoutPromise = require('../Utils/timeout');
 
 const isTokenValid = (expirationDate) => Date.now() - 300000 < Number(expirationDate);
 
@@ -50,6 +51,7 @@ exports.checkPipedriveByEmail = async (emails, forJames, period, toBeSync) => {
         if ((resultDeals && resultDeals.differences.unRegistered > 0)
           || (resultActivities && (resultActivities.differences.meetingsUnregistered || resultActivities.differences.callsUnregistered))) {
           syncDataAuto(user._id, 'pipedrive', email);
+          await timeoutPromise(300000);
         }
       }
     } catch (e) {
@@ -98,6 +100,7 @@ exports.checkHubspotByEmail = async (emails, forJames, period, toBeSync) => {
         if ((resultDeals && resultDeals.differences.unRegistered > 0)
           || (resultActivities && (resultActivities.differences.meetingsUnregistered || resultActivities.differences.callsUnregistered))) {
           syncDataAuto(user._id, 'hubspot', email);
+          await timeoutPromise(300000);
         }
       }
     } catch (e) {
