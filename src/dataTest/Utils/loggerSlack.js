@@ -99,6 +99,12 @@ const info = async (message) => {
   customLogger.info(createLabelInfo(message));
 };
 
+const count = async (message) => {
+  customLogger.info(`
+  ${Object.entries(message).reduce((prev, curr) => `${prev} \n *${curr[0]}*: ${curr[1]}`, '')}
+  `);
+};
+
 const create = (e) => {
   console.log(`${new Date()} - ${e}`);
 };
@@ -106,4 +112,5 @@ const create = (e) => {
 exports.error = error;
 exports.info = info;
 exports.create = create;
+exports.count = count;
 
