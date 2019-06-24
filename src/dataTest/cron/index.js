@@ -4,23 +4,26 @@ const moment = require('moment');
 
 const checkData = require('../services');
 const config = require('config');
-const urlCount = require('../services/urlCount');
+const urlMetrics = require('../services/urlMetrics');
 
 const emails = config.get('emails');
 
 const timeoutPromise = require('../Utils/timeout');
 
 
-exports.cronUrlCount = async () => {
+exports.cronRequestMetrics = async () => {
   cron.schedule('0 20 * * *', async () => {
     try {
-      logger.info(`START URL COUNT 22h: ${moment().format('DD/MM/YYYY')}`);
-      await urlCount();
+      logger.info(`START REQUEST METRICS 22h: ${moment().format('DD/MM/YYYY')}`);
+      await urlMetrics.pathCount();
       await timeoutPromise(1000);
-      logger.info(`END URL COUNT ${moment().format('DD/MM/YYYY')}`);
+      await urlMetrics.statusCode();
+      await timeoutPromise(1000);
+      await urlMetrics.originUrl();
+      logger.info(`END REQUEST METRICS ${moment().format('DD/MM/YYYY')}`);
     } catch (e) {
       setTimeout(() => {
-        logger.info(`END METRIC COUNT WITH ERRORS:
+        logger.info(`END REQUEST METRICS WITH ERRORS:
           ${e.message}
         ${moment().format('LLL')}`);
       }, 3000);
