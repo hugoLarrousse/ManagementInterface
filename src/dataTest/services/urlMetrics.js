@@ -6,7 +6,6 @@ exports.pathCount = async () => {
   const count = await mongo.findOne('heptaward', 'counters', { _id: `url-count-${process.env.NODE_ENV}-${moment().format('DD-MM-YYYY')}` });
   if (count) {
     const { _id, ...rest } = count;
-    console.log('rest :', rest);
     logger.count({ total: Object.values(rest).reduce((prev, curr) => prev + curr, 0), ...rest });
   }
 };

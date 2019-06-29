@@ -33,33 +33,33 @@ exports.cronRequestMetrics = async () => {
 
 exports.cron = async () => {
   if (process.env.NODE_ENV === 'production') {
-    cron.schedule('0 11 * * *', async () => {
-      try {
-        logger.info(`START TEST AUTOMATION 13H: ${moment().format('LLL')}`);
-        logger.info('PIPEDRIVE MONTH');
-        await checkData.checkPipedriveByEmail(emails.pipedrive, false, 'month');
-        await timeoutPromise(1000);
-        logger.info('--------------------');
-        logger.info('HUBSPOT WEEK');
-        await checkData.checkHubspotByEmail(emails.hubspot, false, 'week');
-        await timeoutPromise(1000);
-        logger.info('--------------------');
-        logger.info('SALESFORCE MONTH');
-        await checkData.checkSalesforceByEmail(emails.salesforce, false, 'month');
-        await timeoutPromise(1000);
-        logger.info('--------------------');
-        logger.info('HUBSPOT DAY');
-        await checkData.checkHubspotByEmail(emails.hubspot, false, 'day');
-        await timeoutPromise(1000);
-        logger.info(`END TEST AUTOMATION : ${moment().format('LLL')}`);
-      } catch (e) {
-        setTimeout(() => {
-          logger.info(`END TEST AUTOMATION WITH ERRORS:
-            ${e.message}
-          ${moment().format('LLL')}`);
-        }, 3000);
-      }
-    });
+    // cron.schedule('0 11 * * *', async () => {
+    //   try {
+    //     logger.info(`START TEST AUTOMATION 13H: ${moment().format('LLL')}`);
+    //     logger.info('PIPEDRIVE MONTH');
+    //     await checkData.checkPipedriveByEmail(emails.pipedrive, false, 'month');
+    //     await timeoutPromise(1000);
+    //     logger.info('--------------------');
+    //     logger.info('HUBSPOT WEEK');
+    //     await checkData.checkHubspotByEmail(emails.hubspot, false, 'week');
+    //     await timeoutPromise(1000);
+    //     logger.info('--------------------');
+    //     logger.info('SALESFORCE MONTH');
+    //     await checkData.checkSalesforceByEmail(emails.salesforce, false, 'month');
+    //     await timeoutPromise(1000);
+    //     logger.info('--------------------');
+    //     logger.info('HUBSPOT DAY');
+    //     await checkData.checkHubspotByEmail(emails.hubspot, false, 'day');
+    //     await timeoutPromise(1000);
+    //     logger.info(`END TEST AUTOMATION : ${moment().format('LLL')}`);
+    //   } catch (e) {
+    //     setTimeout(() => {
+    //       logger.info(`END TEST AUTOMATION WITH ERRORS:
+    //         ${e.message}
+    //       ${moment().format('LLL')}`);
+    //     }, 3000);
+    //   }
+    // });
     cron.schedule('0 21 * * *', async () => {
       try {
         logger.info(`START TEST AUTOMATION 23H: ${moment().format('LLL')}`);
