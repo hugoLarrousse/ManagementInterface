@@ -20,7 +20,6 @@ const mongodbHeptaward = MongoClient
 
 const mongodbName = {
   heptaward: mongodbHeptaward,
-  // pipedrive: mongodbPipedrive,
   // hubspot: mongodbHubspot,
 };
 

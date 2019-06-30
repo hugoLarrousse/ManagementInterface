@@ -15,8 +15,13 @@ exports.deleteUsers = async (email) => {
     await mongo.deleteDoc('heptaward', 'organisations', { _id: user.orga_id });
     await mongo.deleteDoc('heptaward', 'settings', { orgaId: user.orga_id });
     await mongo.deleteDoc('heptaward', 'licences', { orgaId: user.orga_id });
+    await mongo.deleteDoc('heptaward', 'library', { teamId: user.team_id });
     await mongo.deleteMany('heptaward', 'integrations', { orgaId: user.orga_id });
+    await mongo.deleteMany('heptaward', 'otherIntegrations', { orgaId: user.orga_id });
     await mongo.deleteMany('heptaward', 'hashtags', { orgaId: user.orga_id });
+    await mongo.deleteMany('heptaward', 'slacked', { orgaId: user.orga_id });
+    await mongo.deleteMany('heptaward', 'trelloCards', { orgaId: user.orga_id });
+    await mongo.deleteMany('heptaward', 'trelloEvents', { orgaId: user.orga_id });
     await mongo.deleteMany('heptaward', 'echoes', { orga_h7_id: user.orga_id });
     await mongo.deleteMany('heptaward', 'users', { orga_id: user.orga_id, _id: { $ne: user._id } });
     const user2 = {
