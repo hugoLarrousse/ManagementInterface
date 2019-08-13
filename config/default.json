@@ -1,16 +1,4 @@
 {
-  "emails": {
-    "pipedriveOld": ["alexandre@deepidoo.com", "quentin@qualifio.com", "Marshall@GoldinSolar.com", "simone@eurostep.it", "p.vasse@webetsolutions.com", "sean.freedman@trinitylogistics.com"],
-    "pipedrive": ["alex@justflybusiness.co.uk", "dimitri@wedoogift.com", "axel.manoukian@moovone.fr",
-      "schfin@gmail.com"],
-    "salesforceOld": ["gguilbert@marche-prive.net", "baptiste@touch-sell.com"],
-    "salesforce": ["romain.bulard-luc@dimelo.com", "julien@demenagerfacile.com"],
-    "hubspotOld": ["nicolas@ecommerce-nation.fr", "antoine@medgo.fr", "nicolas.weissleib@paygreen.fr", "julien.l@captaincontrat.com"],
-    "hubspot":["david@carts.guru", "alexandre@greenkub.fr",
-      "service.client@quasiaqui.fr", "aurelien@permettezmoideconstruire.fr",
-      "romain.bulard-luc@dimelo.com", "frederic.hamain@siatech.fr",
-      "m.cost@cliqeo.com"]
-  },
   "pipedrive": {
     "apiUrl": "https://api.pipedrive.com",
     "apiUrlProxy": "https://api-proxy.pipedrive.com",

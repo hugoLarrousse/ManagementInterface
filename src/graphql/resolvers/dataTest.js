@@ -1,18 +1,20 @@
 const moment = require('moment');
-const config = require('config');
 
 const logger = require('../../dataTest/Utils/loggerSlack');
 const checkData = require('../../dataTest/services');
 
-const emails = config.get('emails');
+const { emailsPipedrive, emailsHubspot, emailsSalesforce } = process.env;
+const emailsPipedriveFormatted = emailsPipedrive.split(', ');
+const emailsHubspotFormatted = emailsHubspot.split(', ');
+const emailsSalesforceFormatted = emailsSalesforce.split(', ');
 
 
 const launchTests = async () => {
   try {
     logger.info(`START TEST AUTOMATION FROM JAMES: ${moment().format('LLL')}`);
-    await checkData.checkPipedriveByEmail(emails.pipedrive);
-    await checkData.checkHubspotByEmail(emails.hubspot);
-    await checkData.checkSalesforceByEmail(emails.salesforce);
+    await checkData.checkPipedriveByEmail(emailsPipedriveFormatted);
+    await checkData.checkHubspotByEmail(emailsHubspotFormatted);
+    await checkData.checkSalesforceByEmail(emailsSalesforceFormatted);
     setTimeout(() => {
       logger.info(`END TEST AUTOMATION FROM JAMES: ${moment().format('LLL')}`);
     }, 3000);
