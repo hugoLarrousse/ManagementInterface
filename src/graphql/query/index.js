@@ -11,6 +11,7 @@ const list = require('./list');
 const userList = require('./userList');
 const dataTest = require('./dataTest');
 const user = require('./user');
+const pi = require('./pi');
 
 const queryType = new GraphQLObjectType({
   name: 'Query',
@@ -27,6 +28,7 @@ const queryType = new GraphQLObjectType({
     teamsUsers: user.teamsUsers,
     teams: user.teams,
     coupons: payment.getCoupons,
+    getPis: pi.data,
   },
 });
 

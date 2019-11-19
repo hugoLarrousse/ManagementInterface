@@ -9,3 +9,4 @@ exports.licence = require('./licence');
 exports.dataTest = require('./dataTest');
 exports.user = require('./user');
 exports.notification = require('./notification');
+exports.pi = require('./pi');
