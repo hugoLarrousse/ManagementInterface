@@ -11,7 +11,7 @@ const { makeEnumType } = require('../utils');
 
 const statusEnumType = new GraphQLEnumType({
   name: 'STATUS_TYPES',
-  values: makeEnumType(['online', 'pause', 'offline']),
+  values: makeEnumType(['online', 'pause', 'offline', 'error']),
 });
 
 const channel = new GraphQLObjectType({
