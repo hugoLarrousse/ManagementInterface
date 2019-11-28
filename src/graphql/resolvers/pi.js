@@ -35,6 +35,14 @@ const manageStatus = (active, on) => {
   return 'offline';
 };
 
+const getDayHourSchedule = (schedule) => {
+  const today = new Date();
+  const day = schedule.filter(s => s.day === (today.getDay() || 7) - 1);
+  const fromHour = Math.min(...day.map(d => d.from));
+  const toHour = Math.max(...day.map(d => d.to));
+  return `${fromHour}h-${toHour}h`;
+};
+
 exports.data = async () => {
   try {
     // get all pi
@@ -62,13 +70,15 @@ exports.data = async () => {
 
     return pis.reduce((prev, curr) => {
       const status = manageStatus(body.pisActive.find(p => p.serial === curr.serial), body.pisOn.find(p => p === curr.serial));
+      const currentChannel = status === 'online' ? body.pisActive.find(p => p.serial === curr.serial).channel : null;
       prev.push({
         id: String(curr._id),
         name: curr.name,
         version: curr.version || '1.1.3',
         company: curr.company || 'unknown',
         reloadCounter: curr.reloadCounter || 0,
-        currentChannel: status === 'online' ? JSON.stringify(body.pisActive.find(p => p.serial === curr.serial).channel) : '',
+        currentChannelName: currentChannel && currentChannel.name,
+        dayHour: curr.schedule && getDayHourSchedule(curr.schedule),
         status,
         serial: curr.serial,
         teamId: curr.teamId,

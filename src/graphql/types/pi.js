@@ -44,7 +44,10 @@ exports.data = new GraphQLObjectType({
     reloadCounter: {
       type: GraphQLFloat,
     },
-    currentChannel: {
+    currentChannelName: {
+      type: GraphQLString,
+    },
+    dayHour: {
       type: GraphQLString,
     },
     nextChannel: {
