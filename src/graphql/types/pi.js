@@ -53,6 +53,9 @@ exports.data = new GraphQLObjectType({
     nextChannel: {
       type: channel,
     },
+    cec: {
+      type: GraphQLBoolean,
+    },
     status: {
       type: new GraphQLNonNull(statusEnumType),
     },

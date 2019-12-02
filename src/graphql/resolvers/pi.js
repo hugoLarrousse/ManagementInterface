@@ -82,6 +82,7 @@ exports.data = async () => {
         status,
         serial: curr.serial,
         teamId: curr.teamId,
+        cec: curr.cec,
       });
       return prev;
     }, []);
