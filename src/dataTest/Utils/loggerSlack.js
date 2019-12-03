@@ -100,8 +100,9 @@ const info = async (message) => {
 };
 
 const count = async (message) => {
+  const length = Object.values(message).reduce((a, b) => a + b, 0);
   customLogger.info(`
-  ${Object.entries(message).reduce((prev, curr) => `${prev} \n *${curr[0]}*: ${curr[1]}`, '')}
+  ${Object.entries(message).reduce((prev, curr) => `${prev} \n *${curr[0]}*: ${(curr[1] * 100) / length}%`, '')}
   `);
 };
 
