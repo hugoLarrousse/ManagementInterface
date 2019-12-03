@@ -4,6 +4,7 @@ const moment = require('moment');
 
 const checkData = require('../services');
 const urlMetrics = require('../services/urlMetrics');
+const uptime = require('../services/uptime');
 
 const { emailsPipedrive, emailsHubspot, emailsSalesforce } = process.env;
 const emailsPipedriveFormatted = emailsPipedrive.split(', ');
@@ -17,13 +18,33 @@ const timeoutPromise = require('../Utils/timeout');
 exports.cronRequestMetrics = async () => {
   cron.schedule('0 20 * * *', async () => {
     try {
-      logger.info(`START REQUEST METRICS 22h: ${moment().format('DD/MM/YYYY')}`);
+      logger.info(`START REQUEST METRICS 21h: ${moment().format('DD/MM/YYYY')}`);
       await urlMetrics.pathCount();
       await timeoutPromise(1000);
       await urlMetrics.statusCode();
       await timeoutPromise(1000);
       await urlMetrics.originUrl();
       logger.info(`END REQUEST METRICS ${moment().format('DD/MM/YYYY')}`);
+    } catch (e) {
+      setTimeout(() => {
+        logger.info(`END REQUEST METRICS WITH ERRORS:
+          ${e.message}
+        ${moment().format('LLL')}`);
+      }, 3000);
+    }
+  });
+};
+
+exports.cronRequestUptime = async () => {
+  cron.schedule('5 20 * * *', async () => {
+    try {
+      logger.info(`START CHECK UPTIME 21h05: ${moment().format('DD/MM/YYYY')}`);
+      await timeoutPromise(1000);
+      logger.info('api.heptaward.com');
+      await uptime.statusCode();
+      await timeoutPromise(1000);
+      await uptime.elapseTime();
+      logger.info(`END CHECK UPTIME ${moment().format('DD/MM/YYYY')}`);
     } catch (e) {
       setTimeout(() => {
         logger.info(`END REQUEST METRICS WITH ERRORS:
@@ -94,20 +115,20 @@ exports.cron = async () => {
     try {
       logger.info('START TEST AUTOMATION MANUAL');
       await timeoutPromise(1000);
-      logger.info(`PIPEDRIVE MONTH, ${emailsPipedriveFormatted.length} accounts`);
-      await checkData.checkPipedriveByEmail(emailsPipedriveFormatted, false, 'month');
-      await timeoutPromise(1000);
-      logger.info('--------------------');
-      logger.info(`HUBSPOT WEEK, ${emailsHubspotFormatted.length} accounts`);
-      await checkData.checkHubspotByEmail(emailsHubspotFormatted, false, 'week');
-      await timeoutPromise(1000);
+      // logger.info(`PIPEDRIVE MONTH, ${emailsPipedriveFormatted.length} accounts`);
+      // await checkData.checkPipedriveByEmail(emailsPipedriveFormatted, false, 'month');
+      // await timeoutPromise(1000);
+      // logger.info('--------------------');
+      // logger.info(`HUBSPOT WEEK, ${emailsHubspotFormatted.length} accounts`);
+      // await checkData.checkHubspotByEmail(emailsHubspotFormatted, false, 'week');
+      // await timeoutPromise(1000);
       logger.info('--------------------');
       logger.info(`SALESFORCE MONTH ${emailsSalesforceFormatted.length} accounts`);
       await checkData.checkSalesforceByEmail(emailsSalesforceFormatted, false, 'month');
       await timeoutPromise(1000);
       logger.info('--------------------');
-      logger.info(`HUBSPOT DAY, ${emailsHubspotFormatted.length} accounts`);
-      await checkData.checkHubspotByEmail(emailsHubspotFormatted, false, 'day');
+      // logger.info(`HUBSPOT DAY, ${emailsHubspotFormatted.length} accounts`);
+      // await checkData.checkHubspotByEmail(emailsHubspotFormatted, false, 'day');
       await timeoutPromise(1000);
       logger.info('END TEST AUTOMATION MANUAL');
     } catch (e) {
