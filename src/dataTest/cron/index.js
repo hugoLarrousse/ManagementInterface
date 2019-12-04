@@ -44,6 +44,7 @@ exports.cronRequestUptime = async () => {
       await uptime.statusCode();
       await timeoutPromise(1000);
       await uptime.elapseTime();
+      await timeoutPromise(1000);
       logger.info(`END CHECK UPTIME ${moment().format('DD/MM/YYYY')}`);
     } catch (e) {
       setTimeout(() => {

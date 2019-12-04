@@ -15,6 +15,6 @@ exports.elapseTime = async () => {
   if (originUrl) {
     const { timer } = originUrl;
     const avgTime = timer.reduce((a, b) => a + b, 0) / timer.length;
-    logger.info(`average elapse time: ${avgTime}`);
+    logger.info(`average elapse time: ${Math.round(avgTime)}ms`);
   }
 };
