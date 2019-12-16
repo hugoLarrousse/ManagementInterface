@@ -74,9 +74,25 @@ const create = (e) => {
   console.log(`${new Date()} - ${e}`);
 };
 
+const typeToCollection = {
+  'deal-opened': 'deals',
+  'deal-won': 'deals',
+  'deal-lost': 'deals',
+  deal: 'deals',
+  deals: 'deals',
+  dealOpened: 'deals',
+  dealWon: 'deals',
+  dealLost: 'deals',
+  call: 'calls',
+  calls: 'calls',
+  meeting: 'meetings',
+  meetings: 'meetings',
+};
+
 exports.error = error;
 exports.create = create;
 exports.info = info;
 exports.warn = warn;
 exports.errorDb = errorDb;
 exports.warnDb = warnDb;
+exports.typeToCollection = typeToCollection;

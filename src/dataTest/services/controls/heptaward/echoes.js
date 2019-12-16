@@ -95,7 +95,7 @@ exports.manageDoublonsDeals = async (openedDoublons, wonDoublons) => {
       } else {
         const idToDelete = compareDoublons(dealsOpened[0], dealsOpened[1]);
         if (idToDelete) {
-          await h7Echoes.deleteDoublonById(idToDelete);
+          await h7Echoes.deleteDoublonById(idToDelete, 'deal-opened');
           console.log('idDeleted :', idToDelete);
         }
       }
@@ -112,7 +112,7 @@ exports.manageDoublonsDeals = async (openedDoublons, wonDoublons) => {
       } else {
         const idToDelete = compareDoublons(dealsWon[0], dealsWon[1]);
         if (idToDelete) {
-          await h7Echoes.deleteDoublonById(idToDelete);
+          await h7Echoes.deleteDoublonById(idToDelete, 'deal-won');
           console.log('idDeleted :', idToDelete);
         }
       }
@@ -133,7 +133,7 @@ exports.manageDoublonsActivities = async (meetingsDoublons, callDoublons, doublo
         console.log('meetings :', meetings);
         const idToDelete = compareDoublons(meetings[0], meetings[1]);
         if (idToDelete) {
-          await h7Echoes.deleteDoublonById(idToDelete);
+          await h7Echoes.deleteDoublonById(idToDelete, 'meeting');
           console.log('idDeleted :', idToDelete);
         }
       }
@@ -142,15 +142,15 @@ exports.manageDoublonsActivities = async (meetingsDoublons, callDoublons, doublo
   if (callDoublons && callDoublons.length > 0) {
     console.log('call doublons');
     for (const callDoublon of callDoublons) {
-      const meetings = await h7Echoes.getActivitiesDoublons(callDoublon.source.team_id, callDoublon.source.id, 'call');
-      if (meetings.length < 2) {
+      const calls = await h7Echoes.getActivitiesDoublons(callDoublon.source.team_id, callDoublon.source.id, 'call');
+      if (calls.length < 2) {
         console.log('Error no doublons calls :');
-      } else if (meetings.length > 2) {
+      } else if (calls.length > 2) {
         console.log('Call Doublon more than 2...');
       } else {
-        const idToDelete = compareDoublons(meetings[0], meetings[1]);
+        const idToDelete = compareDoublons(calls[0], calls[1]);
         if (idToDelete) {
-          await h7Echoes.deleteDoublonById(idToDelete);
+          await h7Echoes.deleteDoublonById(idToDelete, 'call');
           console.log('idDeleted :', idToDelete);
         }
       }
@@ -167,7 +167,7 @@ exports.manageDoublonsActivities = async (meetingsDoublons, callDoublons, doublo
       } else {
         const idToDelete = compareDoublons(activities[0], activities[1], true);
         if (idToDelete) {
-          await h7Echoes.deleteDoublonById(idToDelete);
+          await h7Echoes.deleteDoublonById(idToDelete, activities.find(a => String(a._id) === String(idToDelete).type));
           console.log('idDeleted :', idToDelete);
         }
       }

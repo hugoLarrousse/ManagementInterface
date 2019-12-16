@@ -1,4 +1,5 @@
 const mongo = require('../../db/mongo');
+const Utils = require('../../utils');
 
 
 exports.deleteUsers = async (email) => {
@@ -22,7 +23,9 @@ exports.deleteUsers = async (email) => {
     await mongo.deleteMany('heptaward', 'slacked', { orgaId: user.orga_id });
     await mongo.deleteMany('heptaward', 'trelloCards', { orgaId: user.orga_id });
     await mongo.deleteMany('heptaward', 'trelloEvents', { orgaId: user.orga_id });
-    await mongo.deleteMany('heptaward', 'echoes', { orga_h7_id: user.orga_id });
+    await mongo.deleteMany('heptaward', Utils.typeToCollection.call, { team_h7_id: user.team_id });
+    await mongo.deleteMany('heptaward', Utils.typeToCollection.meeting, { team_h7_id: user.team_id });
+    await mongo.deleteMany('heptaward', Utils.typeToCollection.deal, { team_h7_id: user.team_id });
     await mongo.deleteMany('heptaward', 'users', { orga_id: user.orga_id, _id: { $ne: user._id } });
     const user2 = {
       ...user,

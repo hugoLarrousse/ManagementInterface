@@ -1,5 +1,6 @@
 const mongo = require('../../../db/mongo');
 const { ObjectID } = require('mongodb');
+const Utils = require('../../../utils');
 
 const getDealsInfos = async (type, teamH7Id, since, integrationTeam, crm) => {
   try {
@@ -21,7 +22,7 @@ const getDealsInfos = async (type, teamH7Id, since, integrationTeam, crm) => {
       type,
     };
 
-    const result = await mongo.find('heptaward', 'echoes', select);
+    const result = await mongo.find('heptaward', Utils.typeToCollection[type], select);
     result.forEach(deal => {
       stats.totalValueDeals += deal.parametres.valeur;
     });
@@ -47,10 +48,9 @@ const getAddActivitiesInfos = (type, teamId, since, crm) => {
         $gte: Number(since),
         $lte: Date.now(),
       },
-      type,
     };
 
-    return mongo.find('heptaward', 'echoes', select);
+    return mongo.find('heptaward', Utils.typeToCollection[type], select);
   } catch (e) {
     throw new Error(`${__filename}
       ${getAddActivitiesInfos.name}
@@ -58,48 +58,57 @@ const getAddActivitiesInfos = (type, teamId, since, crm) => {
   }
 };
 
-const getDoneActivitiesInfos = async (type, teamId, since, crm) => {
-  try {
-    const stats = {
-      ndActivities: 0,
-      activities: [],
-    };
+// if usefull go change echoes
+// const getDoneActivitiesInfos = async (type, teamId, since, crm) => {
+//   try {
+//     const stats = {
+//       ndActivities: 0,
+//       activities: [],
+//     };
 
-    const select = {
-      team_h7_id: ObjectID(teamId),
-      user_h7_id: { $ne: null },
-      'source.name': crm,
-      date_done_timestamp: {
-        $gte: Number(since),
-      },
-      type,
-    };
+//     const select = {
+//       team_h7_id: ObjectID(teamId),
+//       user_h7_id: { $ne: null },
+//       'source.name': crm,
+//       date_done_timestamp: {
+//         $gte: Number(since),
+//       },
+//       type,
+//     };
 
-    const result = await mongo.find('heptaward', 'echoes', select);
+//     const result = await mongo.find('heptaward', 'echoes', select);
 
-    stats.ndActivities = result.length;
-    stats.activities = result;
+//     stats.ndActivities = result.length;
+//     stats.activities = result;
 
-    return stats;
-  } catch (e) {
-    throw new Error(`${__filename}
-      ${getDoneActivitiesInfos.name}
-      ${e.message}`);
+//     return stats;
+//   } catch (e) {
+//     throw new Error(`${__filename}
+//       ${getDoneActivitiesInfos.name}
+//       ${e.message}`);
+//   }
+// };
+
+const getActivitiesDoublons = async (teamId, activityId, type) => {
+  if (type) {
+    return mongo.find(
+      'heptaward',
+      Utils.typeToCollection[type],
+      { 'source.id': activityId, 'source.team_id': teamId, type: type || { $in: ['call', 'meeting'] } }
+    );
   }
+  const calls = await mongo.find('heptaward', Utils.typeToCollection.call, { 'source.id': activityId, 'source.team_id': teamId });
+  const meetings = await mongo.find('heptaward', Utils.typeToCollection.meeting, { 'source.id': activityId, 'source.team_id': teamId });
+  return [...calls, ...meetings];
 };
 
-const getActivitiesDoublons = (teamId, activityId, type) => {
-  return mongo.find('heptaward', 'echoes', { 'source.id': activityId, 'source.team_id': teamId, type: type || { $in: ['call', 'meeting'] } });
-};
+// change echoes if needed
+// const getDealsDoublons = (teamId, activityId, type) => {
+//   return mongo.find('heptaward', 'echoes', { 'source.id': activityId, 'source.team_id': teamId, type });
+// };
 
-const getDealsDoublons = (teamId, activityId, type) => {
-  return mongo.find('heptaward', 'echoes', { 'source.id': activityId, 'source.team_id': teamId, type });
-};
-
-exports.deleteDoublonById = (id) => mongo.softDelete('heptaward', 'echoes', { _id: ObjectID(id) });
+exports.deleteDoublonById = (id, type) => mongo.softDelete('heptaward', Utils.typeToCollection[type], { _id: ObjectID(id) });
 
 exports.getDealsInfos = getDealsInfos;
 exports.getAddActivitiesInfos = getAddActivitiesInfos;
-exports.getDoneActivitiesInfos = getDoneActivitiesInfos;
 exports.getActivitiesDoublons = getActivitiesDoublons;
-exports.getDealsDoublons = getDealsDoublons;

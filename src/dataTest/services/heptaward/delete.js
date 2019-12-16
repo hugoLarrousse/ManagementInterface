@@ -1,5 +1,6 @@
 const mongo = require('../../../db/mongo');
 const { ObjectID } = require('mongodb');
+const Utils = require('../../../utils');
 
 const deleteMany = async (elements, database, collection) => {
   elements.forEach(async element => {
@@ -62,11 +63,11 @@ const deleteDataDoublonsPipedrive = async (elements, database, collection) => {
   return doublons;
 };
 
-const deleteActivitiesById = async (activityIds) => {
+const deleteActivitiesById = async (activityIds, type) => {
   const filter = {
     _id: { $in: activityIds },
   };
-  await mongo.softDeleteMany('heptaward', 'echoes', filter);
+  await mongo.softDeleteMany('heptaward', Utils.typeToCollection[type], filter);
 };
 
 exports.deleteDealsDoublonsEchoes = deleteDealsDoublonsEchoes;

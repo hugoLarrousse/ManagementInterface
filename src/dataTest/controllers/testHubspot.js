@@ -79,8 +79,10 @@ const compareActivities = async (user, integrationChecked, allIntegrations, peri
     const h7C = heptawardCalls.map(p => p.source.id);
     const idsToDelete = await hubspot.checkEngagements(integrationChecked.token, [...difference(h7M, hubspotM), ...difference(h7C, hubspotC)]);
     if (idsToDelete && idsToDelete.length > 0) {
-      const heptawardActivityToDelete = [...heptawardMeetings, ...heptawardCalls].filter(activity => idsToDelete.includes(activity.source.id));
-      h7Delete.deleteActivitiesById(heptawardActivityToDelete.map(a => a._id));
+      const heptawardCallToDelete = heptawardCalls.filter(activity => idsToDelete.includes(activity.source.id));
+      const heptawardMeetingToDelete = heptawardMeetings.filter(activity => idsToDelete.includes(activity.source.id));
+      await h7Delete.deleteActivitiesById(heptawardCallToDelete.map(a => a._id), 'call');
+      await h7Delete.deleteActivitiesById(heptawardMeetingToDelete.map(a => a._id), 'meeting');
     }
   }
 
