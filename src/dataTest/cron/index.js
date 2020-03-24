@@ -114,24 +114,24 @@ exports.cron = async () => {
     });
   } else {
     try {
-      logger.info('START TEST AUTOMATION MANUAL');
+      // logger.info('START TEST AUTOMATION MANUAL');
       await timeoutPromise(1000);
-      // logger.info(`PIPEDRIVE MONTH, ${emailsPipedriveFormatted.length} accounts`);
-      // await checkData.checkPipedriveByEmail(emailsPipedriveFormatted, false, 'month');
+      // logger.info(`PIPEDRIVE ${new Date().getDay() ? 'day' : 'month'}, ${emailsPipedriveFormatted.length} accounts`);
+      // await checkData.checkPipedriveByEmail(emailsPipedriveFormatted, false, new Date().getDay() ? 'day' : 'month');
       // await timeoutPromise(1000);
       // logger.info('--------------------');
       // logger.info(`HUBSPOT WEEK, ${emailsHubspotFormatted.length} accounts`);
       // await checkData.checkHubspotByEmail(emailsHubspotFormatted, false, 'week');
       // await timeoutPromise(1000);
-      logger.info('--------------------');
-      logger.info(`SALESFORCE MONTH ${emailsSalesforceFormatted.length} accounts`);
+      // logger.info('--------------------');
+      // logger.info(`SALESFORCE MONTH ${emailsSalesforceFormatted.length} accounts`);
       await checkData.checkSalesforceByEmail(emailsSalesforceFormatted, false, 'month');
-      await timeoutPromise(1000);
-      logger.info('--------------------');
+      // await timeoutPromise(1000);
+      // logger.info('--------------------');
       // logger.info(`HUBSPOT DAY, ${emailsHubspotFormatted.length} accounts`);
       // await checkData.checkHubspotByEmail(emailsHubspotFormatted, false, 'day');
       await timeoutPromise(1000);
-      logger.info('END TEST AUTOMATION MANUAL');
+      // logger.info('END TEST AUTOMATION MANUAL');
     } catch (e) {
       setTimeout(() => {
         logger.info(`END TEST AUTOMATION WITH ERRORS:

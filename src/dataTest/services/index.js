@@ -11,6 +11,8 @@ const timeoutPromise = require('../Utils/timeout');
 
 const isTokenValid = (expirationDate) => Date.now() - 300000 < Number(expirationDate);
 
+const FIVE_MINUTES_MILLISECONDS = 300000;
+
 exports.checkPipedriveByEmail = async (emails, forJames, period, toBeSync) => {
   if (forJames) {
     const resultActivities = await testPipedriveCtrl.compareActivities(emails[0], period || 'month');
@@ -23,35 +25,35 @@ exports.checkPipedriveByEmail = async (emails, forJames, period, toBeSync) => {
     try {
       console.log('email :', email);
 
+      // get Users
       const user = await h7Users.getUser(email);
 
+      // get integration + check token
       const integration = await h7Users.getIntegration(user._id, 'Pipedrive');
-      let integrationChecked = integration;
+      const integrationChecked = integration.refreshToken ? await pipedriveRefreshToken(integration) : integration;
 
-      if (integration.refreshToken) {
-        integrationChecked = await pipedriveRefreshToken(integration);
-      }
-
+      // get all integrations for a team
       const allIntegrations = await h7Users.getIntegrationOrga(integrationChecked.orgaId, 'Pipedrive');
 
-      const resultActivities = await testPipedriveCtrl.compareActivities(user, integrationChecked, allIntegrations, period || 'month');
-      const resultDeals = await testPipedriveCtrl.compareDeals(user, integrationChecked, allIntegrations, period || 'month');
+      const resultCompareActivities = await testPipedriveCtrl.compareActivities(user, integrationChecked, allIntegrations, period || 'month');
+      const resultCompareDeals = await testPipedriveCtrl.compareDeals(user, integrationChecked, allIntegrations, period || 'month');
 
-      if (resultActivities) {
-        if (Object.values(resultActivities.differences).filter(Number).length > 0) {
-          logger.error('pipedrive', 'activities', email, period || 'month', resultActivities.differences);
+      if (resultCompareActivities) {
+        if (Object.values(resultCompareActivities.differences).filter(Number).length > 0) {
+          logger.error('pipedrive', 'activities', email, period || 'month', resultCompareActivities.differences);
         }
       }
-      if (resultDeals) {
-        if (Object.values(resultDeals.differences).filter(Number).length > 0) {
-          logger.error('pipedrive', 'deals', email, period || 'month', resultDeals.differences);
+      if (resultCompareDeals) {
+        if (Object.values(resultCompareDeals.differences).filter(Number).length > 0) {
+          logger.error('pipedrive', 'deals', email, period || 'month', resultCompareDeals.differences);
         }
       }
       if (toBeSync) {
-        if ((resultDeals && resultDeals.differences.unRegistered > 0)
-          || (resultActivities && (resultActivities.differences.meetingsUnregistered || resultActivities.differences.callsUnregistered))) {
+        if ((resultCompareDeals && resultCompareDeals.differences.unRegistered > 0)
+          || (resultCompareActivities && (resultCompareActivities.differences.meetingsUnregistered
+            || resultCompareActivities.differences.callsUnregistered))) {
           syncDataAuto(user._id, 'pipedrive', email);
-          await timeoutPromise(300000);
+          await timeoutPromise(FIVE_MINUTES_MILLISECONDS);
         }
       }
     } catch (e) {
@@ -100,7 +102,7 @@ exports.checkHubspotByEmail = async (emails, forJames, period, toBeSync) => {
         if ((resultDeals && resultDeals.differences.unRegistered > 0)
           || (resultActivities && (resultActivities.differences.meetingsUnregistered || resultActivities.differences.callsUnregistered))) {
           syncDataAuto(user._id, 'hubspot', email);
-          await timeoutPromise(300000);
+          await timeoutPromise(FIVE_MINUTES_MILLISECONDS);
         }
       }
     } catch (e) {
@@ -144,10 +146,11 @@ exports.checkSalesforceByEmail = async (emails, forJames, period, toBeSync) => {
       }
     }
     if (toBeSync) {
-      // if ((resultDeals && resultDeals.differences.unRegistered > 0)
-      //   || (resultActivities && (resultActivities.differences.meetingsUnregistered || resultActivities.differences.callsUnregistered))) {
-      //   syncDataAuto(user._id, 'salesforce', email);
-      // }
+      if ((resultDeals && resultDeals.differences.unRegistered > 0)
+        || (resultActivities && (resultActivities.differences.meetingsUnregistered || resultActivities.differences.callsUnregistered))) {
+        syncDataAuto(user._id, 'salesforce', email);
+        await timeoutPromise(FIVE_MINUTES_MILLISECONDS);
+      }
     }
   }
   return 1;

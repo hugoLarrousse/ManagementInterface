@@ -61,7 +61,7 @@ const getIntegration = async (userId, name) => {
   }
 };
 
-exports.getSettings = async (orgaId) => {
+exports.getSettingsForPipedrive = async (orgaId) => {
   let meetingTypes = ['meeting', 'lunch'];
   let callTypes = ['call'];
   try {
@@ -74,9 +74,12 @@ exports.getSettings = async (orgaId) => {
       meetingTypes = result.pipedriveMeetingTypes;
       callTypes = result.pipedriveCallTypes;
     }
+
     return {
       meetingTypes: join(meetingTypes, ','),
       callTypes: join(callTypes, ','),
+      pipelines: result && result.pipedrivePipelines,
+      activitiesNoDeal: result.pipedriveActivitiesNoDeal,
     };
   } catch (e) {
     throw new Error(`${__filename}

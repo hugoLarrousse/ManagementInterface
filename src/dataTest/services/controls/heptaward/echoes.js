@@ -1,4 +1,5 @@
 const h7Echoes = require('../../heptaward/echoes');
+const pipedrive = require('../../pipedrive/pipedrive');
 
 const duplicatesID = dict => Object.keys(dict).filter((a) => dict[a] > 1);
 
@@ -30,7 +31,6 @@ const compareDoublons = (doc1, doc2, isDoublon) => {
   let points1 = 0;
   let points2 = 0;
   if (String(doc1.orga_h7_id) !== String(doc2.orga_h7_id) || String(doc1.user_h7_id) !== String(doc2.user_h7_id)) {
-    console.log('orga_h7_id or user_h7_id different :', doc1.user_h7_id, doc2.user_h7_id);
     const timestampDiff = doc1.register_timestamp - doc2.register_timestamp;
     if (timestampDiff < 1000 && timestampDiff > -1000) {
       return doc1.register_timestamp - doc2.register_timestamp > 0 ? doc2._id : doc1._id;
@@ -79,6 +79,13 @@ const compareDoublons = (doc1, doc2, isDoublon) => {
     return doc1.register_timestamp - doc2.register_timestamp > 0 ? doc2._id : doc1._id;
   }
 
+  if (doc1.updatedAt && !doc2.updatedAt && points1 >= points2) {
+    return doc2._id;
+  }
+  if (doc1.updatedAt && !doc2.updatedAt && points2 >= points1) {
+    return doc1._id;
+  }
+
   return null;
 };
 
@@ -120,6 +127,15 @@ exports.manageDoublonsDeals = async (openedDoublons, wonDoublons) => {
   }
 };
 
+const manageTooManyDoublons = async (activities, type) => {
+  const activitiesFiltered = activities.filter(activity => !activity.updatedAt);
+  if (activitiesFiltered.length + 1 === activities.length) {
+    await h7Echoes.deleteDoublonsById(activitiesFiltered.map(a => a._id), type);
+  } else {
+    console.log(activitiesFiltered.length, activities.length);
+  }
+};
+
 exports.manageDoublonsActivities = async (meetingsDoublons, callDoublons, doublons) => {
   if (meetingsDoublons && meetingsDoublons.length > 0) {
     console.log('meeting doublons');
@@ -146,7 +162,7 @@ exports.manageDoublonsActivities = async (meetingsDoublons, callDoublons, doublo
       if (calls.length < 2) {
         console.log('Error no doublons calls :');
       } else if (calls.length > 2) {
-        console.log('Call Doublon more than 2...');
+        await manageTooManyDoublons(calls, 'calls');
       } else {
         const idToDelete = compareDoublons(calls[0], calls[1]);
         if (idToDelete) {
@@ -171,6 +187,33 @@ exports.manageDoublonsActivities = async (meetingsDoublons, callDoublons, doublo
           console.log('idDeleted :', idToDelete);
         }
       }
+    }
+  }
+};
+
+exports.manageFalseWonDealsPipedrive = async (deals, integration) => {
+  for (const deal of deals) {
+    const dealFound = await pipedrive.getDealById(deal.source.id, integration.token, Boolean(integration.refreshToken));
+    if (dealFound.data.status !== 'won') {
+      await h7Echoes.softDelete({ _id: deal._id }, 'deals');
+    }
+  }
+};
+
+exports.managePotentialDeletedDeals = async (deals, integration) => {
+  for (const deal of deals) {
+    const dealFound = await pipedrive.getDealById(deal.source.id, integration.token, Boolean(integration.refreshToken));
+    if (dealFound.data.deleted) {
+      await h7Echoes.softDelete({ _id: deal._id }, 'deals');
+    }
+  }
+};
+
+exports.manageDoublonsPipedrive = async (deals, integration) => {
+  for (const deal of deals) {
+    const dealFound = await pipedrive.getDealById(deal.source.id, integration.token, Boolean(integration.refreshToken));
+    if (dealFound.data.status !== 'won') {
+      await h7Echoes.softDelete({ _id: deal._id }, 'deals');
     }
   }
 };

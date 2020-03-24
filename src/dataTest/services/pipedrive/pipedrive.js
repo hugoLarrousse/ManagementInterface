@@ -1,6 +1,6 @@
 const { get } = require('../../Utils/pipedrive');
 
-const getDealsOpenedTimeline = async (apiToken, since, isOauth, allIntegrations) => {
+const getDealsOpenedTimeline = async (apiToken, since, isOauth, allIntegrations, pipelines) => {
   try {
     const integrationIds = allIntegrations.map(int => int.integrationId);
 
@@ -14,8 +14,15 @@ const getDealsOpenedTimeline = async (apiToken, since, isOauth, allIntegrations)
       if (!result.data) {
         return [];
       }
+
       hasMore = result.additional_data && result.additional_data.pagination.more_items_in_collection;
       result.data = result.data.filter(d => integrationIds.includes(Number(d.user_id.id)));
+
+      if (pipelines && pipelines.length > 0) {
+        result.data = result.data.filter(r => {
+          return pipelines.includes(r.pipeline_id);
+        });
+      }
 
       result.data.forEach(deal => { //eslint-disable-line
         const dealAddTime = new Date(deal.add_time).getTime();
@@ -39,7 +46,7 @@ const getDealsOpenedTimeline = async (apiToken, since, isOauth, allIntegrations)
   }
 };
 
-exports.getDealsWonTimeline = async (apiToken, since, isOauth, allIntegrations) => {
+exports.getDealsWonTimeline = async (apiToken, since, isOauth, allIntegrations, pipelines) => {
   try {
     const integrationIds = allIntegrations.map(int => int.integrationId);
 
@@ -56,6 +63,13 @@ exports.getDealsWonTimeline = async (apiToken, since, isOauth, allIntegrations) 
       }
       hasMore = result.additional_data && result.additional_data.pagination.more_items_in_collection;
       result.data = result.data.filter(d => integrationIds.includes(Number(d.user_id.id)));
+
+      if (pipelines && pipelines.length > 0) {
+        result.data = result.data.filter(r => {
+          return pipelines.includes(r.pipeline_id);
+        });
+      }
+
       result.data.forEach(deal => { //eslint-disable-line
         const dealWonTime = new Date(deal.won_time).getTime();
 
@@ -78,19 +92,27 @@ exports.getDealsWonTimeline = async (apiToken, since, isOauth, allIntegrations) 
   }
 };
 
-const getAddActivities = async (type, apiToken, since, isOauth, allIntegrations) => {
+const getAddActivities = async (type, apiToken, since, isOauth, allIntegrations, pipelines, needActivitiesNoDeal) => {
   try {
     const integrationIds = allIntegrations.map(int => int.integrationId);
     let hasMore = false;
     let activities = [];
 
     let path = `${isOauth ? '' : '/v1'}/activities?user_id=0&limit=500&type=${type}&start=0&sort=add_time%20DESC`;
+
     do {
       const result = await get(path, apiToken, isOauth);
       if (!result.data) {
         return [];
       }
       hasMore = result.additional_data && result.additional_data.pagination.more_items_in_collection;
+      if (pipelines && pipelines.length > 0) {
+        result.data = result.data.filter(activity => {
+          if (!activity.deal_id || !result.related_objects.deal[activity.deal_id]) return needActivitiesNoDeal || false;
+          return pipelines.includes(result.related_objects.deal[activity.deal_id].pipeline_id);
+        });
+      }
+      result.data = result.data.filter(activity => activity.type === 'call' && activity.done);
       result.data.forEach(activity => { //eslint-disable-line
         const activityAddTime = new Date(activity.add_time).getTime();
         if (activityAddTime > since) {
@@ -145,6 +167,11 @@ const getDoneActivities = async (type, apiToken, since, isOauth) => {
       ${getDoneActivities.name}
       ${e.message}`);
   }
+};
+
+exports.getDealById = (dealId, apiToken, isOauth) => {
+  const path = `${isOauth ? '' : '/v1'}/deals/${dealId}`;
+  return get(path, apiToken, isOauth);
 };
 
 exports.getDealsOpenedTimeline = getDealsOpenedTimeline;

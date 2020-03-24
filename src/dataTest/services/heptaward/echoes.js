@@ -16,8 +16,8 @@ const getDealsInfos = async (type, teamH7Id, since, integrationTeam, crm) => {
       'source.team_id': crm === 'salesforce' ? integrationTeam : Number(integrationTeam),
       'source.name': crm,
       date_add_timestamp: {
-        $gte: Number(since),
-        $lte: Date.now(),
+        $gte: Number(since) - (crm === 'pipedrive' ? 3600000 * 3 : 0),
+        ...crm === 'hubspot' && { $lte: Date.now() },
       },
       type,
     };
@@ -45,9 +45,10 @@ const getAddActivitiesInfos = (type, teamId, since, crm) => {
       user_h7_id: { $ne: null },
       'source.name': crm,
       date_add_timestamp: {
-        $gte: Number(since),
-        $lte: Date.now(),
+        $gte: Number(since) - (crm === 'pipedrive' ? 3600000 * 3 : 0),
+        // $lte: Date.now(),
       },
+      ...type === 'call' && { date_marked_done_timestamp: { $ne: null } },
     };
 
     return mongo.find('heptaward', Utils.typeToCollection[type], select);
@@ -108,6 +109,10 @@ const getActivitiesDoublons = async (teamId, activityId, type) => {
 // };
 
 exports.deleteDoublonById = (id, type) => mongo.softDelete('heptaward', Utils.typeToCollection[type], { _id: ObjectID(id) });
+
+exports.deleteDoublonsById = (ids, type) => mongo.softDeleteMany('heptaward', Utils.typeToCollection[type], { _id: { $in: ids } });
+
+exports.softDelete = (query, type) => mongo.softDelete('heptaward', Utils.typeToCollection[type], query);
 
 exports.getDealsInfos = getDealsInfos;
 exports.getAddActivitiesInfos = getAddActivitiesInfos;

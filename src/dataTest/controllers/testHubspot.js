@@ -10,22 +10,22 @@ const compareDeals = async (user, integrationChecked, allIntegrations, period) =
   const since = srvDate.timestampStartPeriod(period);
 
   const hubspotDealsOpened = await hubspot.getDealsOpened(integrationChecked.token, since, allIntegrations);
-  const hubspotDealsWon = await hubspot.getDealsWon(integrationChecked.token, since, allIntegrations);
-  // console.log('hubspotDealsWon :', hubspotDealsWon.length);
+  const hubspotWonDeals = await hubspot.getDealsWon(integrationChecked.token, since, allIntegrations);
+
   const heptawardWonDeals = await h7Echoes.getDealsInfos('deal-won', user.team_id, since, integrationChecked.integrationTeam, 'hubspot');
-  // console.log('heptawardWonDeals :', heptawardWonDeals);
   const heptawardOpenedDeals = await h7Echoes.getDealsInfos('deal-opened', user.team_id, since, integrationChecked.integrationTeam, 'hubspot');
 
   const dealsWonDoublons = await h7Controls.doublonsOnEchoes(heptawardWonDeals.deals);
   const dealsOpenedDoublons = await h7Controls.doublonsOnEchoes(heptawardOpenedDeals.deals);
 
-  const unregisteredDealsWon = await hubspotControls.dealsNotRegistered(hubspotDealsWon, heptawardWonDeals.deals);
+  const unregisteredDealsWon = await hubspotControls.dealsNotRegistered(hubspotWonDeals, heptawardWonDeals.deals);
   const unregisteredDealsOpened = await hubspotControls.dealsNotRegistered(hubspotDealsOpened, heptawardOpenedDeals.deals);
 
   const differenceOpened = heptawardOpenedDeals.ndDeals - hubspotDealsOpened.length;
-  const differenceWon = heptawardWonDeals.ndDeals - hubspotDealsWon.length;
+  const differenceWon = heptawardWonDeals.ndDeals - hubspotWonDeals.length;
 
-  // const hubspotM = hubspotDealsWon.map(p => p.dealId);
+  // usefull to test diff deals won
+  // const hubspotM = hubspotWonDeals.map(p => p.dealId);
   // console.log('hubspotM :', hubspotM.length);
   // const h7M = heptawardWonDeals.deals.map(p => p.source.id);
   // console.log('DIFFF :', difference(h7M, hubspotM));
@@ -42,8 +42,8 @@ const compareDeals = async (user, integrationChecked, allIntegrations, period) =
       datas: hubspotDealsOpened,
     },
     hubspotWon: {
-      count: hubspotDealsWon.length,
-      datas: hubspotDealsWon,
+      count: hubspotWonDeals.length,
+      datas: hubspotWonDeals,
     },
     heptawardOpenedDeals,
     heptawardWonDeals,
@@ -57,10 +57,10 @@ const compareDeals = async (user, integrationChecked, allIntegrations, period) =
 const compareActivities = async (user, integrationChecked, allIntegrations, period) => {
   const since = srvDate.timestampStartPeriod(period);
 
-  const hubspotengagements = await hubspot.getEngagements(integrationChecked.token, since, allIntegrations);
+  const hubspotEngagements = await hubspot.getEngagements(integrationChecked.token, since, allIntegrations);
 
-  const hubspotMeetings = hubspotengagements.documents.filter(meeting => meeting.engagement.type === 'MEETING');
-  const hubspotCalls = hubspotengagements.documents.filter(meeting => meeting.engagement.type === 'CALL');
+  const hubspotMeetings = hubspotEngagements.documents.filter(meeting => meeting.engagement.type === 'MEETING');
+  const hubspotCalls = hubspotEngagements.documents.filter(meeting => meeting.engagement.type === 'CALL');
 
   const heptawardMeetings = await h7Echoes.getAddActivitiesInfos('meeting', user.team_id, since, 'hubspot');
   const heptawardCalls = await h7Echoes.getAddActivitiesInfos('call', user.team_id, since, 'hubspot');
@@ -72,7 +72,7 @@ const compareActivities = async (user, integrationChecked, allIntegrations, peri
   const callsDoublons = h7Controls.doublonsOnEchoes(heptawardCalls);
   const doublons = h7Controls.doublonsOnEchoes([...heptawardCalls, ...heptawardMeetings]);
 
-  if (heptawardMeetings.length - hubspotengagements.nbMeetings > 0 || heptawardCalls.length - hubspotengagements.nbCalls > 0) {
+  if (heptawardMeetings.length - hubspotEngagements.nbMeetings > 0 || heptawardCalls.length - hubspotEngagements.nbCalls > 0) {
     const hubspotM = hubspotMeetings.map(p => p.engagement.id);
     const h7M = heptawardMeetings.map(p => p.source.id);
     const hubspotC = hubspotCalls.map(p => p.engagement.id);
@@ -98,12 +98,12 @@ const compareActivities = async (user, integrationChecked, allIntegrations, peri
       doublons: doublons.length,
     },
     hubspotMeetings: {
-      ndActivities: hubspotengagements.nbMeetings,
+      ndActivities: hubspotEngagements.nbMeetings,
     },
     hubspotCalls: {
-      ndActivities: hubspotengagements.nbCalls,
+      ndActivities: hubspotEngagements.nbCalls,
     },
-    hubspotengagements,
+    hubspotengagements: hubspotEngagements,
     heptawardMeetings,
     heptawardCalls,
     unregisteredMeetingsEngagement,

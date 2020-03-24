@@ -27,6 +27,7 @@
     "no-await-in-loop": "off",
     "no-restricted-syntax":"off",
     "linebreak-style":"off",
-    "max-len": [2, 150, 2]
+    "max-len": [2, 150, 2],
+    "no-loop-func": "off"
   }
 }

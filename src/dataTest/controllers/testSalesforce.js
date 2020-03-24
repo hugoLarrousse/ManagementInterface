@@ -70,9 +70,21 @@ const compareActivities = async (user, integrationChecked, allIntegrations, peri
   const meetingsDoublons = await H7Controls.doublonsOnEchoes(heptawardMeetings);
   const callsDoublons = await H7Controls.doublonsOnEchoes(heptawardCalls);
 
+  await H7Controls.manageDoublonsActivities(meetingsDoublons, callsDoublons);
+
   const meetingsUnregistered = await PidControls.notRegistered(salesforceMeetings, heptawardMeetings);
   const callsUnregistered = await PidControls.notRegistered(salesforceCalls, heptawardCalls);
 
+  // console.log(`
+  // callsDoublons: ${callsDoublons.length}
+  // callsUnregistered: ${callsUnregistered.length}`);
+
+  //   console.log(`
+  //   meetingsDoublons: ${meetingsDoublons.length}
+  //   callsDoublons: ${callsDoublons.length}
+  //   meetingsUnregistered: ${meetingsUnregistered.length}
+  //   callsUnregistered: ${callsUnregistered.length}`);
+  // return null;
   return {
     differences: {
       // meetings: (heptawardMeetings.length - salesforceMeetings.length),
