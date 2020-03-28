@@ -13,7 +13,7 @@ module.exports = (id, crm, email) => {
       name: crm,
     };
     request(
-      config.get('coreUrl'), `${crm}/syncAuto`, null, 'POST',
+      config.get('coreUrl'), `${crm === 'salesforce' ? 'crm' : crm}/syncAuto`, null, 'POST',
       { Authorization: fixedToken, 'Content-Type': 'application/x-www-form-urlencoded' }, data, null, true,
     );
   } catch (e) {
