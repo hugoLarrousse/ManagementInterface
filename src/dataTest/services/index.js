@@ -148,7 +148,7 @@ exports.checkSalesforceByEmail = async (emails, forJames, period, toBeSync) => {
     if (toBeSync) {
       if ((resultDeals && resultDeals.differences.unRegistered > 0)
         || (resultActivities && (resultActivities.differences.meetingsUnregistered || resultActivities.differences.callsUnregistered))) {
-        syncDataAuto(user._id, 'salesforce', email);
+        syncDataAuto(user._id, 'crm', email);
         await timeoutPromise(FIVE_MINUTES_MILLISECONDS);
       }
     }
