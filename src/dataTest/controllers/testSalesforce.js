@@ -28,12 +28,13 @@ const compareDeals = async (user, integrationChecked, allIntegrations, period) =
   const differenceWon = genericControls.tabDealsCompare(heptawardWonDeals.deals, salesforceWonDeals);
 
   // const salesforceM = salesforceWonDeals.map(p => p.Id);
-  // console.log('salesforceWonDeals[0] :', salesforceWonDeals[0]);
   // console.log('salesforceM :', salesforceM.length);
   // const h7M = heptawardWonDeals.deals.map(p => p.source.id);
   // console.log('h7M.length :', h7M.length);
   // console.log('DIFFF :', difference(h7M, salesforceM));
   // console.log('DIFFF2 :', difference(salesforceM, h7M));
+  // console.log('openedDoublons :', openedDoublons.length);
+  // console.log('wonDoublons :', wonDoublons.length);
 
   return {
     differences: {
@@ -75,16 +76,6 @@ const compareActivities = async (user, integrationChecked, allIntegrations, peri
   const meetingsUnregistered = await PidControls.notRegistered(salesforceMeetings, heptawardMeetings);
   const callsUnregistered = await PidControls.notRegistered(salesforceCalls, heptawardCalls);
 
-  // console.log(`
-  // callsDoublons: ${callsDoublons.length}
-  // callsUnregistered: ${callsUnregistered.length}`);
-
-  //   console.log(`
-  //   meetingsDoublons: ${meetingsDoublons.length}
-  //   callsDoublons: ${callsDoublons.length}
-  //   meetingsUnregistered: ${meetingsUnregistered.length}
-  //   callsUnregistered: ${callsUnregistered.length}`);
-  // return null;
   return {
     differences: {
       // meetings: (heptawardMeetings.length - salesforceMeetings.length),
