@@ -6,7 +6,7 @@ const H7Controls = require('../services/controls/heptaward/echoes');
 const srvDate = require('../Utils/dates');
 const genericControls = require('../services/controls/heptaward/generic');
 
-const difference = require('lodash/difference');
+// const difference = require('lodash/difference');
 
 const compareDeals = async (user, integrationChecked, allIntegrations, period) => {
   const { pipelines } = await h7Users.getSettingsForPipedrive(user.orga_id);
@@ -79,8 +79,6 @@ const compareActivities = async (user, integrationChecked, allIntegrations, peri
   } = await h7Users.getSettingsForPipedrive(user.orga_id);
   const since = srvDate.timestampStartPeriod(period);
 
-  console.log('integrationChecked.token :', integrationChecked.token);
-
   const pipedriveMeetings = await pipedrive.getAddActivities(
     meetingTypes, integrationChecked.token,
     since, Boolean(integrationChecked.refreshToken), allIntegrations, pipelines, activitiesNoDeal
@@ -89,33 +87,29 @@ const compareActivities = async (user, integrationChecked, allIntegrations, peri
     callTypes, integrationChecked.token,
     since, Boolean(integrationChecked.refreshToken), allIntegrations, pipelines, activitiesNoDeal,
   );
-  console.log('pipedriveCalls.length :', pipedriveCalls.length);
 
   const heptawardMeetings = await h7Echoes.getAddActivitiesInfos('meeting', user.team_id, since, 'pipedrive');
   const heptawardCalls = await h7Echoes.getAddActivitiesInfos('call', user.team_id, since, 'pipedrive', pipelines, activitiesNoDeal);
-  console.log('heptawardCalls.length :', heptawardCalls.length);
 
   const meetingsDoublons = await H7Controls.doublonsOnEchoes(heptawardMeetings);
   const callsDoublons = await H7Controls.doublonsOnEchoes(heptawardCalls);
-  console.log('callsDoublons :', callsDoublons);
+
   const doublons = await H7Controls.doublonsOnEchoes([...heptawardCalls, ...heptawardMeetings]);
 
   const meetingsUnregistered = await Compare.notRegistered(pipedriveMeetings, heptawardMeetings);
   const callsUnregistered = await Compare.notRegistered(pipedriveCalls, heptawardCalls);
 
-  const diffCall = difference(heptawardCalls.map(p => p.source.id), pipedriveCalls.map(p => p.id));
-  console.log('diffCall :', diffCall);
+  // const diffCall = difference(heptawardCalls.map(p => p.source.id), pipedriveCalls.map(p => p.id));
   // const diffMeeting = difference(heptawardMeetings.map(p => p.source.id), pipedriveMeetings.map(p => p.id));
 
   await H7Controls.manageDoublonsActivities(meetingsDoublons, callsDoublons, doublons);
 
-  return null;
   return {
     differences: {
-      // meetings: (heptawardMeetings.length - pipedriveMeetings.length),
+      meetings: (heptawardMeetings.length - pipedriveMeetings.length),
       meetingsDoublons: meetingsDoublons.length,
       meetingsUnregistered: meetingsUnregistered.length,
-      // calls: (heptawardCalls.length - pipedriveCalls.length),
+      calls: (heptawardCalls.length - pipedriveCalls.length),
       callsDoublons: callsDoublons.length,
       callsUnregistered: callsUnregistered.length,
       doublons: doublons.length,
