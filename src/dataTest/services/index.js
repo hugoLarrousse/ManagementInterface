@@ -11,7 +11,7 @@ const timeoutPromise = require('../Utils/timeout');
 
 const isTokenValid = (expirationDate) => Date.now() - 300000 < Number(expirationDate);
 
-const FIVE_MINUTES_MILLISECONDS = 300000;
+const FIFTEEN_MINUTES_MILLISECONDS = 300000 * 3;
 
 exports.checkPipedriveByEmail = async (emails, forJames, period, toBeSync) => {
   if (forJames) {
@@ -53,7 +53,7 @@ exports.checkPipedriveByEmail = async (emails, forJames, period, toBeSync) => {
           || (resultCompareActivities && (resultCompareActivities.differences.meetingsUnregistered
             || resultCompareActivities.differences.callsUnregistered))) {
           syncDataAuto(user._id, 'pipedrive', email);
-          await timeoutPromise(FIVE_MINUTES_MILLISECONDS);
+          await timeoutPromise(FIFTEEN_MINUTES_MILLISECONDS);
         }
       }
     } catch (e) {
@@ -102,7 +102,7 @@ exports.checkHubspotByEmail = async (emails, forJames, period, toBeSync) => {
         if ((resultDeals && resultDeals.differences.unRegistered > 0)
           || (resultActivities && (resultActivities.differences.meetingsUnregistered || resultActivities.differences.callsUnregistered))) {
           syncDataAuto(user._id, 'hubspot', email);
-          await timeoutPromise(FIVE_MINUTES_MILLISECONDS);
+          await timeoutPromise(FIFTEEN_MINUTES_MILLISECONDS);
         }
       }
     } catch (e) {
@@ -149,7 +149,7 @@ exports.checkSalesforceByEmail = async (emails, forJames, period, toBeSync) => {
       if ((resultDeals && resultDeals.differences.unRegistered > 0)
         || (resultActivities && (resultActivities.differences.meetingsUnregistered || resultActivities.differences.callsUnregistered))) {
         syncDataAuto(user._id, 'salesforce', email);
-        await timeoutPromise(FIVE_MINUTES_MILLISECONDS);
+        await timeoutPromise(FIFTEEN_MINUTES_MILLISECONDS);
       }
     }
   }
