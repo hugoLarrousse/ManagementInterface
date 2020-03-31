@@ -106,10 +106,10 @@ const compareActivities = async (user, integrationChecked, allIntegrations, peri
 
   return {
     differences: {
-      meetings: (heptawardMeetings.length - pipedriveMeetings.length),
+      // meetings: (heptawardMeetings.length - pipedriveMeetings.length),
       meetingsDoublons: meetingsDoublons.length,
       meetingsUnregistered: meetingsUnregistered.length,
-      calls: (heptawardCalls.length - pipedriveCalls.length),
+      // calls: (heptawardCalls.length - pipedriveCalls.length),
       callsDoublons: callsDoublons.length,
       callsUnregistered: callsUnregistered.length,
       doublons: doublons.length,
