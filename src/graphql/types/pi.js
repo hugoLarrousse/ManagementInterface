@@ -56,6 +56,12 @@ exports.data = new GraphQLObjectType({
     cec: {
       type: GraphQLBoolean,
     },
+    statusPi: {
+      type: GraphQLBoolean,
+    },
+    statusCast: {
+      type: GraphQLBoolean,
+    },
     status: {
       type: new GraphQLNonNull(statusEnumType),
     },

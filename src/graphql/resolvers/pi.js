@@ -70,7 +70,7 @@ exports.data = async () => {
 
     return pis.reduce((prev, curr) => {
       const status = manageStatus(body.pisActive.find(p => p.serial === curr.serial), body.pisOn.find(p => p === curr.serial));
-      const currentChannel = status === 'online' ? body.pisActive.find(p => p.serial === curr.serial).channel : null;
+      const currentChannel = body.pisActive.find(p => p.serial === curr.serial) && body.pisActive.find(p => p.serial === curr.serial).channel;
       prev.push({
         id: String(curr._id),
         name: curr.name,
@@ -80,6 +80,8 @@ exports.data = async () => {
         currentChannelName: currentChannel && currentChannel.name,
         dayHour: curr.schedule && getDayHourSchedule(curr.schedule),
         status,
+        statusPi: Boolean(body.pisOn.find(p => p === curr.serial)),
+        statusCast: Boolean(body.pisActive.find(p => p.serial === curr.serial)),
         serial: curr.serial,
         teamId: curr.teamId,
         cec: curr.cec,
