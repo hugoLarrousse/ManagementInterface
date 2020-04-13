@@ -5,14 +5,13 @@ const moment = require('moment');
 const checkData = require('../services');
 const urlMetrics = require('../services/urlMetrics');
 const uptime = require('../services/uptime');
+const timeoutPromise = require('../Utils/timeout');
+const Pis = require('../services/pis');
 
 const { emailsPipedrive, emailsHubspot, emailsSalesforce } = process.env;
 const emailsPipedriveFormatted = emailsPipedrive.split(', ');
 const emailsHubspotFormatted = emailsHubspot.split(', ');
 const emailsSalesforceFormatted = emailsSalesforce.split(', ');
-
-
-const timeoutPromise = require('../Utils/timeout');
 
 
 exports.cronRequestMetrics = async () => {
@@ -140,4 +139,11 @@ exports.cron = async () => {
       }, 3000);
     }
   }
+};
+
+exports.cronPisStatus = () => {
+  cron.schedule('5 * * * *', async () => {
+    await timeoutPromise(2000);
+    await Pis.checkStatusPis();
+  });
 };

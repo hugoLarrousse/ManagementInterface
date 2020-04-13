@@ -23,8 +23,26 @@ const customLogger = winston.createLogger({
   ],
 });
 
+const customLogger2 = winston.createLogger({
+  transports: [
+    new WinstonSlack({
+      hookUrl: process.env.slackUrl,
+      username: 'Jean Pi Plus ',
+      channel: '#pi-info',
+      prependLevel: false,
+      appendMeta: false,
+      colors: {
+        warn: 'warning',
+        error: 'danger',
+        info: 'good',
+        debug: '#bbddff',
+      },
+    })],
+});
+
 if (env === 'test' || loggerEnabledStatus === 'none') {
   customLogger.remove(winston.transports.Console);
+  customLogger2.remove(winston.transports.Console);
 }
 
 const manageData = (data, crm, type) => {
@@ -95,6 +113,10 @@ const error = async (crm, type, email, period, data) => {
   customLogger.error(createLabelError(crm, type, email, period, data));
 };
 
+const error2 = async (message) => {
+  customLogger2.error(message);
+};
+
 const info = async (message) => {
   customLogger.info(createLabelInfo(message));
 };
@@ -114,4 +136,5 @@ exports.error = error;
 exports.info = info;
 exports.create = create;
 exports.count = count;
+exports.error2 = error2;
 

@@ -62,6 +62,9 @@ exports.data = new GraphQLObjectType({
     statusCast: {
       type: GraphQLBoolean,
     },
+    shouldHaveChannel: {
+      type: GraphQLBoolean,
+    },
     status: {
       type: new GraphQLNonNull(statusEnumType),
     },

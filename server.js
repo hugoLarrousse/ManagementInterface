@@ -4,6 +4,7 @@ require('dotenv').load({ path: '.env' });
 require('./src/dataTest/cron').cron();
 // require('./src/dataTest/cron').cronRequestMetrics();
 require('./src/dataTest/cron').cronRequestUptime();
+require('./src/dataTest/cron').cronPisStatus();
 
 const { createGraphQLRouter } = require('./src/graphql');
 

@@ -1,7 +1,7 @@
 const requestRetry = require('requestretry');
+const moment = require('moment');
 
 const mongo = require('../../db/mongo');
-
 
 const databaseName = process.env.databaseH7;
 const { socketUrl } = process.env;
@@ -43,12 +43,23 @@ const getDayHourSchedule = (schedule) => {
   return `${fromHour}h-${toHour}h`;
 };
 
+const shouldHaveUTCChannel = (schedule, timezone = 'Europe/Paris') => {
+  if (!schedule || !schedule.length === 0) return false;
+  const now = moment().tz(timezone || 'Europe/Paris');
+  const day = now.day() || 7;
+  const channelsOfTheDay = schedule.filter(c => c.day === day - 1);
+  if (channelsOfTheDay.length === 0) return false;
+  const time = Number(`${now.hours() + ((now.minutes() * 100) / 6000)}`);
+  const currentChannel = channelsOfTheDay.find(c => c.from <= time && c.to > time);
+  return Boolean(currentChannel);
+};
+
 exports.data = async () => {
   try {
     // get all pi
     const pis = await mongo.find(databaseName, devicesCollection, { type: 'pi' });
 
-    const { error, body } = await requestRetry(optionsGetInfo);
+    const { error, body: infoSocket } = await requestRetry(optionsGetInfo);
     if (error) {
       console.log('error :', error);
     }
@@ -69,8 +80,10 @@ exports.data = async () => {
     });
 
     return pis.reduce((prev, curr) => {
-      const status = manageStatus(body.pisActive.find(p => p.serial === curr.serial), body.pisOn.find(p => p === curr.serial));
-      const currentChannel = body.pisActive.find(p => p.serial === curr.serial) && body.pisActive.find(p => p.serial === curr.serial).channel;
+      const status = manageStatus(infoSocket.pisActive.find(p => p.serial === curr.serial), infoSocket.pisOn.find(p => p === curr.serial));
+      const currentChannel =
+        infoSocket.pisActive.find(p => p.serial === curr.serial)
+        && infoSocket.pisActive.find(p => p.serial === curr.serial).channel;
       prev.push({
         id: String(curr._id),
         name: curr.name,
@@ -80,8 +93,9 @@ exports.data = async () => {
         currentChannelName: currentChannel && currentChannel.name,
         dayHour: curr.schedule && getDayHourSchedule(curr.schedule),
         status,
-        statusPi: Boolean(body.pisOn.find(p => p === curr.serial)),
-        statusCast: Boolean(body.pisActive.find(p => p.serial === curr.serial)),
+        statusPi: Boolean(infoSocket.pisOn.find(p => p === curr.serial)),
+        statusCast: Boolean(infoSocket.pisActive.find(p => p.serial === curr.serial)),
+        shouldHaveChannel: shouldHaveUTCChannel(curr.schedule, curr.timezone),
         serial: curr.serial,
         teamId: curr.teamId,
         cec: curr.cec,
