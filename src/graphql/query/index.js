@@ -29,6 +29,7 @@ const queryType = new GraphQLObjectType({
     teams: user.teams,
     coupons: payment.getCoupons,
     getPis: pi.data,
+    getLogsPi: pi.logs,
   },
 });
 

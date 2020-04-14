@@ -4,6 +4,8 @@ const moment = require('moment');
 const mongo = require('../../db/mongo');
 
 const databaseName = process.env.databaseH7;
+const databasePi = 'pi';
+const logsCollections = 'logs';
 const { socketUrl } = process.env;
 const devicesCollection = 'devices';
 const organisationCollection = 'organisations';
@@ -99,6 +101,7 @@ exports.data = async () => {
         serial: curr.serial,
         teamId: curr.teamId,
         cec: curr.cec,
+        alert: curr.alert,
       });
       return prev;
     }, []);
@@ -106,6 +109,14 @@ exports.data = async () => {
     console.log('ERROR', e);
     return [];
   }
+};
+
+exports.logs = async ({ serial }) => {
+  const logs = await mongo.find(databasePi, logsCollections, { serial }, { createdAt: -1 });
+
+  return logs.map(log => {
+    return { ...log, createdAt: moment(log.createdAt).format('DD/MM/YYYY - kk:mm') };
+  });
 };
 
 exports.reboot = async ({ serial }) => {
@@ -134,6 +145,16 @@ exports.reload = async ({ teamId, deviceId }) => {
     return { done: true };
   } catch (e) {
     console.log('ERROR', e);
-    return [];
+    return { done: false };
+  }
+};
+
+exports.changeAlertPi = async ({ serial, alert }) => {
+  try {
+    await mongo.updateOne(databaseName, devicesCollection, { serial }, { alert: alert || undefined });
+    return { done: true };
+  } catch (e) {
+    console.log('ERROR', e);
+    return { done: true };
   }
 };

@@ -17,6 +17,7 @@ const mutationType = new GraphQLObjectType({
     setCoupon: payment.setCoupon,
     rebootPi: pi.rebootPi,
     reloadPi: pi.reloadPi,
+    changeAlertPi: pi.changeAlertPi,
   },
 });
 

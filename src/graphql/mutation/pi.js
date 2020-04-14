@@ -1,6 +1,7 @@
 const {
   GraphQLNonNull,
   GraphQLString,
+  GraphQLBoolean,
 } = require('graphql');
 const type = require('../types');
 const { createResolver } = require('../utils');
@@ -36,5 +37,23 @@ exports.reloadPi = {
   },
   resolve: createResolver({ isAuthRequired: false }, (_, args) => {
     return pi.reload(args);
+  }),
+};
+
+exports.changeAlertPi = {
+  description: 'change alert pi',
+  type: type.pi.alert,
+  args: {
+    serial: {
+      type: new GraphQLNonNull(GraphQLString),
+      description: 'serial',
+    },
+    alert: {
+      type: GraphQLBoolean,
+      description: 'alert',
+    },
+  },
+  resolve: createResolver({ isAuthRequired: false }, (_, args) => {
+    return pi.changeAlertPi(args);
   }),
 };

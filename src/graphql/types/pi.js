@@ -74,6 +74,24 @@ exports.data = new GraphQLObjectType({
     teamId: {
       type: new GraphQLNonNull(GraphQLString),
     },
+    alert: {
+      type: GraphQLBoolean,
+    },
+  },
+});
+
+exports.logs = new GraphQLObjectType({
+  name: 'logsPi',
+  fields: {
+    message: {
+      type: GraphQLString,
+    },
+    type: {
+      type: new GraphQLNonNull(GraphQLString),
+    },
+    createdAt: {
+      type: new GraphQLNonNull(GraphQLString),
+    },
   },
 });
 
@@ -88,6 +106,15 @@ exports.reboot = new GraphQLObjectType({
 
 exports.reload = new GraphQLObjectType({
   name: 'reloadPi',
+  fields: {
+    done: {
+      type: new GraphQLNonNull(GraphQLBoolean),
+    },
+  },
+});
+
+exports.alert = new GraphQLObjectType({
+  name: 'alertPi',
   fields: {
     done: {
       type: new GraphQLNonNull(GraphQLBoolean),
