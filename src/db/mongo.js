@@ -18,8 +18,13 @@ const mongodbHeptaward = MongoClient
   .connect(`${process.env.dbserver}/${databaseH7}${mongoOptions || ''}`, { poolSize: 20 })
   .catch(err => logger.errorDb(__filename, 'mongo', null, null, `MongoClient.connect() : ${err.message}`, null, err));
 
+const mongodbPi = MongoClient
+  .connect(`${process.env.dbserver}/pi${mongoOptions || ''}`, { poolSize: 2 })
+  .catch(err => logger.errorDb(__filename, 'mongo', null, null, `MongoClient.connect() : ${err.message}`, null, err));
+
 const mongodbName = {
   heptaward: mongodbHeptaward,
+  pi: mongodbPi,
   // hubspot: mongodbHubspot,
 };
 
