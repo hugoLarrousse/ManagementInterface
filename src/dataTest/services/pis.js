@@ -40,11 +40,11 @@ exports.checkStatusPis = async () => {
     }
     for (const pi of pis) {
       if (!(pisInfoSocket.pisOn.find(p => p === pi.serial))) {
-        logger.error2(`[${moment().format('DD/MM/YYYY - kk:mm')}] *${pi.name}* --> INACTIVE`);
+        logger.error2(`[${moment().tz(pi.timezone || 'Europe/Paris').format('DD/MM/YYYY - kk:mm')}] *${pi.name}* --> INACTIVE`);
         continue; //eslint-disable-line
       }
       if (!(pisInfoSocket.pisActive.find(p => p.serial === pi.serial)) && shouldHaveUTCChannel(pi.schedule, pi.timezone)) {
-        logger.error2(`[${moment().format('DD/MM/YYYY - kk:mm')}] *${pi.name}* -->  NO CHANNEL`);
+        logger.error2(`[${moment().tz(pi.timezone || 'Europe/Paris').format('DD/MM/YYYY - kk:mm')}] *${pi.name}* -->  NO CHANNEL`);
       }
     }
     return 1;
