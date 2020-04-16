@@ -6,7 +6,9 @@ const logger = require('../Utils/loggerSlack');
 
 const { socketUrl, databaseH7: databaseName } = process.env;
 
+const databasePi = 'pi';
 const devicesCollection = 'devices';
+const logsCollections = 'logs';
 
 const optionsGetInfo = {
   url: `${socketUrl}/pi`,
@@ -40,13 +42,15 @@ exports.checkStatusPis = async () => {
     }
     for (const pi of pis) {
       if (!(pisInfoSocket.pisOn.find(p => p === pi.serial))) {
-        logger.error2(`[${moment().tz(pi.timezone || 'Europe/Paris')
-          .format('DD/MM/YYYY - kk:mm')} (${pi.timezone || 'Europe/Paris'})] *${pi.name}* --> INACTIVE`);
+        const date = `[${moment().tz(pi.timezone || 'Europe/Paris').format('DD/MM/YYYY - kk:mm')} (${pi.timezone || 'Europe/Paris'})]`;
+        await mongo.insert(databasePi, logsCollections, { serial: pi.serial, type: 'pi-inactive', message: `${date} pi inactive` });
+        logger.error2(`${date} *${pi.name}* --> INACTIVE`);
         continue; //eslint-disable-line
       }
       if (!(pisInfoSocket.pisActive.find(p => p.serial === pi.serial)) && shouldHaveUTCChannel(pi.schedule, pi.timezone)) {
-        logger.error2(`[${moment().tz(pi.timezone || 'Europe/Paris')
-          .format('DD/MM/YYYY - kk:mm')} (${pi.timezone || 'Europe/Paris'})] *${pi.name}* -->  NO CHANNEL`);
+        const date = `[${moment().tz(pi.timezone || 'Europe/Paris').format('DD/MM/YYYY - kk:mm')} (${pi.timezone || 'Europe/Paris'})]`;
+        await mongo.insert(databasePi, logsCollections, { serial: pi.serial, type: 'no-channel', message: `${date} no channel` });
+        logger.error2(`${date} *${pi.name}* -->  NO CHANNEL`);
       }
     }
     return 1;
