@@ -31,15 +31,7 @@ const mongodbName = {
 const insert = async (databaseName, collectionName, doc) => {
   const docToSave = addCreatedAtToModel(doc);
   const db = await mongodbName[databaseName];
-  const response = await db.collection(collectionName).insertOne(docToSave);
-  let insertedDoc;
-  if (response.ops.length > 0) {
-    [insertedDoc] = response.ops;
-    logger.infoDb(__filename, insert.name, databaseName, collectionName, `${insertedDoc._id} inserted`, insertedDoc._id);
-  } else {
-    logger.errorDb(__filename, insert.name, databaseName, collectionName, 'Unable to insert', null, doc);
-  }
-  return insertedDoc;
+  return db.collection(collectionName).insertOne(docToSave);
 };
 
 const insertMany = async (databaseName, collectionName, docs) => {

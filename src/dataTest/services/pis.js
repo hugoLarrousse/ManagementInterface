@@ -43,13 +43,13 @@ exports.checkStatusPis = async () => {
     for (const pi of pis) {
       if (!(pisInfoSocket.pisOn.find(p => p === pi.serial))) {
         const date = `[${moment().tz(pi.timezone || 'Europe/Paris').format('DD/MM/YYYY - kk:mm')} (${pi.timezone || 'Europe/Paris'})]`;
-        await mongo.insert(databasePi, logsCollections, { serial: pi.serial, type: 'pi-inactive', message: `${date} pi inactive` });
+        await mongo.insert(databasePi, logsCollections, { serial: pi.serial, type: 'pi-inactive', message: 'pi inactive' });
         logger.error2(`${date} *${pi.name}* --> INACTIVE`);
         continue; //eslint-disable-line
       }
       if (!(pisInfoSocket.pisActive.find(p => p.serial === pi.serial)) && shouldHaveUTCChannel(pi.schedule, pi.timezone)) {
         const date = `[${moment().tz(pi.timezone || 'Europe/Paris').format('DD/MM/YYYY - kk:mm')} (${pi.timezone || 'Europe/Paris'})]`;
-        await mongo.insert(databasePi, logsCollections, { serial: pi.serial, type: 'no-channel', message: `${date} no channel` });
+        await mongo.insert(databasePi, logsCollections, { serial: pi.serial, type: 'no-channel', message: 'no channel' });
         logger.error2(`${date} *${pi.name}* -->  NO CHANNEL`);
       }
     }
