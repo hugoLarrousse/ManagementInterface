@@ -59,7 +59,7 @@ const shouldHaveUTCChannel = (schedule, timezone = 'Europe/Paris') => {
 exports.data = async () => {
   try {
     // get all pi
-    const pis = await mongo.find(databaseName, devicesCollection, { type: 'pi' });
+    const pis = await mongo.find(databaseName, devicesCollection, { type: 'pi', teamId: { $ne: null } });
 
     const { error, body: infoSocket } = await requestRetry(optionsGetInfo);
     if (error) {
