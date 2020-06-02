@@ -61,7 +61,10 @@ const updateOne = async (databaseName, collectionName, query = {}, doc, options 
   const db = await mongodbName[databaseName];
   const docUpdated = await db.collection(collectionName)
     .findOneAndUpdate(
-      query,
+      {
+        ...query,
+        ...softDeleteQueryCondition,
+      },
       docToUpdate,
       {
         ...options,
