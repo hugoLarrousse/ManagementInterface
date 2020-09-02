@@ -1,19 +1,20 @@
-const tabDealsCompare = (h7Tab, pidTab) => {
+const tabDealsCompare = (h7Deals, pipedriveDeals) => {
   const excessDeals = [];
-  const difference = h7Tab.length - pidTab.length;
+  const missingDeals = [];
+  const difference = h7Deals.length - pipedriveDeals.length;
 
   if (difference > 0) {
-    const pidIds = pidTab.map(a => a.id);
-    h7Tab.forEach(element => {
+    const pidIds = pipedriveDeals.map(a => a.id);
+    h7Deals.forEach(element => {
       if (!pidIds.includes(element.source.id)) {
         excessDeals.push(element);
       }
     });
   } else if (difference < 0) {
-    const h7Ids = h7Tab.map(a => a.source.id);
-    pidTab.forEach(element => {
+    const h7Ids = h7Deals.map(a => a.source.id);
+    pipedriveDeals.forEach(element => {
       if (!h7Ids.includes(element.id)) {
-        excessDeals.push(element);
+        missingDeals.push(element);
       }
     });
   }
@@ -21,6 +22,7 @@ const tabDealsCompare = (h7Tab, pidTab) => {
   return {
     difference,
     excessDeals,
+    missingDeals,
   };
 };
 
