@@ -7,7 +7,7 @@ const getDealsOpenedTimeline = async (apiToken, since, isOauth, allIntegrations,
     let hasMore = false;
     const deals = [];
 
-    let path = `${isOauth ? '' : '/v1'}/deals?limit=500&sort=add_time%20DESC`;
+    let path = `${isOauth ? '' : '/v1'}/deals?user_id=0&start=0&limit=500&sort=add_time%20DESC`;
 
     do {
       const result = await get(path, apiToken, isOauth);

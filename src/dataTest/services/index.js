@@ -13,7 +13,7 @@ const isTokenValid = (expirationDate) => Date.now() - 300000 < Number(expiration
 
 const FIFTEEN_MINUTES_MILLISECONDS = 300000 * 3;
 
-exports.checkPipedriveByEmail = async (emails, forJames, period, toBeSync) => {
+exports.checkPipedriveByEmail = async (emails, forJames, period, toBeSync, sendSlackMessage = true) => {
   if (forJames) {
     const resultActivities = await testPipedriveCtrl.compareActivities(emails[0], period || 'month');
 
@@ -38,12 +38,12 @@ exports.checkPipedriveByEmail = async (emails, forJames, period, toBeSync) => {
       const resultCompareActivities = await testPipedriveCtrl.compareActivities(user, integrationChecked, allIntegrations, period || 'month');
       const resultCompareDeals = await testPipedriveCtrl.compareDeals(user, integrationChecked, allIntegrations, period || 'month');
 
-      if (resultCompareActivities) {
+      if (resultCompareActivities && sendSlackMessage) {
         if (Object.values(resultCompareActivities.differences).filter(Number).length > 0) {
           logger.error('pipedrive', 'activities', email, period || 'month', resultCompareActivities.differences);
         }
       }
-      if (resultCompareDeals) {
+      if (resultCompareDeals && sendSlackMessage) {
         if (Object.values(resultCompareDeals.differences).filter(Number).length > 0) {
           logger.error('pipedrive', 'deals', email, period || 'month', resultCompareDeals.differences);
         }
@@ -64,7 +64,7 @@ exports.checkPipedriveByEmail = async (emails, forJames, period, toBeSync) => {
 };
 
 
-exports.checkHubspotByEmail = async (emails, forJames, period, toBeSync) => {
+exports.checkHubspotByEmail = async (emails, forJames, period, toBeSync, sendSlackMessage = true) => {
   if (forJames) {
     const resultActivities = await testHubspotCtrl.compareActivities(emails[0], period || 'month');
     const resultDeals = await testHubspotCtrl.compareDeals(emails[0], period || 'month');
@@ -87,12 +87,12 @@ exports.checkHubspotByEmail = async (emails, forJames, period, toBeSync) => {
       const resultActivities = await testHubspotCtrl.compareActivities(user, integrationChecked, allIntegrations, period || 'month');
       const resultDeals = await testHubspotCtrl.compareDeals(user, integrationChecked, allIntegrations, period || 'month');
 
-      if (resultActivities) {
+      if (resultActivities && sendSlackMessage) {
         if (Object.values(resultActivities.differences).filter(Number).length > 0) {
           logger.error('hubspot', 'activities', email, period || 'month', resultActivities.differences);
         }
       }
-      if (resultDeals) {
+      if (resultDeals && sendSlackMessage) {
         if (Object.values(resultDeals.differences).filter(Number).length > 0) {
           logger.error('hubspot', 'deals', email, period || 'month', resultDeals.differences);
         }
@@ -113,7 +113,7 @@ exports.checkHubspotByEmail = async (emails, forJames, period, toBeSync) => {
 };
 
 
-exports.checkSalesforceByEmail = async (emails, forJames, period, toBeSync) => {
+exports.checkSalesforceByEmail = async (emails, forJames, period, toBeSync, sendSlackMessage = true) => {
   if (forJames) {
     const resultActivities = await testSalesforceCtrl.compareActivities(emails[0], period || 'month');
     const resultDeals = await testSalesforceCtrl.compareDeals(emails[0], period || 'month');
@@ -135,12 +135,12 @@ exports.checkSalesforceByEmail = async (emails, forJames, period, toBeSync) => {
     const resultActivities = await testSalesforceCtrl.compareActivities(user, integrationChecked, allIntegrations, period || 'month');
     const resultDeals = await testSalesforceCtrl.compareDeals(user, integrationChecked, allIntegrations, period || 'month');
 
-    if (resultActivities) {
+    if (resultActivities && sendSlackMessage) {
       if (Object.values(resultActivities.differences).filter(Number).length > 0) {
         logger.error('salesforce', 'activities', email, period || 'month', resultActivities.differences);
       }
     }
-    if (resultDeals) {
+    if (resultDeals && sendSlackMessage) {
       if (Object.values(resultDeals.differences).filter(Number).length > 0) {
         logger.error('salesforce', 'deals', email, period || 'month', resultDeals.differences);
       }
