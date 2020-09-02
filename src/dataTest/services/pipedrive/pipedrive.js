@@ -112,8 +112,15 @@ const getAddActivities = async (type, apiToken, since, isOauth, allIntegrations,
           return pipelines.includes(result.related_objects.deal[activity.deal_id].pipeline_id);
         });
       }
-      result.data = result.data.filter(activity => activity.type === 'call' && activity.done);
-      result.data.forEach(activity => { //eslint-disable-line
+      const resultFiltered = result.data.filter(activity => type.includes(activity.type) && activity.done);
+      if (resultFiltered.length === 0) {
+        const lastActivity = result.data[0];
+        const lastActivityAddTime = new Date(lastActivity.add_time).getTime();
+        if (lastActivityAddTime < since) {
+          hasMore = false;
+        }
+      }
+      resultFiltered.forEach(activity => { //eslint-disable-line
         const activityAddTime = new Date(activity.add_time).getTime();
         if (activityAddTime > since) {
           activities.push(activity);
