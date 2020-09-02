@@ -128,8 +128,8 @@ exports.checkSalesforceByEmail = async (emails, forJames, period, toBeSync, send
     if (!integration) {
       throw new Error('No integration');
     }
-    const integrationChecked = await salesforceCheckToken(integration);
 
+    const integrationChecked = { ...await salesforceCheckToken(integration), ...await h7Users.getSalesforceRestriction(user.orga_id) };
     const allIntegrations = await h7Users.getIntegrationOrga(integrationChecked.orgaId, 'Salesforce');
 
     const resultActivities = await testSalesforceCtrl.compareActivities(user, integrationChecked, allIntegrations, period || 'month');

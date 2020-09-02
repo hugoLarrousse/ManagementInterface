@@ -113,27 +113,28 @@ exports.cron = async () => {
     });
   } else {
     try {
-      // logger.info('START TEST AUTOMATION MANUAL');
+      console.log('START TEST AUTOMATION MANUAL');
       await timeoutPromise(1000);
-      // logger.info(`PIPEDRIVE ${new Date().getDay() ? 'day' : 'month'}, ${emailsPipedriveFormatted.length} accounts`);
-      // await checkData.checkPipedriveByEmail(emailsPipedriveFormatted, false, new Date().getDay() ? 'day' : 'month');
-      // await timeoutPromise(1000);
-      // logger.info('--------------------');
-      // logger.info(`HUBSPOT WEEK, ${emailsHubspotFormatted.length} accounts`);
-      // await checkData.checkHubspotByEmail(emailsHubspotFormatted, false, 'week');
-      // await timeoutPromise(1000);
-      // logger.info('--------------------');
-      // logger.info(`SALESFORCE MONTH ${emailsSalesforceFormatted.length} accounts`);
-      await checkData.checkSalesforceByEmail(emailsSalesforceFormatted, false, 'month');
-      // await timeoutPromise(1000);
-      // logger.info('--------------------');
-      // logger.info(`HUBSPOT DAY, ${emailsHubspotFormatted.length} accounts`);
-      // await checkData.checkHubspotByEmail(emailsHubspotFormatted, false, 'day');
+      console.log(`PIPEDRIVE ${new Date().getDay() ? 'day' : 'month'}, ${emailsPipedriveFormatted.length} accounts`);
+      await checkData.checkPipedriveByEmail(emailsPipedriveFormatted, false, new Date().getDay() ? 'day' : 'month', false, false);
       await timeoutPromise(1000);
-      // logger.info('END TEST AUTOMATION MANUAL');
+      console.log('--------------------');
+      console.log(`HUBSPOT WEEK, ${emailsHubspotFormatted.length} accounts`);
+      await checkData.checkHubspotByEmail(emailsHubspotFormatted, false, 'week', false, false);
+      await timeoutPromise(1000);
+      console.log('--------------------');
+      console.log(`SALESFORCE MONTH ${emailsSalesforceFormatted.length} accounts`);
+      await checkData.checkSalesforceByEmail(emailsSalesforceFormatted, false, 'month', false, false);
+      console.log('DONE');
+      await timeoutPromise(1000);
+      console.log('--------------------');
+      console.log(`HUBSPOT DAY, ${emailsHubspotFormatted.length} accounts`);
+      await checkData.checkHubspotByEmail(emailsHubspotFormatted, false, 'day');
+      await timeoutPromise(1000);
+      console.log('END TEST AUTOMATION MANUAL');
     } catch (e) {
       setTimeout(() => {
-        logger.info(`END TEST AUTOMATION WITH ERRORS:
+        console.log(`END TEST AUTOMATION WITH ERRORS:
           ${e.message}
         ${moment().format('LLL')}`);
       }, 3000);

@@ -11,9 +11,15 @@ const genericControls = require('../services/controls/heptaward/generic');
 const compareDeals = async (user, integrationChecked, allIntegrations, period) => {
   const since = srvDate.timestampStartPeriod(period);
 
-  const salesforceOpenedDeals = await salesforce.getDealsOpened(integrationChecked.token, integrationChecked.instanceUrl, period, allIntegrations);
+  const salesforceOpenedDeals = await salesforce.getDealsOpened(
+    integrationChecked.token, integrationChecked.instanceUrl, period,
+    allIntegrations, integrationChecked.restrictions
+  );
 
-  const salesforceWonDeals = await salesforce.getDealsWon(integrationChecked.token, integrationChecked.instanceUrl, since, allIntegrations);
+  const salesforceWonDeals = await salesforce.getDealsWon(
+    integrationChecked.token, integrationChecked.instanceUrl, since,
+    allIntegrations, integrationChecked.restrictions
+  );
 
   const heptawardOpenedDeals = await h7Echoes.getDealsInfos('deal-opened', user.team_id, since, integrationChecked.integrationTeam, 'salesforce');
   const heptawardWonDeals = await h7Echoes.getDealsInfos('deal-won', user.team_id, since, integrationChecked.integrationTeam, 'salesforce');

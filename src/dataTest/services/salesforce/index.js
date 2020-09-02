@@ -5,16 +5,29 @@ const dates = require('../../Utils/dates');
 
 const PATH_FOR_QUERY = '/services/data/v43.0/query/';
 
-const getData = (baseUrl, accessToken, dataType, lastModifiedDateTZ) => {
+const formatKeys = (keys, keysToRemove) => {
+  let k = typeof keys === 'string' ? keys : keys.length && keys.join(',');
+  if (keysToRemove) {
+    for (const keyToRemove of keysToRemove) {
+      k = k.replace(`,${keyToRemove}`, '');
+    }
+  }
+  return k;
+};
+
+const getData = (baseUrl, accessToken, dataType, lastModifiedDateTZ, restrictions) => {
   const date = lastModifiedDateTZ || '';
-  return request(baseUrl, PATH_FOR_QUERY, `${query[dataType]}${date}`, 'GET', { Authorization: `Bearer ${accessToken}` }, null, true);
+  return request(
+    baseUrl, PATH_FOR_QUERY, `${formatKeys(query[dataType], restrictions)}${date}`,
+    'GET', { Authorization: `Bearer ${accessToken}` }, null, true
+  );
 };
 
 const getMoreData = (baseUrl, accessToken, pathUrl) => {
   return request(baseUrl, pathUrl, null, 'GET', { Authorization: `Bearer ${accessToken}` }, null, true);
 };
 
-const getDealsOpened = async (token, baseUrl, period, allIntegrations) => {
+const getDealsOpened = async (token, baseUrl, period, allIntegrations, restrictions) => {
   const startDateTZ = `${(new Date(dates.timestampStartPeriod(period))).toISOString().split('.')[0]}Z`;
   try {
     let hasMore = false;
@@ -23,7 +36,7 @@ const getDealsOpened = async (token, baseUrl, period, allIntegrations) => {
     const arrayData = [];
     do {
       if (!hasMore) {
-        results = await getData(baseUrl, token, 'opportunityOpened', startDateTZ);
+        results = await getData(baseUrl, token, 'opportunityOpened', startDateTZ, restrictions);
       } else {
         results = await getMoreData(baseUrl, token, urlPath);
       }
@@ -44,7 +57,7 @@ const getDealsOpened = async (token, baseUrl, period, allIntegrations) => {
   }
 };
 
-const getDealsWon = async (token, baseUrl, period, allIntegrations) => {
+const getDealsWon = async (token, baseUrl, period, allIntegrations, restrictions) => {
   const date = new Date(period);
   const startDate = `${date.getFullYear()}-${date.getMonth() + 1 < 10 ?
     `0${date.getMonth() + 1}` : date.getMonth() + 1}-${date.getDate() < 10 ?
@@ -56,7 +69,7 @@ const getDealsWon = async (token, baseUrl, period, allIntegrations) => {
     const arrayData = [];
     do {
       if (!hasMore) {
-        results = await getData(baseUrl, token, 'opportunityWon', startDate);
+        results = await getData(baseUrl, token, 'opportunityWon', startDate, restrictions);
       } else {
         results = await getMoreData(baseUrl, token, urlPath);
       }

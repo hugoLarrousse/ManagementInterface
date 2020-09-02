@@ -83,7 +83,22 @@ exports.getSettingsForPipedrive = async (orgaId) => {
     };
   } catch (e) {
     throw new Error(`${__filename}
-      ${getIntegration.name}
+    getSettingsForPipedrive
+      ${e.message}`);
+  }
+};
+
+exports.getSalesforceRestriction = async (orgaId) => {
+  try {
+    const select = {
+      orgaId: ObjectID(orgaId),
+    };
+    const result = await mongo.findOne('heptaward', 'settings', select);
+
+    return result && result.salesforceRestriction && { restrictions: result.salesforceRestriction };
+  } catch (e) {
+    throw new Error(`${__filename}
+    getSettings
       ${e.message}`);
   }
 };
