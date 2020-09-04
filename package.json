@@ -65,7 +65,7 @@
     "lodash": "^4.17.20",
     "moment": "^2.22.2",
     "moment-timezone": "^0.5.17",
-    "mongodb": "^2.2.1",
+    "mongodb": "^3.6.1",
     "node-cron": "^1.2.1",
     "requestretry": "^2.0.0",
     "sha1": "^1.1.1",
