@@ -7,10 +7,15 @@ const UserCollection = 'users';
 const SEVEN_DAYS_MILLISECONDS = 604800000;
 const FIVE_MINUTES_MILLISECONDS = 300000;
 
-const userCount = mongo.count(databaseName, UserCollection, { status: 'ACTIVE', team_id: { $ne: null } });
-const managerCount = mongo.count(databaseName, UserCollection, { status: 'ACTIVE', role: 'manager' });
-const users = mongo.find(databaseName, UserCollection, { status: 'ACTIVE', team_id: { $ne: null } });
+let userCount = null;
+let managerCount = null;
+let users = null;
 
+exports.initializeCount = () => {
+  userCount = mongo.count(databaseName, UserCollection, { status: 'ACTIVE', team_id: { $ne: null } });
+  managerCount = mongo.count(databaseName, UserCollection, { status: 'ACTIVE', role: 'manager' });
+  users = mongo.find(databaseName, UserCollection, { status: 'ACTIVE', team_id: { $ne: null } });
+};
 
 exports.count = async () => {
   await Promise.all([userCount,

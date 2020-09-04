@@ -9,11 +9,17 @@ const integrationCollection = 'integrations';
 
 const SEVEN_DAYS_MILLISECONDS = 604800000;
 
+let usersFound = null;
+let autoRegisterCount = null;
+let signedUpCount = null;
+let invitedCount = null;
 
-const usersFound = mongo.find(databaseName, userCollection, { status: 'ACTIVE' });
-const autoRegisterCount = mongo.count(databaseName, userCollection, { status: 'AUTO_REGISTER' });
-const signedUpCount = mongo.count(databaseName, userCollection, { status: 'NOT_CONFIRMED_YET' });
-const invitedCount = mongo.count(databaseName, userCollection, { status: 'INVITED' });
+exports.initializeCount = () => {
+  usersFound = mongo.find(databaseName, userCollection, { status: 'ACTIVE' });
+  autoRegisterCount = mongo.count(databaseName, userCollection, { status: 'AUTO_REGISTER' });
+  signedUpCount = mongo.count(databaseName, userCollection, { status: 'NOT_CONFIRMED_YET' });
+  invitedCount = mongo.count(databaseName, userCollection, { status: 'INVITED' });
+};
 
 
 exports.count = async () => {

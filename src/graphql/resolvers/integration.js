@@ -8,8 +8,11 @@ const databaseName = process.env.databaseH7;
 const userCollection = 'users';
 const integrationCollection = 'integrations';
 
+let users = null;
 
-const users = mongo.find(databaseName, userCollection, { status: 'ACTIVE' });
+exports.initializeData = () => {
+  users = mongo.find(databaseName, userCollection, { status: 'ACTIVE' });
+};
 
 const reducer = (accumulator, currentValue) => {
   for (const crt of currentValue) {
