@@ -1,3 +1,4 @@
 {
-  "coreUrl": "https://api.heptaward.com"
+  "coreUrl": "https://api.heptaward.com",
+  "poolSize": 20
 }

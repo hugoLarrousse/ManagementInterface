@@ -4,5 +4,6 @@
     "apiUrlProxy": "https://api-proxy.pipedrive.com",
     "loginUrl": "https://oauth.pipedrive.com"
   },
-  "coreUrl": "http://localhost:3333"
+  "coreUrl": "http://localhost:3333",
+  "poolSize": 10
 }
