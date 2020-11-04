@@ -16,7 +16,7 @@ Create a management interface in first place for Heptaward but it has to be as g
 * GraphQL
 * Express
 * MongoDB
-* Cron
+* Node-cron
 
 ## How to use managementInterface
 
