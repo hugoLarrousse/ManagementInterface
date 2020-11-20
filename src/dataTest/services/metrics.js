@@ -27,7 +27,7 @@ exports.originUrl = async () => {
 };
 
 exports.locationPathCount = async () => {
-  const pathLocation = await mongo.findOne('heptaward', 'counters', { _id: `path-count-${process.env.NODE_ENV}-${moment().format('DD-MM-YYYY')}` }); //eslint-disable-line
+  const pathLocation = await mongo.findOne('heptaward', 'counters', { _id: `path-count-${process.env.NODE_ENV}-${moment().format('ww-YYYY')}` }); //eslint-disable-line
   if (pathLocation) {
     const { _id, updatedAt, ...rest } = pathLocation;
     logger.info(Object.entries(rest).sort((a, b) => b[1] - a[1]).reduce((prev, curr) => {

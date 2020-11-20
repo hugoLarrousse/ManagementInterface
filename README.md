@@ -23,3 +23,7 @@ Create a management interface in first place for Heptaward but it has to be as g
 1) clone Repo
 2) `npm install`
 3) `npm start` (ou `npm run dev` for development)
+
+## TO DO
+
+* change package cron

@@ -1,4 +1,4 @@
-const cron = require('node-cron');
+const cron = require('node-cron'); // to be changed
 const logger = require('../Utils/loggerSlack');
 const moment = require('moment');
 
@@ -56,7 +56,7 @@ exports.cronRequestUptime = async () => {
 };
 
 exports.cronRequestLocationPath = async () => {
-  cron.schedule('10 20 * * *', async () => {
+  cron.schedule('29 16 * * 5', async () => {
     try {
       logger.info(`START PAGE VISITED 21h10: ${moment().format('DD/MM/YYYY')}`);
       await metrics.locationPathCount();
