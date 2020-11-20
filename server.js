@@ -40,7 +40,8 @@ mongo.createConnection().then((code) => {
     cron.cron();
     cron.cronRequestUptime();
     cron.cronPisStatus();
-    // cron..cronRequestMetrics();
+    // cron.cronRequestMetrics();
+    cron.cronRequestLocationPath();
   } else {
     console.log('Error with MongoDb connection');
   }

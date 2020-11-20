@@ -3,7 +3,7 @@ const logger = require('../Utils/loggerSlack');
 const moment = require('moment');
 
 const checkData = require('../services');
-const urlMetrics = require('../services/urlMetrics');
+const metrics = require('../services/metrics');
 const uptime = require('../services/uptime');
 const timeoutPromise = require('../Utils/timeout');
 const Pis = require('../services/pis');
@@ -18,11 +18,11 @@ exports.cronRequestMetrics = async () => {
   cron.schedule('0 20 * * *', async () => {
     try {
       logger.info(`START REQUEST METRICS 21h: ${moment().format('DD/MM/YYYY')}`);
-      await urlMetrics.pathCount();
+      await metrics.pathCount();
       await timeoutPromise(1000);
-      await urlMetrics.statusCode();
+      await metrics.statusCode();
       await timeoutPromise(1000);
-      await urlMetrics.originUrl();
+      await metrics.originUrl();
       logger.info(`END REQUEST METRICS ${moment().format('DD/MM/YYYY')}`);
     } catch (e) {
       setTimeout(() => {
@@ -48,6 +48,22 @@ exports.cronRequestUptime = async () => {
     } catch (e) {
       setTimeout(() => {
         logger.info(`END REQUEST METRICS WITH ERRORS:
+          ${e.message}
+        ${moment().format('LLL')}`);
+      }, 3000);
+    }
+  });
+};
+
+exports.cronRequestLocationPath = async () => {
+  cron.schedule('10 20 * * *', async () => {
+    try {
+      logger.info(`START PAGE VISITED 21h10: ${moment().format('DD/MM/YYYY')}`);
+      await metrics.locationPathCount();
+      logger.info(`END ${moment().format('DD/MM/YYYY')}`);
+    } catch (e) {
+      setTimeout(() => {
+        logger.info(`END PAGE VISITED WITH ERRORS:
           ${e.message}
         ${moment().format('LLL')}`);
       }, 3000);
@@ -114,23 +130,23 @@ exports.cron = async () => {
   } else {
     try {
       console.log('START TEST AUTOMATION MANUAL');
-      await timeoutPromise(1000);
-      console.log(`PIPEDRIVE ${new Date().getDay() ? 'day' : 'month'}, ${emailsPipedriveFormatted.length} accounts`);
-      await checkData.checkPipedriveByEmail(emailsPipedriveFormatted, false, new Date().getDay() ? 'day' : 'month', false, false);
-      await timeoutPromise(1000);
-      console.log('--------------------');
-      console.log(`HUBSPOT WEEK, ${emailsHubspotFormatted.length} accounts`);
-      await checkData.checkHubspotByEmail(emailsHubspotFormatted, false, 'week', false, false);
-      await timeoutPromise(1000);
-      console.log('--------------------');
+      // await timeoutPromise(1000);
+      // console.log(`PIPEDRIVE ${new Date().getDay() ? 'day' : 'month'}, ${emailsPipedriveFormatted.length} accounts`);
+      // await checkData.checkPipedriveByEmail(emailsPipedriveFormatted, false, new Date().getDay() ? 'day' : 'month', false, false);
+      // await timeoutPromise(1000);
+      // console.log('--------------------');
+      // console.log(`HUBSPOT WEEK, ${emailsHubspotFormatted.length} accounts`);
+      // await checkData.checkHubspotByEmail(emailsHubspotFormatted, false, 'week', false, false);
+      // await timeoutPromise(1000);
+      // console.log('--------------------');
       console.log(`SALESFORCE MONTH ${emailsSalesforceFormatted.length} accounts`);
       await checkData.checkSalesforceByEmail(emailsSalesforceFormatted, false, 'month', false, false);
       console.log('DONE');
-      await timeoutPromise(1000);
-      console.log('--------------------');
-      console.log(`HUBSPOT DAY, ${emailsHubspotFormatted.length} accounts`);
-      await checkData.checkHubspotByEmail(emailsHubspotFormatted, false, 'day');
-      await timeoutPromise(1000);
+      // await timeoutPromise(1000);
+      // console.log('--------------------');
+      // console.log(`HUBSPOT DAY, ${emailsHubspotFormatted.length} accounts`);
+      // await checkData.checkHubspotByEmail(emailsHubspotFormatted, false, 'day');
+      // await timeoutPromise(1000);
       console.log('END TEST AUTOMATION MANUAL');
     } catch (e) {
       setTimeout(() => {
