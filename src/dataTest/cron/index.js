@@ -56,9 +56,9 @@ exports.cronRequestUptime = async () => {
 };
 
 exports.cronRequestLocationPath = async () => {
-  cron.schedule('29 16 * * 5', async () => {
+  cron.schedule('29 15 * * 5', async () => {
     try {
-      logger.info(`START PAGE VISITED 21h10: ${moment().format('DD/MM/YYYY')}`);
+      logger.info(`START PAGE VISITED 16h29: ${moment().format('DD/MM/YYYY')}`);
       await metrics.locationPathCount();
       logger.info(`END ${moment().format('DD/MM/YYYY')}`);
     } catch (e) {
