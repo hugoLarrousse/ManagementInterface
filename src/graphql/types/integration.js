@@ -19,10 +19,22 @@ exports.count = new GraphQLObjectType({
     hubspotPercentage: {
       type: new GraphQLNonNull(GraphQLFloat),
     },
-    spectatorCount: {
+    salesforceCount: {
       type: new GraphQLNonNull(GraphQLFloat),
     },
-    spectatorPercentage: {
+    salesforcePercentage: {
+      type: new GraphQLNonNull(GraphQLFloat),
+    },
+    asanaCount: {
+      type: new GraphQLNonNull(GraphQLFloat),
+    },
+    asanaPercentage: {
+      type: new GraphQLNonNull(GraphQLFloat),
+    },
+    noCRMCount: {
+      type: new GraphQLNonNull(GraphQLFloat),
+    },
+    noCRMPercentage: {
       type: new GraphQLNonNull(GraphQLFloat),
     },
   },

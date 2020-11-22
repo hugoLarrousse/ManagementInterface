@@ -12,6 +12,7 @@ const userList = require('./userList');
 const dataTest = require('./dataTest');
 const user = require('./user');
 const pi = require('./pi');
+const metrics = require('./metrics');
 
 const queryType = new GraphQLObjectType({
   name: 'Query',
@@ -30,6 +31,7 @@ const queryType = new GraphQLObjectType({
     coupons: payment.getCoupons,
     getPis: pi.data,
     getLogsPi: pi.logs,
+    pagesVisited: metrics.pagesVisitedQuery,
   },
 });
 

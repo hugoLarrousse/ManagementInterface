@@ -1,52 +1,40 @@
-const { ObjectID } = require('mongodb');
 const mongo = require('../../db/mongo');
-const sum = require('lodash/sum');
 
 const { makePercentage } = require('../utils');
 
 const databaseName = process.env.databaseH7;
-const userCollection = 'users';
 const integrationCollection = 'integrations';
 
-let users = null;
-
-exports.initializeData = () => {
-  users = mongo.find(databaseName, userCollection, { status: 'ACTIVE' });
-};
-
-const reducer = (accumulator, currentValue) => {
-  for (const crt of currentValue) {
-    if (accumulator[crt.name]) {
-      Object.assign(accumulator, { [crt.name]: accumulator[crt.name] + 1 });
-    } else {
-      Object.assign(accumulator, { [crt.name]: 1 });
-    }
-  }
-  return accumulator;
+const countPerCRM = (integrations, crmName) => {
+  return (new Set(integrations.filter(i => i.name === crmName).map(j => String(j.orgaId)))).size;
 };
 
 
 exports.count = async () => {
-  const usersFound = await users;
-  const spectator = usersFound.filter(user => user.role === 'spectator');
-  for (const user of usersFound) {
-    user.integrations = await mongo.find(databaseName, integrationCollection, {
-      userId: ObjectID(user._id),
-      token: {
-        $ne: null,
-      },
-    });
-  }
-  const integrations = usersFound.map(user => user.integrations);
+  const integrations = await mongo.find(databaseName, integrationCollection, {
+    token: {
+      $ne: null,
+    },
+  });
+  const integrationsNoCRM = await mongo.find(databaseName, integrationCollection, { name: 'NoCRM' });
 
-  const integrationCount = integrations.reduce(reducer, {});
-  const integrationTotal = sum(Object.values(integrationCount)) + spectator.length;
+  const countPipedrive = countPerCRM(integrations, 'Pipedrive');
+  const countHubspot = countPerCRM(integrations, 'Hubspot');
+  const countSalesforce = countPerCRM(integrations, 'Salesforce');
+  const countAsana = countPerCRM(integrations, 'Asana');
+  const countNoCRM = (new Set(integrationsNoCRM.map(i => String(i.orgaId)))).size;
+
+  const integrationTotal = countPipedrive + countHubspot + countSalesforce + countAsana + countNoCRM;
   return {
-    pipedriveCount: integrationCount.Pipedrive || 0,
-    pipedrivePercentage: makePercentage(integrationCount.Pipedrive, integrationTotal),
-    hubspotCount: integrationCount.Hubspot || 0,
-    hubspotPercentage: makePercentage(integrationCount.Hubspot, integrationTotal),
-    spectatorCount: spectator.length || 0,
-    spectatorPercentage: makePercentage(spectator.length, integrationTotal),
+    pipedriveCount: countPipedrive || 0,
+    pipedrivePercentage: makePercentage(countPipedrive, integrationTotal),
+    hubspotCount: countHubspot || 0,
+    hubspotPercentage: makePercentage(countHubspot, integrationTotal),
+    salesforceCount: countSalesforce || 0,
+    salesforcePercentage: makePercentage(countSalesforce, integrationTotal),
+    asanaCount: countAsana || 0,
+    asanaPercentage: makePercentage(countAsana, integrationTotal),
+    noCRMCount: countNoCRM || 0,
+    noCRMPercentage: makePercentage(countNoCRM, integrationTotal),
   };
 };
