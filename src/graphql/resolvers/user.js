@@ -64,3 +64,8 @@ exports.getTeams = async () => {
   }
   return teams.filter(team => !teamToRemove.includes(team._id));
 };
+
+exports.getOrganizations = async () => {
+  const organisations = await mongo.find('heptaward', 'organisations');
+  return organisations.sort((a, b) => a.name.localeCompare(b.name));
+};

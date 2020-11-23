@@ -74,3 +74,31 @@ exports.setCoupon = async ({ orgaId, couponId }) => {
     return { success: false };
   }
 };
+
+const getNextSequenceValue = async (sequenceName) => {
+  return mongo.findAndModify(
+    'heptaward',
+    'counters',
+    { _id: sequenceName },
+    { $inc: { sequenceValue: 1 } },
+    { returnOriginal: false, upsert: true },
+  );
+};
+
+const buildInvoiceNumber = (count, clientCode) => {
+  const date = new Date();
+  return `${date.getFullYear()}-${date.getMonth() + 1}-${String(count).padStart(5, '0')}${clientCode}`;
+};
+
+
+exports.generateInvoiceNumber = async ({ clientCode }) => {
+  const organization = await mongo.findOne('heptaward', 'organisations', { clientCode });
+  if (!organization) return { invoiceNumber: 'null' };
+  const user = await mongo.findOne('heptaward', 'users', { orga_id: organization._id });
+  if (!user) return { invoiceNumber: 'null' };
+  const { sequenceValue } = await getNextSequenceValue('licenceNumber');
+
+  return {
+    invoiceNumber: buildInvoiceNumber(sequenceValue, clientCode),
+  };
+};

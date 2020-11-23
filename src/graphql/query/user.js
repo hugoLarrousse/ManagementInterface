@@ -25,3 +25,14 @@ exports.teams = {
     }
   ),
 };
+
+exports.organizations = {
+  type: new GraphQLList(type.user.organizations),
+  description: 'Get all organizations',
+  resolve: createResolver(
+    { isAuthRequired: true },
+    () => {
+      return user.getOrganizations();
+    }
+  ),
+};

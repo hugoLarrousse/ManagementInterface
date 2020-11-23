@@ -71,3 +71,15 @@ exports.getTeams = new GraphQLObjectType({
     },
   },
 });
+
+exports.organizations = new GraphQLObjectType({
+  name: 'Organizations',
+  fields: {
+    name: {
+      type: new GraphQLNonNull(GraphQLString),
+    },
+    clientCode: {
+      type: new GraphQLNonNull(GraphQLString),
+    },
+  },
+});

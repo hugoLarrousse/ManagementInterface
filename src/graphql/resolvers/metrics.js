@@ -1,4 +1,4 @@
-
+const { ObjectID } = require('mongodb');
 const moment = require('moment');
 const mongo = require('../../db/mongo');
 
@@ -40,18 +40,11 @@ exports.pagesVisited = async ({ period, date = moment().format('ww') }) => {
     const docs = await mongo.find('heptaward', 'counters', { _id: { $in: ids } });
     if (docs.length === 0) return { data: null };
 
-    let properties = [];
-
-    for (const doc of docs) {
-      const { _id, updatedAt, ...rest } = doc;
-      properties.push(...Object.keys(rest));
-    }
-    properties = [...new Set(properties)];
-
-    const data = properties.reduce((prev, property) => {
-      prev[property] = docs.reduce((prevT, curr) => { // eslint-disable-line
-        return prevT + (curr[property] || 0);
-      }, 0);
+    const data = docs.reduce((prev, curr) => {
+      const { _id, updatedAt, ...rest } = curr;
+      for (const t of Object.entries(rest)) {
+        prev[t[0]] = t[1] + (prev[t[0]] || 0); //eslint-disable-line
+      }
       return prev;
     }, {});
 
@@ -63,4 +56,32 @@ exports.pagesVisited = async ({ period, date = moment().format('ww') }) => {
     };
   }
   return { data: null };
+};
+
+
+exports.slidesInfo = async () => {
+  const channels = await mongo.find('heptaward', 'library', {
+    teamId: {
+      $nin: [ObjectID('5c01a70172871b1d6530cd48'), ObjectID('5da72cbd6810dc1523997e9a')],
+    },
+    name: {
+      $nin: ['Demo Channel', 'Your Demo Channel'],
+    },
+  });
+  const channelsRecent = channels.filter(c => c.createdAt > 1577833200000 || c.updatedAt > 1577833200000);
+  const slides = channelsRecent.reduce((prev, curr) => {
+    prev.push(...curr.slides);
+    return prev;
+  }, []);
+  const types = Object.entries(slides.reduce((prev, curr) => {
+    const type = curr.type === 'slideBuilder' ? `${curr.type}-${curr.subtype}` : curr.type;
+    prev[type] = prev[type] + 1 || 1; //eslint-disable-line
+    return prev;
+  }, {})).sort((a, b) => b[1] - a[1]).map(t => ({ name: t[0], value: t[1] }));
+  return {
+    channelsCount: channelsRecent.length,
+    slidesCount: slides.length,
+    types,
+    slidesCountAverage: (slides.length / channelsRecent.length).toFixed(2),
+  };
 };

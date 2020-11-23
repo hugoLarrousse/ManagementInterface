@@ -46,6 +46,14 @@ const insertMany = async (databaseName, collectionName, docs) => {
   return null;
 };
 
+const findAndModify = async (databaseName, collectionName, query, toUpdate, options) => {
+  const docFoundAndModified = await mongodbConnect.db(databaseName).collection(collectionName).findOneAndUpdate(query, toUpdate, options);
+  if (docFoundAndModified.ok === 1) {
+    return docFoundAndModified.value;
+  }
+  return null;
+};
+
 const updateOne = async (databaseName, collectionName, query = {}, doc, options = {}, noNeedSet) => {
   const docToUpdate = noNeedSet ? doc : { $set: addUpdatedAtToModel(doc) };
   const docUpdated = await mongodbConnect.db(databaseName).collection(collectionName)
@@ -133,6 +141,7 @@ const deleteMany = async (databaseName, collectionName, query, options) => {
 exports.createConnection = createConnection;
 exports.closeConnection = closeConnection;
 exports.insert = insert;
+exports.findAndModify = findAndModify;
 exports.updateOne = updateOne;
 exports.update = update;
 exports.softDelete = softDelete;

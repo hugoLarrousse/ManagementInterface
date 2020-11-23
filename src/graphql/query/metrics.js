@@ -27,3 +27,14 @@ exports.pagesVisitedQuery = {
     }
   ),
 };
+
+exports.slidesInfoQuery = {
+  type: type.metrics.slidesInfo,
+  description: 'get slides info',
+  resolve: createResolver(
+    { isAuthRequired: true },
+    () => {
+      return metrics.slidesInfo();
+    }
+  ),
+};

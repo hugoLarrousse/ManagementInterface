@@ -4,7 +4,6 @@
   "description": "backend management interface H7",
   "main": "server.js",
   "scripts": {
-    "test": "better-npm-run test",
     "start": "node server.js",
     "dev": "better-npm-run dev",
     "staging": "better-npm-run staging",
@@ -15,13 +14,6 @@
       "command": "nodemon server.js",
       "env": {
         "NODE_ENV": "development"
-      }
-    },
-    "test": {
-      "command": "node test/jasmineRun.js",
-      "env": {
-        "NODE_ENV": "test",
-        "JASMINE_CONFIG_PATH": "jasmine.json"
       }
     },
     "staging": {
@@ -78,11 +70,7 @@
     "eslint-config-airbnb": "^16.1.0",
     "eslint-config-airbnb-base": "^12.1.0",
     "eslint-plugin-import": "^2.12.0",
-    "eslint-plugin-jasmine": "^2.10.1",
     "eslint-plugin-jsx-a11y": "^6.0.3",
-    "eslint-plugin-react": "^7.9.1",
-    "jasmine": "^3.1.0",
-    "jasmine-console-reporter": "^3.0.2",
-    "nodemon": "^1.17.5"
+    "eslint-plugin-react": "^7.9.1"
   }
 }

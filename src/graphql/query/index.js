@@ -32,6 +32,9 @@ const queryType = new GraphQLObjectType({
     getPis: pi.data,
     getLogsPi: pi.logs,
     pagesVisited: metrics.pagesVisitedQuery,
+    slidesInfo: metrics.slidesInfoQuery,
+    organizations: user.organizations,
+    generateInvoiceNumber: payment.generateInvoiceNumberQuery,
   },
 });
 

@@ -42,3 +42,13 @@ exports.coupon = new GraphQLObjectType({
     },
   },
 });
+
+
+exports.generateInvoiceNumber = new GraphQLObjectType({
+  name: 'generateInvoiceNumber',
+  fields: {
+    invoiceNumber: {
+      type: new GraphQLNonNull(GraphQLString),
+    },
+  },
+});

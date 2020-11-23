@@ -1,11 +1,10 @@
 {
   "extends": "airbnb",
   "env": {
-      "jasmine": true
+      "development": true
   },
   "plugins": [
-      "import",
-      "jasmine"
+      "import"
   ],
   "rules": {
     "no-underscore-dangle": "off",
@@ -20,10 +19,6 @@
     "arrow-body-style":"off",
     "arrow-parens":"off",
     "import/prefer-default-export": "off",
-    "jasmine/no-disabled-tests": "warn",
-    "jasmine/no-focused-tests": "error",
-    "jasmine/valid-expect": "error",
-    "jasmine/no-spec-dupes": "error",
     "no-await-in-loop": "off",
     "no-restricted-syntax":"off",
     "linebreak-style":"off",
