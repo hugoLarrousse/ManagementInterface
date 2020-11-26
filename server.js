@@ -27,7 +27,7 @@ app.get('/test', async (req, res) => {
 });
 
 app.all('/', async (req, res) => {
-  res.status(200).json('Error router');
+  res.status(200).json({ error: true, message: 'Error router' });
 });
 
 mongo.createConnection().then((code) => {

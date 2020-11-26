@@ -35,6 +35,8 @@ const queryType = new GraphQLObjectType({
     slidesInfo: metrics.slidesInfoQuery,
     organizations: user.organizations,
     generateInvoiceNumber: payment.generateInvoiceNumberQuery,
+    previousInfoInvoice: payment.previousInfoInvoiceQuery,
+    previousInvoices: payment.previousInvoicesQuery,
   },
 });
 

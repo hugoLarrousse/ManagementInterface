@@ -1,8 +1,12 @@
 const { ObjectID } = require('mongodb');
+const config = require('config');
 
 const mongo = require('../../db/mongo');
+const utils = require('../utils');
+const request = require('../../dataTest/Utils/request');
 
 const databaseName = process.env.databaseH7;
+const { fixedToken } = process.env;
 
 const licenceCollection = 'licences';
 const planCollection = 'plans';
@@ -34,6 +38,16 @@ const normalizeAmountPlan = ({ interval, currency, amount }) => {
   letAmount = interval === 'year' ? letAmount / 12 : letAmount;
   letAmount = currency === 'usd' ? letAmount * CONVERSION_DOLLAR_EURO : letAmount;
   return Math.round(letAmount / 100);
+};
+
+const getNextSequenceValue = async (sequenceName) => {
+  return mongo.findAndModify(
+    'heptaward',
+    'counters',
+    { _id: sequenceName },
+    { $inc: { sequenceValue: 1 } },
+    { returnOriginal: false, upsert: true },
+  );
 };
 
 exports.count = async () => {
@@ -75,22 +89,6 @@ exports.setCoupon = async ({ orgaId, couponId }) => {
   }
 };
 
-const getNextSequenceValue = async (sequenceName) => {
-  return mongo.findAndModify(
-    'heptaward',
-    'counters',
-    { _id: sequenceName },
-    { $inc: { sequenceValue: 1 } },
-    { returnOriginal: false, upsert: true },
-  );
-};
-
-const buildInvoiceNumber = (count, clientCode) => {
-  const date = new Date();
-  return `${date.getFullYear()}-${date.getMonth() + 1}-${String(count).padStart(5, '0')}${clientCode}`;
-};
-
-
 exports.generateInvoiceNumber = async ({ clientCode }) => {
   const organization = await mongo.findOne('heptaward', 'organisations', { clientCode });
   if (!organization) return { invoiceNumber: 'null' };
@@ -99,6 +97,90 @@ exports.generateInvoiceNumber = async ({ clientCode }) => {
   const { sequenceValue } = await getNextSequenceValue('licenceNumber');
 
   return {
-    invoiceNumber: buildInvoiceNumber(sequenceValue, clientCode),
+    invoiceNumber: utils.buildInvoiceNumber(sequenceValue, clientCode),
+  };
+};
+
+exports.previousInfoInvoice = async ({ clientCode }) => {
+  const [invoice] = await mongo.find('heptaward', 'invoices', { clientCode }, { createdAt: -1 }, 1);
+  if (!invoice) return null;
+  return {
+    shipping: invoice.shipping,
+    descriptionPlan: invoice.descriptionPlan,
+    currency: invoice.currency,
+  };
+};
+
+exports.previousInvoices = async ({ clientCode }) => {
+  const invoices = await mongo.find('heptaward', 'invoices', { clientCode }, { createdAt: -1 });
+  return invoices.map(invoice => {
+    return {
+      ...invoice,
+      ...invoice.subscriptions && { descriptionPlan: `${invoice.subscriptions[0].descriptionPlan}/${invoice.subscriptions[1].descriptionPlan}` },
+      isPaid: invoice.outsideStripe ? invoice.isPaid : true,
+      from: invoice.outsideStripe ? 'custom' : 'stripe',
+    };
+  });
+};
+
+exports.addInvoice = async ({
+  clientCode, periodStart, periodEnd, paymentType, currency,
+  isPaid, taxPercent, subtotal, quantity, shipping, subscriptions,
+  note, notePayment,
+}) => {
+  const organization = await mongo.findOne('heptaward', 'organisations', { clientCode });
+  if (!organization) return { success: false };
+
+  const date = new Date();
+
+  const { sequenceValue } = await getNextSequenceValue('licenceNumber');
+  // const { sequenceValue } = await getNextSequenceValue('licenceNumberDev');
+
+  const subscriptionsParsed = JSON.parse(subscriptions);
+  const shippingParsed = JSON.parse(shipping);
+
+  const tax = taxPercent && Number((subtotal * (taxPercent / 100)).toFixed(2));
+
+  const newInvoice = {
+    orgaId: organization._id,
+    clientCode,
+    number: {
+      year: date.getFullYear(),
+      month: date.getMonth() + 1,
+      count: sequenceValue,
+    },
+    creationDate: date.getTime(),
+    periodStart,
+    periodEnd,
+    ...subscriptionsParsed.length === 1 && { descriptionPlan: subscriptionsParsed[0].descriptionPlan, quantity },
+    ...subscriptionsParsed.length > 1 && { subscriptions: subscriptionsParsed },
+    currency,
+    tax,
+    taxPercent,
+    subtotal,
+    total: (subtotal + tax),
+    shipping: shippingParsed,
+    outsideStripe: true,
+    paymentType,
+    isPaid: Boolean(isPaid),
+    ...note && { note: note.split('\n') },
+    ...notePayment && { notePayment: notePayment.split('\n') },
+  };
+
+  // const invoiceInserted = await mongo.insert('heptaward', 'invoicesDev', newInvoice);
+  const invoiceInserted = await mongo.insert('heptaward', 'invoices', newInvoice);
+
+  const dataToReplaceInInvoice = utils.formatInvoiceObject(newInvoice);
+
+  const data = {
+    dataToReplace: dataToReplaceInInvoice,
+    invoiceId: invoiceInserted._id,
+  };
+  const body = await request(config.get('coreUrl'), 'webhookInvoices', null, 'POST', { Authorization: fixedToken }, data);
+
+  if (!body || !body.pdfUrl) return { success: false };
+  return {
+    success: true,
+    pdfUrl: body.pdfUrl,
   };
 };

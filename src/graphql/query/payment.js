@@ -42,3 +42,37 @@ exports.generateInvoiceNumberQuery = {
     }
   ),
 };
+
+exports.previousInfoInvoiceQuery = {
+  type: type.payment.previousInfoInvoice,
+  description: 'Get info previous invoice',
+  args: {
+    clientCode: {
+      type: new GraphQLNonNull(GraphQLString),
+      description: 'client Code',
+    },
+  },
+  resolve: createResolver(
+    { isAuthRequired: true },
+    (_, args) => {
+      return payment.previousInfoInvoice(args);
+    }
+  ),
+};
+
+exports.previousInvoicesQuery = {
+  type: new GraphQLList(type.payment.previousInvoices),
+  description: 'Get previous invoices',
+  args: {
+    clientCode: {
+      type: new GraphQLNonNull(GraphQLString),
+      description: 'client Code',
+    },
+  },
+  resolve: createResolver(
+    { isAuthRequired: true },
+    (_, args) => {
+      return payment.previousInvoices(args);
+    }
+  ),
+};

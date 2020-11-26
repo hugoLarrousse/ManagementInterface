@@ -4,6 +4,7 @@ const {
   GraphQLFloat,
   GraphQLString,
   GraphQLBoolean,
+  GraphQLID,
 } = require('graphql');
 
 
@@ -49,6 +50,97 @@ exports.generateInvoiceNumber = new GraphQLObjectType({
   fields: {
     invoiceNumber: {
       type: new GraphQLNonNull(GraphQLString),
+    },
+  },
+});
+
+const address = new GraphQLObjectType({
+  name: 'address',
+  fields: {
+    city: {
+      type: GraphQLString,
+    },
+    country: {
+      type: GraphQLString,
+    },
+    line1: {
+      type: GraphQLString,
+    },
+    postal_code: {
+      type: GraphQLString,
+    },
+  },
+});
+
+const shipping = new GraphQLObjectType({
+  name: 'shipping',
+  fields: {
+    name: {
+      type: GraphQLString,
+    },
+    address: {
+      type: address,
+    },
+  },
+});
+
+
+exports.previousInfoInvoice = new GraphQLObjectType({
+  name: 'previousInfoInvoice',
+  fields: {
+    shipping: {
+      type: shipping,
+    },
+  },
+});
+
+const number = new GraphQLObjectType({
+  name: 'number',
+  fields: {
+    year: {
+      type: new GraphQLNonNull(GraphQLString),
+    },
+    month: {
+      type: new GraphQLNonNull(GraphQLString),
+    },
+    count: {
+      type: new GraphQLNonNull(GraphQLFloat),
+    },
+  },
+});
+
+exports.previousInvoices = new GraphQLObjectType({
+  name: 'previousInvoices',
+  fields: {
+    _id: {
+      type: new GraphQLNonNull(GraphQLID),
+    },
+    number: {
+      type: new GraphQLNonNull(number),
+    },
+    descriptionPlan: {
+      type: GraphQLString,
+    },
+    isPaid: {
+      type: GraphQLBoolean,
+    },
+    from: {
+      type: GraphQLString,
+    },
+    pdfUrl: {
+      type: new GraphQLNonNull(GraphQLString),
+    },
+  },
+});
+
+exports.addInvoice = new GraphQLObjectType({
+  name: 'addInvoice',
+  fields: {
+    success: {
+      type: new GraphQLNonNull(GraphQLBoolean),
+    },
+    pdfUrl: {
+      type: GraphQLString,
     },
   },
 });
