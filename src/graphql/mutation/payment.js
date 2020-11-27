@@ -88,3 +88,24 @@ exports.addInvoiceMutation = {
     return payment.addInvoice(args);
   }),
 };
+
+exports.changePaidStatusQuery = {
+  type: type.payment.changePaidStatus,
+  description: 'CHange paid status invoice',
+  args: {
+    invoiceId: {
+      type: new GraphQLNonNull(GraphQLString),
+      description: 'invoiceId',
+    },
+    isPaid: {
+      type: new GraphQLNonNull(GraphQLBoolean),
+      description: 'is Paid',
+    },
+  },
+  resolve: createResolver(
+    { isAuthRequired: true },
+    (_, args) => {
+      return payment.changePaidStatus(args);
+    }
+  ),
+};

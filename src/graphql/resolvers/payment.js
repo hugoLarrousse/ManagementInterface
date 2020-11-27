@@ -14,6 +14,8 @@ const couponCollection = 'coupons';
 
 const CONVERSION_DOLLAR_EURO = 0.85;
 
+const isDev = process.env.NODE_ENV === 'development';
+
 let coupons = [];
 
 const licenceCount = () => mongo.count(databaseName, licenceCollection);
@@ -102,7 +104,7 @@ exports.generateInvoiceNumber = async ({ clientCode }) => {
 };
 
 exports.previousInfoInvoice = async ({ clientCode }) => {
-  const [invoice] = await mongo.find('heptaward', 'invoices', { clientCode }, { createdAt: -1 }, 1);
+  const [invoice] = await mongo.find('heptaward', `invoices${isDev ? 'Dev' : ''}`, { clientCode }, { createdAt: -1 }, 1);
   if (!invoice) return null;
   return {
     shipping: invoice.shipping,
@@ -112,7 +114,7 @@ exports.previousInfoInvoice = async ({ clientCode }) => {
 };
 
 exports.previousInvoices = async ({ clientCode }) => {
-  const invoices = await mongo.find('heptaward', 'invoices', { clientCode }, { createdAt: -1 });
+  const invoices = await mongo.find('heptaward', `invoices${isDev ? 'Dev' : ''}`, { clientCode }, { createdAt: -1 });
   return invoices.map(invoice => {
     return {
       ...invoice,
@@ -133,7 +135,7 @@ exports.addInvoice = async ({
 
   const date = new Date();
 
-  const { sequenceValue } = await getNextSequenceValue(`licenceNumber${process.env.NODE_ENV === 'development' ? 'Dev' : ''}`);
+  const { sequenceValue } = await getNextSequenceValue(`licenceNumber${isDev ? 'Dev' : ''}`);
 
   const subscriptionsParsed = JSON.parse(subscriptions);
   const shippingParsed = JSON.parse(shipping);
@@ -166,7 +168,7 @@ exports.addInvoice = async ({
     ...notePayment && { notePayment: notePayment.split('\n') },
   };
 
-  const invoiceInserted = await mongo.insert('heptaward', `invoices${process.env.NODE_ENV === 'development' ? 'Dev' : ''}`, newInvoice);
+  const invoiceInserted = await mongo.insert('heptaward', `invoices${isDev ? 'Dev' : ''}`, newInvoice);
 
   const { locale } = await mongo.findOne('heptaward', 'users', { orga_id: organization._id });
 
@@ -182,5 +184,12 @@ exports.addInvoice = async ({
   return {
     success: true,
     pdfUrl: body.pdfUrl,
+  };
+};
+
+exports.changePaidStatus = async ({ invoiceId, isPaid }) => {
+  await mongo.updateOne('heptaward', `invoices${isDev ? 'Dev' : ''}`, { _id: ObjectID(invoiceId) }, { isPaid: Boolean(isPaid) });
+  return {
+    success: true,
   };
 };

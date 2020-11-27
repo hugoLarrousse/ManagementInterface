@@ -147,3 +147,12 @@ exports.addInvoice = new GraphQLObjectType({
     },
   },
 });
+
+exports.changePaidStatus = new GraphQLObjectType({
+  name: 'changePaidStatus',
+  fields: {
+    success: {
+      type: new GraphQLNonNull(GraphQLBoolean),
+    },
+  },
+});
