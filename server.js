@@ -34,7 +34,7 @@ mongo.createConnection().then((code) => {
   if (code) {
     server.listen(port, () => {
       const date = new Date();
-      console.log(`Server Management is running at ${date} on ${port}`);
+      console.log(`Server Management is running at ${date} on ${port}, NODE_ENV: ${process.env.NODE_ENV}`);
     });
     initializeData();
     cron.cron();
