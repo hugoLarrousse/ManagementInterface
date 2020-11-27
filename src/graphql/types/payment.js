@@ -128,7 +128,10 @@ exports.previousInvoices = new GraphQLObjectType({
       type: GraphQLString,
     },
     pdfUrl: {
-      type: new GraphQLNonNull(GraphQLString),
+      type: GraphQLString,
+    },
+    outsideStripe: {
+      type: GraphQLBoolean,
     },
   },
 });

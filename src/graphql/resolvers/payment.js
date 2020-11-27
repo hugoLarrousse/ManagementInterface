@@ -133,8 +133,7 @@ exports.addInvoice = async ({
 
   const date = new Date();
 
-  const { sequenceValue } = await getNextSequenceValue('licenceNumber');
-  // const { sequenceValue } = await getNextSequenceValue('licenceNumberDev');
+  const { sequenceValue } = await getNextSequenceValue(`licenceNumber${process.env.NODE_ENV === 'development' ? 'Dev' : ''}`);
 
   const subscriptionsParsed = JSON.parse(subscriptions);
   const shippingParsed = JSON.parse(shipping);
@@ -167,10 +166,11 @@ exports.addInvoice = async ({
     ...notePayment && { notePayment: notePayment.split('\n') },
   };
 
-  // const invoiceInserted = await mongo.insert('heptaward', 'invoicesDev', newInvoice);
-  const invoiceInserted = await mongo.insert('heptaward', 'invoices', newInvoice);
+  const invoiceInserted = await mongo.insert('heptaward', `invoices${process.env.NODE_ENV === 'development' ? 'Dev' : ''}`, newInvoice);
 
-  const dataToReplaceInInvoice = utils.formatInvoiceObject(newInvoice);
+  const { locale } = await mongo.findOne('heptaward', 'users', { orga_id: organization._id });
+
+  const dataToReplaceInInvoice = utils.formatInvoiceObject({ ...newInvoice, locale });
 
   const data = {
     dataToReplace: dataToReplaceInInvoice,

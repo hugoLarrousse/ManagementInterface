@@ -80,6 +80,7 @@ const buildInvoiceNumber = (count, clientCode, date = new Date()) => {
 const currencySymbol = {
   eur: '€',
   usd: '$',
+  cad: '$',
 };
 
 const numeral = (number) => {
@@ -121,6 +122,7 @@ const formatInvoiceObject = (invoiceInfo) => {
       && numeral(invoiceInfo.subscriptions[1].subtotal + Number((invoiceInfo.subscriptions[1].subtotal * (invoiceInfo.taxPercent / 100)))),
     TOTAL_ALL: numeral(invoiceInfo.total),
     AMOUNT_DUE: invoiceInfo.isPaid ? 0 : numeral(invoiceInfo.total),
+    STATUS_PAID: invoiceInfo.isPaid ? (invoiceInfo.locale === 'fr' ? 'PAYÉE' : 'PAID') : (invoiceInfo.locale === 'fr' ? 'À PAYER' : 'TO PAY'), //eslint-disable-line
     SHIPPING_ADDRESS_LINE1: shipping.address.line1,
     SHIPPING_ADDRESS_CITY: shipping.address.city.charAt(0).toUpperCase() + shipping.address.city.slice(1),
     SHIPPING_ADDRESS_COUNTRY: shipping.address.country.charAt(0).toUpperCase() + shipping.address.country.slice(1),
@@ -134,6 +136,7 @@ const formatInvoiceObject = (invoiceInfo) => {
     PAYMENT_INFO_LINE1: invoiceInfo.notePayment ? invoiceInfo.notePayment[0] || '' : '',
     PAYMENT_INFO_LINE2: invoiceInfo.notePayment ? invoiceInfo.notePayment[1] || '' : '',
     PAYMENT_INFO_LINE3: invoiceInfo.notePayment ? invoiceInfo.notePayment[2] || '' : '',
+    LOCALE: invoiceInfo.locale,
   };
 };
 
