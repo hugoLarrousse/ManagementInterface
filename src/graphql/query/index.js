@@ -13,6 +13,7 @@ const dataTest = require('./dataTest');
 const user = require('./user');
 const pi = require('./pi');
 const metrics = require('./metrics');
+const channels = require('./channels');
 
 const queryType = new GraphQLObjectType({
   name: 'Query',
@@ -37,6 +38,7 @@ const queryType = new GraphQLObjectType({
     generateInvoiceNumber: payment.generateInvoiceNumberQuery,
     previousInfoInvoice: payment.previousInfoInvoiceQuery,
     previousInvoices: payment.previousInvoicesQuery,
+    channelsLive: channels.channelsLiveQuery,
   },
 });
 

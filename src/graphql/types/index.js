@@ -11,3 +11,4 @@ exports.user = require('./user');
 exports.notification = require('./notification');
 exports.pi = require('./pi');
 exports.metrics = require('./metrics');
+exports.channels = require('./channels');
