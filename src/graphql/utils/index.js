@@ -97,9 +97,9 @@ const formatInvoiceObject = (invoiceInfo) => {
   return {
     INVOICE_NUMBER: buildInvoiceNumber(invoiceInfo.number.count),
     CLIENT_CODE: invoiceInfo.clientCode,
-    CREATION_DATE: moment(invoiceInfo.creationDate).format('D MMMM, YYYY'),
-    START_PERIOD: moment(invoiceInfo.periodStart).format('D MMMM, YYYY'),
-    END_PERIOD: moment(invoiceInfo.periodEnd).format('D MMMM, YYYY'),
+    CREATION_DATE: moment(invoiceInfo.creationDate).locale(invoiceInfo.locale || 'en').format('D MMMM, YYYY'),
+    START_PERIOD: moment(invoiceInfo.periodStart).locale(invoiceInfo.locale || 'en').format('D MMMM, YYYY'),
+    END_PERIOD: moment(invoiceInfo.periodEnd).locale(invoiceInfo.locale || 'en').format('D MMMM, YYYY'),
     DESCRIPTION_PLAN_1: !hasManySubscriptions ? invoiceInfo.descriptionPlan : invoiceInfo.subscriptions[0].descriptionPlan,
     DESCRIPTION_PLAN_2: hasManySubscriptions ? invoiceInfo.subscriptions[1].descriptionPlan : '',
     CURRENCY_SYMBOL: currencySymbol[invoiceInfo.currency],
