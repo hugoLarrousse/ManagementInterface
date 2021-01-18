@@ -42,6 +42,7 @@ mongo.createConnection().then((code) => {
     cron.cronPisStatus();
     // cron.cronRequestMetrics();
     cron.cronRequestLocationPath();
+    cron.cronHubspotWebhooks();
   } else {
     console.log('Error with MongoDb connection');
   }

@@ -1,14 +1,22 @@
-const cron = require('node-cron'); // to be changed
-const logger = require('../Utils/loggerSlack');
+const cron = require('node-cron');
 const moment = require('moment');
+const config = require('config');
 
+const request = require('../../dataTest/Utils/request');
 const checkData = require('../services');
 const metrics = require('../services/metrics');
 const uptime = require('../services/uptime');
 const timeoutPromise = require('../Utils/timeout');
 const Pis = require('../services/pis');
+const logger = require('../Utils/loggerSlack');
 
-const { emailsPipedrive, emailsHubspot, emailsSalesforce } = process.env;
+
+const {
+  emailsPipedrive,
+  emailsHubspot,
+  emailsSalesforce,
+  fixedToken,
+} = process.env;
 const emailsPipedriveFormatted = emailsPipedrive.split(', ');
 const emailsHubspotFormatted = emailsHubspot.split(', ');
 const emailsSalesforceFormatted = emailsSalesforce.split(', ');
@@ -162,5 +170,11 @@ exports.cronPisStatus = () => {
   cron.schedule('5 * * * *', async () => {
     await timeoutPromise(2000);
     await Pis.checkStatusPis();
+  });
+};
+
+exports.cronHubspotWebhooks = () => {
+  cron.schedule('*/2 * * * *', async () => {
+    await request(config.get('coreUrl'), 'hubspot/check/webhooks', null, 'GET', { Authorization: fixedToken });
   });
 };
