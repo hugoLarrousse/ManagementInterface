@@ -147,7 +147,7 @@ exports.addInvoice = async ({
     clientCode,
     number: {
       year: date.getFullYear(),
-      month: date.getMonth() + 1,
+      month: (`0${date.getMonth() + 1}`).slice(-2),
       count: sequenceValue,
     },
     creationDate: date.getTime(),
