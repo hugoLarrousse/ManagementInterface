@@ -11,16 +11,7 @@ const Pis = require('../services/pis');
 const logger = require('../Utils/loggerSlack');
 
 
-const {
-  emailsPipedrive,
-  emailsHubspot,
-  emailsSalesforce,
-  fixedToken,
-} = process.env;
-const emailsPipedriveFormatted = emailsPipedrive.split(', ');
-const emailsHubspotFormatted = emailsHubspot.split(', ');
-const emailsSalesforceFormatted = emailsSalesforce.split(', ');
-
+const { fixedToken } = process.env;
 
 exports.cronRequestMetrics = async () => {
   cron.schedule('0 20 * * *', async () => {
@@ -85,15 +76,15 @@ exports.cron = async () => {
     //   try {
     //     logger.info(`START TEST AUTOMATION 13H: ${moment().format('LLL')}`);
     //     logger.info('PIPEDRIVE MONTH');
-    //     await checkData.checkPipedriveByEmail(emails.pipedrive, false, 'month');
+    //     await checkData.checkPipedriveByEmail(false, 'month');
     //     await timeoutPromise(1000);
     //     logger.info('--------------------');
     //     logger.info('HUBSPOT WEEK');
-    //     await checkData.checkHubspotByEmail(emails.hubspot, false, 'week');
+    //     await checkData.checkHubspotByEmail(false, 'week');
     //     await timeoutPromise(1000);
     //     logger.info('--------------------');
     //     logger.info('SALESFORCE MONTH');
-    //     await checkData.checkSalesforceByEmail(emails.salesforce, false, 'month');
+    //     await checkData.checkSalesforceByEmail(false, 'month');
     //     await timeoutPromise(1000);
     //     logger.info('--------------------');
     //     logger.info('HUBSPOT DAY');
@@ -111,57 +102,47 @@ exports.cron = async () => {
     cron.schedule('0 21 * * *', async () => {
       try {
         logger.info(`START TEST AUTOMATION: ${moment().format('LLL')}`);
-        logger.info(`PIPEDRIVE MONTH, ${emailsPipedriveFormatted.length} accounts`);
-        await checkData.checkPipedriveByEmail(emailsPipedriveFormatted, false, 'month', true);
+        await checkData.checkPipedriveByEmail(false, 'month', true);
         await timeoutPromise(1000);
         logger.info('--------------------');
-        logger.info(`HUBSPOT WEEK, ${emailsHubspotFormatted.length} accounts`);
-        await checkData.checkHubspotByEmail(emailsHubspotFormatted, false, 'week', true);
+        await checkData.checkHubspotByEmail(false, 'week', true);
         await timeoutPromise(1000);
         logger.info('--------------------');
-        logger.info(`SALESFORCE MONTH ${emailsSalesforceFormatted.length} accounts`);
-        await checkData.checkSalesforceByEmail(emailsSalesforceFormatted, false, 'month', true);
+        await checkData.checkSalesforceByEmail(false, 'month', true);
         await timeoutPromise(1000);
         logger.info('--------------------');
-        logger.info(`HUBSPOT DAY, ${emailsHubspotFormatted.length} accounts`);
-        await checkData.checkHubspotByEmail(emailsHubspotFormatted, false, 'day');
+        await checkData.checkHubspotByEmail(false, 'day');
         await timeoutPromise(1000);
         logger.info(`END TEST AUTOMATION : ${moment().format('LLL')}`);
       } catch (e) {
-        setTimeout(() => {
-          logger.info(`END TEST AUTOMATION WITH ERRORS:
+        await timeoutPromise(3000);
+        logger.info(`END TEST AUTOMATION WITH ERRORS:
             ${e.message}
           ${moment().format('LLL')}`);
-        }, 3000);
       }
     });
   } else {
     try {
       console.log('START TEST AUTOMATION MANUAL');
       // await timeoutPromise(1000);
-      // console.log(`PIPEDRIVE ${new Date().getDay() ? 'day' : 'month'}, ${emailsPipedriveFormatted.length} accounts`);
-      // await checkData.checkPipedriveByEmail(emailsPipedriveFormatted, false, new Date().getDay() ? 'day' : 'month', false, false);
+      // await checkData.checkPipedriveByEmail(false, new Date().getDay() ? 'day' : 'month', false, false);
       // await timeoutPromise(1000);
       // console.log('--------------------');
-      // console.log(`HUBSPOT WEEK, ${emailsHubspotFormatted.length} accounts`);
-      // await checkData.checkHubspotByEmail(emailsHubspotFormatted, false, 'week', false, false);
+      // await checkData.checkHubspotByEmail(false, 'week', false, false);
       // await timeoutPromise(1000);
       // console.log('--------------------');
-      console.log(`SALESFORCE MONTH ${emailsSalesforceFormatted.length} accounts`);
-      await checkData.checkSalesforceByEmail(emailsSalesforceFormatted, false, 'month', false, false);
-      console.log('DONE');
+      // await checkData.checkSalesforceByEmail(false, 'month', false, false);
+      // console.log('DONE');
       // await timeoutPromise(1000);
       // console.log('--------------------');
-      // console.log(`HUBSPOT DAY, ${emailsHubspotFormatted.length} accounts`);
-      // await checkData.checkHubspotByEmail(emailsHubspotFormatted, false, 'day');
+      // await checkData.checkHubspotByEmail(false, 'day');
       // await timeoutPromise(1000);
       console.log('END TEST AUTOMATION MANUAL');
     } catch (e) {
-      setTimeout(() => {
-        console.log(`END TEST AUTOMATION WITH ERRORS:
+      await timeoutPromise(3000);
+      console.log(`END TEST AUTOMATION WITH ERRORS:
           ${e.message}
         ${moment().format('LLL')}`);
-      }, 3000);
     }
   }
 };

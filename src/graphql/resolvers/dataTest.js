@@ -3,18 +3,13 @@ const moment = require('moment');
 const logger = require('../../dataTest/Utils/loggerSlack');
 const checkData = require('../../dataTest/services');
 
-const { emailsPipedrive, emailsHubspot, emailsSalesforce } = process.env;
-const emailsPipedriveFormatted = emailsPipedrive.split(', ');
-const emailsHubspotFormatted = emailsHubspot.split(', ');
-const emailsSalesforceFormatted = emailsSalesforce.split(', ');
-
 
 const launchTests = async () => {
   try {
     logger.info(`START TEST AUTOMATION FROM JAMES: ${moment().format('LLL')}`);
-    await checkData.checkPipedriveByEmail(emailsPipedriveFormatted);
-    await checkData.checkHubspotByEmail(emailsHubspotFormatted);
-    await checkData.checkSalesforceByEmail(emailsSalesforceFormatted);
+    await checkData.checkPipedriveByEmail();
+    await checkData.checkHubspotByEmail();
+    await checkData.checkSalesforceByEmail();
     setTimeout(() => {
       logger.info(`END TEST AUTOMATION FROM JAMES: ${moment().format('LLL')}`);
     }, 3000);
@@ -38,7 +33,7 @@ const crmFunction = {
 
 exports.data = async ({ email, crmName }) => {
   const crmNameLOwerCase = crmName.toLowerCase();
-  const { resultActivities, resultDeals } = await crmFunction[crmNameLOwerCase]([email], true);
+  const { resultActivities, resultDeals } = await crmFunction[crmNameLOwerCase](true, null, null, null, null, [email]);
 
   return {
     meetings: {

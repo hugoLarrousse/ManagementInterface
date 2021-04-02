@@ -8,12 +8,15 @@ const h7Users = require('../services/heptaward/user');
 const pipedriveRefreshToken = require('./pipedrive/refreshToken');
 const salesforceCheckToken = require('./salesforce/checkIntegration');
 const timeoutPromise = require('../Utils/timeout');
+const Email = require('../Utils/email');
 
 const isTokenValid = (expirationDate) => Date.now() - 300000 < Number(expirationDate);
 
 const FIFTEEN_MINUTES_MILLISECONDS = 300000 * 3;
 
-exports.checkPipedriveByEmail = async (emails, forJames, period, toBeSync, sendSlackMessage = true) => {
+exports.checkPipedriveByEmail = async (forJames, period, toBeSync, sendSlackMessage = true, forceEmail) => {
+  const emails = forceEmail || await Email.getByCrm('pipedrive');
+  logger.info(`PIPEDRIVE MONTH, ${emails.length} accounts`, !sendSlackMessage);
   if (forJames) {
     const resultActivities = await testPipedriveCtrl.compareActivities(emails[0], period || 'month');
 
@@ -64,7 +67,10 @@ exports.checkPipedriveByEmail = async (emails, forJames, period, toBeSync, sendS
 };
 
 
-exports.checkHubspotByEmail = async (emails, forJames, period, toBeSync, sendSlackMessage = true) => {
+exports.checkHubspotByEmail = async (forJames, period, toBeSync, sendSlackMessage = true, forceEmail) => {
+  const emails = forceEmail || await Email.getByCrm('hubspot');
+  logger.info(`HUBSPOT ${period || 'month'}, ${emails.length} accounts`, !sendSlackMessage);
+
   if (forJames) {
     const resultActivities = await testHubspotCtrl.compareActivities(emails[0], period || 'month');
     const resultDeals = await testHubspotCtrl.compareDeals(emails[0], period || 'month');
@@ -113,7 +119,9 @@ exports.checkHubspotByEmail = async (emails, forJames, period, toBeSync, sendSla
 };
 
 
-exports.checkSalesforceByEmail = async (emails, forJames, period, toBeSync, sendSlackMessage = true) => {
+exports.checkSalesforceByEmail = async (forJames, period, toBeSync, sendSlackMessage = true, forceEmail) => {
+  const emails = forceEmail || await Email.getByCrm('salesforce');
+  logger.info(`SALESFORCE MONTH ${emails.length} accounts`, !sendSlackMessage);
   if (forJames) {
     const resultActivities = await testSalesforceCtrl.compareActivities(emails[0], period || 'month');
     const resultDeals = await testSalesforceCtrl.compareDeals(emails[0], period || 'month');

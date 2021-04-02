@@ -117,7 +117,11 @@ const error2 = async (message) => {
   customLogger2.error(message);
 };
 
-const info = async (message) => {
+const info = async (message, onlyConsole) => {
+  if (onlyConsole) {
+    console.log(createLabelInfo(message));
+    return;
+  }
   customLogger.info(createLabelInfo(message));
 };
 
