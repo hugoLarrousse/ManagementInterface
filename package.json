@@ -55,7 +55,7 @@
     "graphql": "^14.0.0-rc.1",
     "jsonwebtoken": "^8.2.2",
     "lodash": "^4.17.20",
-    "moment": "^2.22.2",
+    "moment": "^2.29.4",
     "moment-timezone": "^0.5.17",
     "mongodb": "^3.6.1",
     "node-cron": "^1.2.1",
