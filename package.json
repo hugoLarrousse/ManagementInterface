@@ -50,7 +50,7 @@
     "config": "^2.0.1",
     "cors": "^2.8.4",
     "dotenv": "^6.0.0",
-    "express": "^4.16.3",
+    "express": "^4.17.3",
     "express-graphql": "^0.6.12",
     "graphql": "^14.0.0-rc.1",
     "jsonwebtoken": "^8.2.2",
