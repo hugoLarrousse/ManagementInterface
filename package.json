@@ -53,7 +53,7 @@
     "express": "^4.18.2",
     "express-graphql": "^0.6.12",
     "graphql": "^14.0.0-rc.1",
-    "jsonwebtoken": "^8.2.2",
+    "jsonwebtoken": "^9.0.0",
     "lodash": "^4.17.20",
     "moment": "^2.22.2",
     "moment-timezone": "^0.5.17",
